@@ -1,5 +1,8 @@
+=========
+Comparing with related packages
+=========
 
-.. list-table:: Comparison of similar packages
+.. list-table:: Related packages
    :widths: 30 10 10 65
    :header-rows: 1
 
