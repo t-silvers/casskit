@@ -35,6 +35,22 @@
      - R
      - Yes
      - A Bioconductor package for the representation of multi-assay experiments
+   * - `TCGAutils`_
+     - R
+     - Yes
+     - ``MultiAssayExperiment`` for TCGA
+   * - `scverse`_
+     - R, Python
+     - Yes
+     - ``AnnData``, ``muon`` with ``PyTorch`` for single-cell RNA-seq
+   * - `sgkit`_
+     - Python
+     - Yes
+     - ``xarray`` for VCFs with some statgen functionality (eg GWAS)
+   * - `scikit-allel`_
+     - Python
+     - No
+     - Succeeded by ``sgkit``
    * - `scikit-genome`_
      - Python
      - Yes
@@ -59,15 +75,15 @@
 
 .. Refs
 .. =====
-.. _PyBDA: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
-.. _pypath: https://github.com/saezlab/pypath
-.. _OmniPath: https://omnipathdb.org
-.. _pyensembl: https://raw.githubusercontent.com/openvax/pyensembl/0e750e50105c22666fcd43181183719876e15e6a/README.md
 .. _MultiAssayExperiment: https://github.com/waldronlab/MultiAssayExperiment
-.. _TCGAutils: https://github.com/waldronlab/TCGAutils
+.. _OmniPath: https://omnipathdb.org
+.. _PyBDA: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
+.. _pycellbase: https://pypi.org/project/pycellbase/
+.. _pyensembl: https://raw.githubusercontent.com/openvax/pyensembl/0e750e50105c22666fcd43181183719876e15e6a/README.md
+.. _pypath: https://github.com/saezlab/pypath
+.. _scikit-allel: https://scikit-allel.readthedocs.io/en/stable/
+.. _scikit-bio: http://scikit-bio.org
+.. _scikit-genome: https://cnvkit.readthedocs.io/en/stable/skgenome.html
 .. _scverse: https://scverse.org
 .. _sgkit: https://pystatgen.github.io/sgkit/latest/
-.. _scikit-allel: https://scikit-allel.readthedocs.io/en/stable/
-.. _scikit-genome: https://cnvkit.readthedocs.io/en/stable/skgenome.html
-.. _scikit-bio: http://scikit-bio.org
-.. _pycellbase: https://pypi.org/project/pycellbase/
+.. _TCGAutils: https://github.com/waldronlab/TCGAutils
