@@ -1,11 +1,11 @@
 import logging
 
-from ._base import (
+from casskit.io._base import (
     DataURLMixin,
     ElsevierLink,
 )
 
-from .tcga._gdc_via_xena import (
+from casskit.io.tcga._gdc_via_xena import (
     TCGAXenaLoader,
     build_tcga,
     get_tcga
