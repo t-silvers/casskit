@@ -47,7 +47,7 @@
      - Python
      - Yes
      - mainly microbial genomics
-   * - `pygenometracks`_
+   * - pygenometracks
      - Python
      - Yes
      - 
