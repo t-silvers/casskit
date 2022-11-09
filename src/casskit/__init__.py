@@ -1,9 +1,6 @@
 import sys
 
-from casskit.io import (
-    build_tcga,
-    get_tcga
-)
+from casskit import io
 from casskit.config import *
 
 if sys.version_info[:2] >= (3, 8):
@@ -22,6 +19,5 @@ finally:
     del version, PackageNotFoundError
 
 __all__ = [
-    "build_tcga",
-    "get_tcga"
+    "io", "CACHE_DIR"
 ]

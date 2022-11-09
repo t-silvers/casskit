@@ -113,7 +113,7 @@ class TCGAXenaLoader(DataURLMixin):
             xd_ = XenaData(xena_data.omic, xena_data.sep, compression, xena_data.units)
             cls(cancer, xd_, cache_dir).raw_data
 
-get_tcga = TCGAXenaLoader.get
+get_gdc_tcga = TCGAXenaLoader.get
 """Shortcut for TCGAXenaLoader.build_cache"""
 
 build_tcga = TCGAXenaLoader.build_cache
