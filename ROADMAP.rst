@@ -25,13 +25,13 @@ scikit-bio
 http://scikit-bio.org
 
 .. list-table:: Comparison of similar packages
-   :header: "Name", "Language", "Active?", "Description"
-   :widths: 30, 10, 10, 65
+   :widths: 30 10 10 65
    :header-rows: 1
 
-   * - Heading row 1, column 1
-     - Heading row 1, column 2
-     - Heading row 1, column 3
+   * - Name
+     - Language
+     - Active?
+     - Description
    * - Row 1, column 1
      -
      - Row 1, column 3
