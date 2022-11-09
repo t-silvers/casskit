@@ -1,28 +1,52 @@
+import csv
+from dataclasses import dataclass, field
+import io
+import os
+from pathlib import Path
 import subprocess
+from typing import Optional
 
-with open("test.tsv", "w") as f:
-    for record in SeqIO.parse("/home/fil/Desktop/420_2_03_074.fastq", "fastq"):
-        f.write("%s %s %s\n" % (record.id,record.seq, record.format("qual")))
+import pandas as pd
 
-
-encoding = 'ascii'    # specify the encoding of the CSV data
-p2 = subprocess.Popen(["Rscript", "/home/users/tsilvers/casskit/src/casskit/io/tcga/_tcgabiolinks.R"], stdout=subprocess.PIPE)
-output = p2.communicate()[0].decode(encoding)
-edits = csv.reader(output.splitlines(), delimiter=",")
-for row in edits:
-    print(row)
-
-p1 = subprocess.Popen(["Rscript", "/home/users/tsilvers/casskit/src/casskit/io/tcga/_tcgabiolinks.R"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT, universal_newlines=True)
+from casskit.io import DataURLMixin
+from casskit.io._utils import cache_on_disk
+from ...config import CACHE_DIR # TEMP
 
 
-process = subprocess.run(["Rscript /home/users/tsilvers/casskit/src/casskit/io/tcga/_tcgabiolinks.R"], stdout=subprocess.PIPE, shell=True)
-(output, err) = process.communicate()
-exit_code = process.wait()
+@dataclass
+class TCGABiolinksSubtype(DataURLMixin):
 
+    cache_dir: Optional[Path] = CACHE_DIR
+    r_script: str = field(init=False, default=Path(__file__).parent / "_tcgabiolinks.R")
+    
+    @cache_on_disk
+    def fetch(self):
+        return self.query_tcgabiolinks()
 
-import csv, pprint, subprocess, io
+    def query_tcgabiolinks(self):
+        subtypes_l = []
+        with subprocess.Popen(["Rscript", self.r_script], stdout=subprocess.PIPE) as p:
+            with io.TextIOWrapper(p.stdout, newline=os.linesep) as f:
+                reader = csv.reader(f, delimiter=",")
+                for r in reader:
+                    subtypes_l.append(pd.Series(r))
+        
+        return pd.concat(subtypes_l[2:], axis=1).set_index(0).T
 
-pipe = subprocess.Popen(["Rscript", "/home/users/tsilvers/casskit/src/casskit/io/tcga/_tcgabiolinks.R"], stdout=subprocess.PIPE)
-pipeWrapper = io.TextIOWrapper(pipe.stdout)
-pipeReader = csv.DictReader(pipeWrapper)
-listOfDicts = [ dict(row) for row in pipeReader ]
+    def set_cache(self, cache_dir):
+        self.path_cache = Path(cache_dir, f"tcga_subtype_tcgabiolinks.pkl")
+        self.read_cache = lambda cache: pd.read_pickle(cache)
+        self.write_cache = lambda data, cache: data.to_pickle(cache)
+
+    @classmethod
+    def get_data(cls, cache_only: bool = False):
+        data = cls().fetch()
+        if cache_only is False:
+            return data
+        
+    def __post_init__(self):
+        self.set_cache(self.cache_dir)
+        self.r_script = Path(self.r_script).as_posix()
+        
+get_subtypes = TCGABiolinksSubtype.get_data
+"""Convenience function for TCGA subtypes from TCGAbiolinks."""
