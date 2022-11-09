@@ -24,11 +24,28 @@ https://cnvkit.readthedocs.io/en/stable/skgenome.html
 scikit-bio
 http://scikit-bio.org
 
-.. csv-table:: Frozen Delights!
-   :header: "Treat", "Quantity", "Description"
-   :widths: 15, 10, 30
+.. csv-table:: Comparison of similar packages
+   :header: "Name", "Language", "Active?", "Description"
+   :widths: 30, 10, 10, 65
 
-   "Albatross", 2.99, "On a stick!"
-   "Crunchy Frog", 1.49, "If we took the bones out, it wouldn't be
-   crunchy, now would it?"
-   "Gannet Ripple", 1.99, "On a stick!"
+    "`PyBDA`", "Python", "Yes", "A Python package for the analysis of biological data"
+    "`pypath`", "Python", "Yes", "A Python module for molecular signaling prior knowledge processing"
+    "OmniPath", "Python", "Yes", "intra- & intercellular signaling knowledge"
+    "PyBEL", "Python", "Yes", "a Python library for biological expression language"
+    "PySB", "Python", "Yes", "a Python library for modeling biological systems"
+    "ExperimentHub", "R", "Yes", "a repository of curated biological data"
+    "pyGeno", "Python", "Yes", "A Python package for precision medicine and proteogenomics"
+    "scikit-genome", "Python", "Yes", "A Python package for the analysis of biological data"
+    "scikit-bio", "Python", "Yes", "A Python package for the analysis of biological data"
+
+.. Refs
+.. =====
+.. _PyBDA: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
+.. _pyensembl: https://raw.githubusercontent.com/openvax/pyensembl/0e750e50105c22666fcd43181183719876e15e6a/README.md
+.. _MultiAssayExperiment: https://github.com/waldronlab/MultiAssayExperiment
+.. _TCGAutils: https://github.com/waldronlab/TCGAutils
+.. _scverse: https://scverse.org
+.. _sgkit: https://pystatgen.github.io/sgkit/latest/
+.. _scikit-allel: https://scikit-allel.readthedocs.io/en/stable/
+.. _APIs of scikit-learn objects: https://scikit-learn.org/stable/developers/develop.html
+.. _provided templates: https://github.com/scikit-learn-contrib/project-template/blob/master/skltemplate/_template.py
