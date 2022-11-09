@@ -1,7 +1,5 @@
-import os
 import sys
 
-os.environ["CASSKIT_CACHE_DIR"] = "/scratch/users/tsilvers/ceqtl_selection"
 from casskit.config import *
 
 if sys.version_info[:2] >= (3, 8):
