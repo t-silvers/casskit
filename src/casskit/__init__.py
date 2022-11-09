@@ -1,5 +1,11 @@
 import sys
 
+from casskit.io import (
+    build_tcga,
+    get_tcga
+)
+from casskit.config import *
+
 if sys.version_info[:2] >= (3, 8):
     # TODO: Import directly (no need for conditional) when `python_requires = >= 3.8`
     from importlib.metadata import PackageNotFoundError, version  # pragma: no cover
@@ -14,3 +20,8 @@ except PackageNotFoundError:  # pragma: no cover
     __version__ = "unknown"
 finally:
     del version, PackageNotFoundError
+
+__all__ = [
+    "build_tcga",
+    "get_tcga"
+]
