@@ -90,11 +90,16 @@ class TCGAXenaLoader(DataURLMixin):
         self.write_cache = lambda data, cache: data.to_parquet(cache, engine="pyarrow")
 
     @classmethod
-    def get(cls, cancer: str, data: str, cache_dir: Path) -> pd.DataFrame:
+    def get(cls, cancer: str, data: str, cache_dir: Path = CACHE_DIR) -> pd.DataFrame:
         return cls(cancer, TCGA_XENA_DATASETS[data], cache_dir).raw_data
 
     @classmethod
-    def build_cache(cls, cancer: str, cache_dir: Path, overwrite: bool = False) -> None:
+    def build_cache(
+        cls,
+        cancer: str,
+        cache_dir: Path = CACHE_DIR,
+        overwrite: bool = False
+    ) -> None:
         for xena_data in TCGA_XENA_DATASETS.values():
             print(f"Building {xena_data}")
 
