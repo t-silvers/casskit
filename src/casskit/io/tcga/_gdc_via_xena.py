@@ -10,7 +10,7 @@ import pandas as pd
 from casskit.io import DataURLMixin
 from casskit.io._utils import cache_on_disk
 from casskit.descriptors import OneOf
-from ...config import CACHE_DIR
+from ...config import CACHE_DIR # TEMP
 
 
 TCGA_CANCERS = [
