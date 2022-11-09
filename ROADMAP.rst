@@ -28,7 +28,7 @@ http://scikit-bio.org
    :header: "Name", "Language", "Active?", "Description"
    :widths: 30, 10, 10, 65
 
-    "`PyBDA`", "Python", "Yes", "A Python package for the analysis of biological data"
+    `PyBDA`, "Python", "Yes", "A Python package for the analysis of biological data"
     "`pypath`", "Python", "Yes", "A Python module for molecular signaling prior knowledge processing"
     "OmniPath", "Python", "Yes", "intra- & intercellular signaling knowledge"
     "PyBEL", "Python", "Yes", "a Python library for biological expression language"
