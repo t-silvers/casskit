@@ -20,6 +20,7 @@ __all__ = [
     "DataURLMixin",
     "TCGAXenaLoader",
     "ElsevierLink",
+    "get_ont",
     "build_tcga_cache",
     "get_tcga",
 ]
