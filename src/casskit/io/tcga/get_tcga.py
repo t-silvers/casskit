@@ -6,9 +6,11 @@ from ...io.tcga._tumorpurity import get_tumor_purity
 
 def build_tcga_cache(cancer):
     """Build local cache of TCGA data."""
+
     build_tcga(cancer)
     get_ancestry_pcs(cache_only=True)
     get_subtypes(cache_only=True)
+
     
 def get_tcga(feature, cancer=None):
     """Get TCGA data from local cache."""
