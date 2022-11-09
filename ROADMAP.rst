@@ -32,7 +32,7 @@ http://scikit-bio.org
      - Language
      - Active?
      - Description
-   * - Row 1, column 1
+   * - `PyBDA`_
      - Row 1, column 2
      - Row 1, column 3
      - Row 1, column 3
