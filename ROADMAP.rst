@@ -43,7 +43,7 @@
      - Python
      - Yes
      - mainly microbial genomics
-   * - `pycellbase`_
+   * - pycellbase
      - Python
      - Yes
      - mainly microbial genomics
@@ -51,7 +51,7 @@
      - Python
      - Yes
      - 
-   * - `eDGAR`_
+   * - eDGAR
      - Python
      - Yes
      - a database of Disease-Gene Associations
