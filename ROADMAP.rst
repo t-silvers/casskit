@@ -33,21 +33,23 @@ http://scikit-bio.org
      - Active?
      - Description
    * - Row 1, column 1
-     -
+     - Row 1, column 2
+     - Row 1, column 3
      - Row 1, column 3
    * - Row 2, column 1
      - Row 2, column 2
      - Row 2, column 3
+     - Row 2, column 3
 
-    .. `PyBDA`, "Python", "Yes", "A Python package for the analysis of biological data"
-    .. "`pypath`", "Python", "Yes", "A Python module for molecular signaling prior knowledge processing"
-    .. "OmniPath", "Python", "Yes", "intra- & intercellular signaling knowledge"
-    .. "PyBEL", "Python", "Yes", "a Python library for biological expression language"
-    .. "PySB", "Python", "Yes", "a Python library for modeling biological systems"
-    .. "ExperimentHub", "R", "Yes", "a repository of curated biological data"
-    .. "pyGeno", "Python", "Yes", "A Python package for precision medicine and proteogenomics"
-    .. "scikit-genome", "Python", "Yes", "A Python package for the analysis of biological data"
-    .. "scikit-bio", "Python", "Yes", "A Python package for the analysis of biological data"
+.. `PyBDA`, "Python", "Yes", "A Python package for the analysis of biological data"
+.. "`pypath`", "Python", "Yes", "A Python module for molecular signaling prior knowledge processing"
+.. "OmniPath", "Python", "Yes", "intra- & intercellular signaling knowledge"
+.. "PyBEL", "Python", "Yes", "a Python library for biological expression language"
+.. "PySB", "Python", "Yes", "a Python library for modeling biological systems"
+.. "ExperimentHub", "R", "Yes", "a repository of curated biological data"
+.. "pyGeno", "Python", "Yes", "A Python package for precision medicine and proteogenomics"
+.. "scikit-genome", "Python", "Yes", "A Python package for the analysis of biological data"
+.. "scikit-bio", "Python", "Yes", "A Python package for the analysis of biological data"
 
 .. Refs
 .. =====
