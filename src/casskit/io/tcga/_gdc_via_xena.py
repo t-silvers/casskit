@@ -8,7 +8,7 @@ from typing import Dict, Optional
 import pandas as pd
 
 from casskit.io import DataURLMixin
-from casskit.io._utils import cache_on_disk
+from casskit.io._utils import cache_on_disk, check_package_version
 from casskit.descriptors import OneOf
 from ...config import CACHE_DIR # TEMP
 
@@ -55,6 +55,8 @@ class TCGAXenaLoader(DataURLMixin):
         xena_data: XenaData,
         cache_dir: Optional[Path] = CACHE_DIR,
     ):
+        check_package_version("pyarrow")
+        
         self.cancer = cancer
         self.omic = xena_data.omic
         self.sep = xena_data.sep
