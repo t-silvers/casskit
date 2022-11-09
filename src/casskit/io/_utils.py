@@ -1,7 +1,11 @@
 from functools import wraps
 from pathlib import Path
 import pkg_resources
-from typing import Callable
+import subprocess
+from typing import Any, Callable, Dict, List, Union
+import warnings
+
+import pandas as pd
 
 
 def cache_on_disk(f: Callable) -> Callable:
@@ -41,3 +45,18 @@ def check_package_version(package: str, version: str = None) -> bool:
     
     except pkg_resources.DistributionNotFound:
         return False
+
+def wrap_rcall(script: str,
+              params: Dict[Union[str, Path], pd.DataFrame],
+              output: List[Path],
+              check: bool = True) -> None:
+    """Wrap R call to script."""
+    def _args():
+        for arg, param in params.items():
+            param_ = param
+            if isinstance(param, Path):
+                param_ = param.as_posix()
+            yield f'--{arg} {param_}'
+    
+    cmd = f"Rscript {script} {' '.join(_args())}"
+    subprocess.run(cmd, shell=True, check=check)

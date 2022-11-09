@@ -10,6 +10,10 @@ Comparing with related packages
      - Language
      - Active?
      - Description
+   * - `TCGAbiolinks`_
+     - R
+     - Yes
+     - An R/Bioconductor package for integrative analysis with TCGA data
    * - `PyBDA`_
      - Python
      - Yes
@@ -90,3 +94,4 @@ Comparing with related packages
 .. _scverse: https://scverse.org
 .. _sgkit: https://pystatgen.github.io/sgkit/latest/
 .. _TCGAutils: https://github.com/waldronlab/TCGAutils
+.. _TCGAbiolinks: https://github.com/BioinformaticsFMRP/TCGAbiolinks

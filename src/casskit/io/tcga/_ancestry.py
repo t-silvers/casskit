@@ -68,15 +68,17 @@ class TCGAAncestryPCs(DataURLMixin):
                 .pipe(column_janitor))
 
     @classmethod
-    def get_data(cls):
-        # PC values change across data set. Use WashU set, as this appears most complete.
-        # _b, _u = cls().get_broad(), cls().get_ucsf()
+    def get_data(cls, cache_only: bool = False):
+        broad_data = cls.get_broad()
+        ucsf_data = cls.get_ucsf()
         washu_data = cls().get_washu()
 
-        return (cls
-                .prepare_ancestry_data(washu_data)
-                .set_index("sample")
-                .add_prefix("ancestry_"))
+        if cache_only is False:
+            # PC values change across data set. Use WashU set, as this appears most complete.
+            return (cls
+                    .prepare_ancestry_data(washu_data)
+                    .set_index("sample")
+                    .add_prefix("ancestry_"))
 
 get_ancestry_pcs = TCGAAncestryPCs.get_data
 """Convenience function for ancestry PCs from TCGA."""
