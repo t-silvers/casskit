@@ -1,7 +1,4 @@
 import logging
-import os
-
-os.environ["CASSKIT_CACHE_DIR"] = "/scratch/users/tsilvers/ceqtl_selection"
 
 from casskit.io._base import (
     DataURLMixin,
