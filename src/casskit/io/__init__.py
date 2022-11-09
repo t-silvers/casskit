@@ -8,7 +8,8 @@ from casskit.io._base import (
     ElsevierLink,
 )
 
-from casskit.io.tcga.get_tcga import get_tcga
+from casskit.io.ontology.get_ont import get_ont
+from casskit.io.tcga.get_tcga import build_tcga_cache, get_tcga
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -19,5 +20,6 @@ __all__ = [
     "DataURLMixin",
     "TCGAXenaLoader",
     "ElsevierLink",
+    "build_tcga_cache",
     "get_tcga",
 ]

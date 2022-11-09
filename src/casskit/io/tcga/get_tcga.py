@@ -12,13 +12,18 @@ def build_tcga_cache(cancer):
     
 def get_tcga(feature, cancer=None):
     """Get TCGA data from local cache."""
+    # TODO: filter samples by cancer type
     match feature:
+        
         case "ancestry":
             return get_ancestry_pcs()
+        
         case "purity":
             return get_tumor_purity()
+        
         case "subtypes":
             return get_subtypes()
+        
         case _:
             try:
                 return get_gdc_tcga(cancer, feature)
