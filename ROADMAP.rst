@@ -1,6 +1,3 @@
-Similar packages
-* Compare with PyBDA https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
-* pypath https://github.com/saezlab/pypath
 
 Annotation
 * pycellbase
@@ -33,27 +30,48 @@ http://scikit-bio.org
      - Active?
      - Description
    * - `PyBDA`_
-     - Row 1, column 2
-     - Row 1, column 3
-     - Row 1, column 3
-   * - Row 2, column 1
-     - Row 2, column 2
-     - Row 2, column 3
-     - Row 2, column 3
+     - Python
+     - Yes
+     - A Python package for the analysis of biological data
+   * - `pypath`_ / `OmniPath`_
+     - Python, R
+     - Yes
+     - A Python module for molecular signaling prior knowledge processing
+   * - PyBEL
+     - Python
+     - Yes
+     - A Python module for biological expression language
+   * - ExperimentHub
+     - R
+     - Yes
+     - A repository of curated biological data
+   * - pyGeno
+     - Python
+     - Yes
+     - precision medicine and proteogenomics
+   * - `pyensembl`_
+     - Python
+     - Yes
+     - annotation
+   * - `MultiAssayExperiment`_
+     - R
+     - Yes
+     - A Bioconductor package for the representation of multi-assay experiments
+   * - `scikit-genome`_
+     - Python
+     - Yes
+     - add-on to CNVkit
+   * - `scikit-bio`_
+     - Python
+     - Yes
+     - mainly microbial genomics
 
-.. `PyBDA`, "Python", "Yes", "A Python package for the analysis of biological data"
-.. "`pypath`", "Python", "Yes", "A Python module for molecular signaling prior knowledge processing"
-.. "OmniPath", "Python", "Yes", "intra- & intercellular signaling knowledge"
-.. "PyBEL", "Python", "Yes", "a Python library for biological expression language"
-.. "PySB", "Python", "Yes", "a Python library for modeling biological systems"
-.. "ExperimentHub", "R", "Yes", "a repository of curated biological data"
-.. "pyGeno", "Python", "Yes", "A Python package for precision medicine and proteogenomics"
-.. "scikit-genome", "Python", "Yes", "A Python package for the analysis of biological data"
-.. "scikit-bio", "Python", "Yes", "A Python package for the analysis of biological data"
 
 .. Refs
 .. =====
 .. _PyBDA: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
+.. _pypath: https://github.com/saezlab/pypath
+.. _OmniPath: https://omnipathdb.org
 .. _pyensembl: https://raw.githubusercontent.com/openvax/pyensembl/0e750e50105c22666fcd43181183719876e15e6a/README.md
 .. _MultiAssayExperiment: https://github.com/waldronlab/MultiAssayExperiment
 .. _TCGAutils: https://github.com/waldronlab/TCGAutils
