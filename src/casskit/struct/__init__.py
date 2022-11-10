@@ -1,3 +1,3 @@
-# from ._tiledb import DataDB
+from ._tiledb import DataDB
 
-# __all__ = ["DataDB"]
+__all__ = ["DataDB"]
