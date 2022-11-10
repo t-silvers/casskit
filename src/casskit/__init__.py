@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from .io.tcga.ancestry import get_ancestry_pcs
+from .io.tcga.get_tcga import build_tcga_cache, get_tcga
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -24,4 +24,4 @@ finally:
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
-__all__ = ["get_ancestry_pcs"]
+__all__ = ["build_tcga_cache", "get_tcga"]
