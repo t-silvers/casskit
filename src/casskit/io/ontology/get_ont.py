@@ -1,4 +1,4 @@
-from ...io.ontology._cosmic import get_cosmic
+from _cosmic import get_cosmic
 
 
 def get_ont(ontology_id):

@@ -6,7 +6,7 @@ from this import d
 
 import pandas as pd
 
-from casskit.io._utils import cache_on_disk
+from .._utils import cache_on_disk
 
 
 @dataclass

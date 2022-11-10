@@ -3,7 +3,6 @@ from pathlib import Path
 import pkg_resources
 import subprocess
 from typing import Any, Callable, Dict, List, Union
-import warnings
 
 import pandas as pd
 
