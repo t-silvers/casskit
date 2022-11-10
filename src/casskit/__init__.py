@@ -1,13 +1,7 @@
 import logging
 import sys
 
-import io
-
-# from .io.tcga.ancestry import get_ancestry_pcs
-
-# from .io.ontology import get_ont
-# from .io.tcga import build_tcga_cache, get_tcga
-# from .struct import DataDB
+from .io.tcga.ancestry import get_ancestry_pcs
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -30,11 +24,4 @@ finally:
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
-__all__ = ["io"]
-
-# __all__ = [
-#     "DataDB",
-#     "get_ont",
-#     "build_tcga_cache",
-#     "get_tcga",
-# ]
+__all__ = ["get_ancestry_pcs"]
