@@ -1,6 +1,8 @@
 import logging
 import sys
 
+from .io.tcga._ancestry import TCGAAncestry
+
 # from .io.ontology import get_ont
 # from .io.tcga import build_tcga_cache, get_tcga
 # from .struct import DataDB
@@ -25,6 +27,8 @@ finally:
     del version, PackageNotFoundError
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
+
+__all__ = ["TCGAAncestry"]
 
 # __all__ = [
 #     "DataDB",
