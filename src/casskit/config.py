@@ -7,6 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 HOME = os.environ["HOME"]
+SCRATCH = os.environ["SCRATCH"]
 
 
 CACHE_BASE_SUBDIR = "casskit"
@@ -30,3 +31,9 @@ UNITS = {
     "abs": "counts",
     "counts": "counts"
 }
+
+def set_cache(cache_dir):
+    """Set cache directory."""
+    global CACHE_DIR
+    CACHE_DIR = cache_dir
+    CACHE_DIR.mkdir(parents=True, exist_ok=True)

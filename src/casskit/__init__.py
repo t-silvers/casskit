@@ -1,6 +1,8 @@
 import logging
 import sys
 
+from .config import *
+from .config import set_cache
 from .io.tcga.get_tcga import build_tcga_cache, get_tcga
 
 logger = logging.getLogger(__name__)
@@ -24,4 +26,8 @@ finally:
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
-__all__ = ["build_tcga_cache", "get_tcga"]
+__all__ = [
+    "set_cache",
+    "build_tcga_cache",
+    "get_tcga"
+]
