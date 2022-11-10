@@ -19,5 +19,5 @@ finally:
     del version, PackageNotFoundError
 
 __all__ = [
-    "io", "CACHE_DIR"
+    "io", "struct", "CACHE_DIR"
 ]
