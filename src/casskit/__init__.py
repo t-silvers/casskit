@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from .io.tcga._ancestry import TCGAAncestry
+from .io.tcga.ancestry import get_ancestry_pcs
 
 # from .io.ontology import get_ont
 # from .io.tcga import build_tcga_cache, get_tcga
@@ -28,7 +28,7 @@ finally:
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
-__all__ = ["TCGAAncestry"]
+__all__ = ["get_ancestry_pcs"]
 
 # __all__ = [
 #     "DataDB",
