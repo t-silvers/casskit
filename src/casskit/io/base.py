@@ -7,7 +7,7 @@ from urllib.request import Request, urlopen
 
 import pandas as pd
 
-from _utils import cache_on_disk, check_package_version
+import casskit.io.utils as io_utils
 
 
 class DataURLMixin(ABC):
@@ -37,7 +37,7 @@ class ElsevierLink(DataURLMixin):
         cache_name: Optional[str] = None,
         cache_dir: Optional[Path] = Path("~/.cache").expanduser(),
     ):
-        check_package_version("openpyxl")
+        io_utils.check_package_version("openpyxl")
         self.url = url
         self.skiprows = skiprows        
         self.set_cache(cache_dir, cache_name)
@@ -46,7 +46,7 @@ class ElsevierLink(DataURLMixin):
     def raw_data(self):
         return self.fetch()
 
-    @cache_on_disk
+    @io_utils.cache_on_disk
     def fetch(self) -> pd.DataFrame:
         request = Request(self.url, None, headers=self.header)
         with urlopen(request) as response:

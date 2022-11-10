@@ -3,14 +3,15 @@ from typing import Optional
 
 import pandas as pd
 
-from casskit.io._base import DataURLMixin
-from casskit.io._utils import cache_on_disk
+import casskit.io.base as base
+import casskit.io.utils as io_utils
+import casskit.utils as utils
+import casskit.config as config
 
-from ...utils import column_janitor
-from ...config import CACHE_DIR # TEMP
+cache_dir = config.CACHE_DIR
 
 
-class TCGAAncestryPCs(DataURLMixin):
+class TCGAAncestryPCs(base.DataURLMixin):
     
     SOURCES = {
         "broad": "https://api.gdc.cancer.gov/data/1fee3458-14ee-4b4b-964c-a05164b68066",
@@ -20,7 +21,7 @@ class TCGAAncestryPCs(DataURLMixin):
 
     def __init__(
         self,
-        cache_dir: Optional[Path] = CACHE_DIR,
+        cache_dir: Optional[Path] = cache_dir,
         institute: str = "broad",
         sep: str = "\t",
     ):
@@ -28,7 +29,7 @@ class TCGAAncestryPCs(DataURLMixin):
         self.sep = sep
         self.set_cache(cache_dir)
     
-    @cache_on_disk
+    @io_utils.cache_on_disk
     def fetch(self):
         return pd.read_csv(self.SOURCES[self.institute], sep=self.sep)
 
@@ -66,7 +67,7 @@ class TCGAAncestryPCs(DataURLMixin):
         return (cls(institute="washu")
                 .fetch()
                 .rename(columns={'Case': 'sample', 'Sample': 'aliquot_id'})
-                .pipe(column_janitor))
+                .pipe(utils.column_janitor))
 
     @classmethod
     def get_data(cls, cache_only: bool = False):
