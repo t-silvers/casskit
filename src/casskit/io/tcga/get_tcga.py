@@ -1,7 +1,7 @@
-from ._gdcxena import build_tcga, get_gdc_tcga
-from ._ancestry import get_ancestry_pcs
-from ._subtype import get_subtypes
-from ._tumorpurity import get_tumor_purity
+from casskit.io.tcga._gdcxena import build_tcga, get_gdc_tcga
+from casskit.io.tcga._ancestry import get_ancestry_pcs
+from casskit.io.tcga._subtype import get_subtypes
+from casskit.io.tcga._tumorpurity import get_tumor_purity
 
 
 def build_tcga_cache(cancer):

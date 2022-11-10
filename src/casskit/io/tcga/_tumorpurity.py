@@ -6,8 +6,8 @@ from scipy.stats import norm
 from sklearn.experimental import enable_iterative_imputer # explicitly require experimental feature
 from sklearn.impute import IterativeImputer
 
-from .._base import ElsevierLink
-from .._utils import column_janitor
+from casskit.io._base import ElsevierLink
+from ...utils import column_janitor
 from ...config import CACHE_DIR # TEMP
 
 

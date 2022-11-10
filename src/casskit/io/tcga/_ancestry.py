@@ -3,8 +3,9 @@ from typing import Optional
 
 import pandas as pd
 
-from .._base import DataURLMixin
-from .._utils import cache_on_disk
+from casskit.io._base import DataURLMixin
+from casskit.io._utils import cache_on_disk
+
 from ...utils import column_janitor
 from ...config import CACHE_DIR # TEMP
 

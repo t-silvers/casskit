@@ -1,8 +1,8 @@
 import sys
 
-from .io.ontology.get_ont import get_ont
-from .io.tcga.get_tcga import build_tcga_cache, get_tcga
-from .struct._tiledb import DataDB
+from .io.ontology import get_ont
+from .io.tcga import build_tcga_cache, get_tcga
+from .struct import DataDB
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
