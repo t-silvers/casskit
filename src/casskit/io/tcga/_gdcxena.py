@@ -7,9 +7,9 @@ from typing import Dict, Optional
 
 import pandas as pd
 
-from casskit.io import DataURLMixin
-from casskit.io._utils import cache_on_disk, check_package_version
-from casskit.descriptors import OneOf
+from .._base import DataURLMixin
+from .._utils import cache_on_disk, check_package_version
+from ...descriptors import OneOf
 from ...config import CACHE_DIR # TEMP
 
 
