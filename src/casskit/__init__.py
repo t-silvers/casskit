@@ -1,7 +1,7 @@
 import sys
 
-from casskit import io, struct
-from casskit.config import *
+from . import io, struct
+from .config import *
 
 if sys.version_info[:2] >= (3, 8):
     # TODO: Import directly (no need for conditional) when `python_requires = >= 3.8`
