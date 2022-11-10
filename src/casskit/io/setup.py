@@ -6,7 +6,7 @@
     PyScaffold helps you to put up the scaffold of your new Python project.
     Learn more under: https://pyscaffold.org/
 """
-from setuptools import setup
+from setuptools import setup, find_packages
 
 
 if __name__ == "__main__":
@@ -19,4 +19,16 @@ if __name__ == "__main__":
             "setuptools_scm and wheel with:\n"
             "   pip install -U setuptools setuptools_scm wheel\n\n"
         )
-        raise
+        raise    
+
+    setup(
+        name='io',
+        version='1',
+        description='',
+        long_description='',
+        author='',
+        author_email='',
+        license='MIT',
+        packages=find_packages(),
+        zip_safe=False,
+    )
