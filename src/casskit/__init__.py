@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from .config import *
+# from .config import *
 from .config import set_cache
 from .io.tcga.get_tcga import build_tcga_cache, get_tcga
 
