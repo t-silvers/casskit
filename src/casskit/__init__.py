@@ -1,6 +1,14 @@
 import sys
 
-from . import io, struct
+from .io.ontology.get_ont import get_ont
+from .io.tcga.get_tcga import build_tcga_cache, get_tcga
+from .struct._tiledb import DataDB
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+# https://xenabrowser.net/datapages/
+
 from .config import *
 
 if sys.version_info[:2] >= (3, 8):
@@ -20,7 +28,8 @@ finally:
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
 __all__ = [
-    "io", "struct", "CACHE_DIR"
+    "DataDB",
+    "get_ont",
+    "build_tcga_cache",
+    "get_tcga",
 ]
-
-# __path__ = __import__('pkgutil').extend_path(__path__, __name__)
