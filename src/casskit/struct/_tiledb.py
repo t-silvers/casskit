@@ -10,7 +10,6 @@ import pandas as pd
 import tiledb
 from tiledb.libtiledb import TileDBError
 
-from . import __version__
 from ..config import CACHE_DIR # TEMP
 
 cfg = tiledb.Ctx().config()
