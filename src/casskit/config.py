@@ -14,10 +14,9 @@ try:
     CACHE_DIR = Path(os.environ[_CACHE_DIR_ENV_KEY]) / ".cache" / _CACHE_BASE_SUBDIR
 except:
     logger.warning(f"Environment variable {_CACHE_DIR_ENV_KEY} not set. Using default cache directory.")
-    CACHE_DIR = Path("~/.cache").expanduser() / _CACHE_DIR_ENV_KEY
+    CACHE_DIR = Path("~/.cache").expanduser() / _CACHE_BASE_SUBDIR
 
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
-
 
 UNITS = {
     "log1p": "log1p",
@@ -29,8 +28,11 @@ UNITS = {
     "counts": "counts"
 }
 
-def set_cache(cache_dir):
+def set_cache(cache_dir, subdirs=[".cache", _CACHE_BASE_SUBDIR]):
     """Set cache directory."""
     global CACHE_DIR
-    CACHE_DIR = cache_dir
+    CACHE_DIR = Path(cache_dir)
+    if len(subdirs) > 0:
+        CACHE_DIR = Path(cache_dir, *subdirs)
+    
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
