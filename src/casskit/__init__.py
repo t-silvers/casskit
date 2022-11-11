@@ -4,6 +4,7 @@ import sys
 # from .config import *
 from .config import set_cache
 from .io.tcga.get_tcga import build_tcga_cache, get_tcga
+from .models.latent.expression_pcs import BatchModelEPCS
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -29,5 +30,6 @@ __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 __all__ = [
     "set_cache",
     "build_tcga_cache",
-    "get_tcga"
+    "get_tcga",
+    "BatchModelEPCS"
 ]
