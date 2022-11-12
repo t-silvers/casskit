@@ -11,7 +11,7 @@ from sklearn.preprocessing import FunctionTransformer
 
 
 @FunctionTransformer
-def rank_inverse_normal_transform(A, k: float = 3.0/8):
+def rank_inverse_normal(A, k: float = 3.0/8):
     """Rank inverse normal transform, (R)INT
     
     INT(s) = Φ^-1 [(rank(s) - k) / (n - 2k + 1)]
