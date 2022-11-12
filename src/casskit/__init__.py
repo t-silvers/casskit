@@ -17,11 +17,11 @@ from .preprocess.expression import (
     ToCounts,
     VariationThreshold
 )
-from pipelines.gtex import GTEx
+from .pipelines.gtex import GTEx
 
-from io.annotate import build_ensembl_cache, get_ensembl, annotate_genes
-from io.ontology.get_ontology import build_ontology_cache, get_ontology
-from io.tcga.get_tcga import build_tcga_cache, get_tcga
+from .io.annotate import build_ensembl_cache, get_ensembl, annotate_genes
+from .io.ontology.get_ontology import build_ontology_cache, get_ontology
+from .io.tcga.get_tcga import build_tcga_cache, get_tcga
 
 
 logger = logging.getLogger(__name__)
