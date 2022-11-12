@@ -7,8 +7,10 @@ from qtl import norm as qtl_norm
 from scipy import stats
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import FunctionTransformer
+from typing import List
 
 from ..descriptors import OneOf
+from casskit.io import get_ensembl
 
 
 class VariationThreshold(BaseEstimator, TransformerMixin):
@@ -134,16 +136,31 @@ class ProteinCoding(BaseEstimator, TransformerMixin):
     """Filter out non-protein coding genes
     
     If in pipelin, must be run before other filtering steps.
+    
+    Parameters
+    ----------
+    genes: List[str]
+        List of gene names (as Ensembl gene ID) to filter
     """
-    def __init__(self, biotype: pd.Series):
-        self.biotype = biotype
+    def __init__(self, genes, assembly: str = "GRCh37"):
+        self.genes = genes
+        self.assembly = assembly
+
+    @property
+    def protein_coding_genes(self, biotype) -> List:
+        return (get_ensembl(self.assembly)
+                .query("gene_biotype == 'protein_coding'")
+                ["gene_id"]
+                .tolist())
 
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
-        return self.filter_protein_coding(X, self.biotype)
+        ix = self.filter_protein_coding(self.genes, self.protein_coding_genes)
+        return np.take(X, ix, axis=1)
     
     @staticmethod
-    def filter_protein_coding(data, biotype):
-        return data.loc[biotype == "protein_coding"]
+    def filter_protein_coding(X_genes, protein_coding_genes):
+        protein_coding = set(X_genes).intersection(protein_coding_genes)
+        return np.sort([X_genes.index(x) for x in protein_coding])

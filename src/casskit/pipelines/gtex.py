@@ -1,7 +1,7 @@
 # Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
 # License: MIT
 
-from typing import Dict
+from typing import Dict, List
 
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -26,12 +26,14 @@ class GTEx(BaseEstimator, TransformerMixin):
         self,
         units: OneOf("log2(count+1)", "counts") = "log2(count+1)",
         lib_size: np.ndarray = None,
+        genes: List[str] = None,
         min_cpm: float = 1,
         max_freq_zero: float = 0.3,
         cv2_min: float = 0.1,
     ):
         self.units = units
         self.lib_size = lib_size
+        self.genes = genes
         self.min_cpm = min_cpm
         self.max_freq_zero = max_freq_zero
         self.cv2_min = cv2_min
@@ -41,7 +43,7 @@ class GTEx(BaseEstimator, TransformerMixin):
         return Pipeline(
             [("As counts", ToCounts(units=self.units)),
              ("TMM", EdgeRCPM(lib_size=self.lib_size)),
-             ("Protein coding", ProteinCoding()),
+             ("Protein coding", ProteinCoding(genes=self.genes)),
              ("Filter low expression", CountThreshold(self.min_cpm, self.max_freq_zero)),
              ("Filter low variance", VariationThreshold(self.cv2_min)),
              ("RINT", RINT)]
