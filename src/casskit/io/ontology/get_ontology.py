@@ -1,9 +1,9 @@
 import pandas as pd
 
-from .biogrid import get_biogrid
-from .corum import get_corum
-from .cosmic import get_cosmic
-from .trrust import get_trrust
+from casskit.io.ontology.biogrid import get_biogrid
+from casskit.io.ontology.corum import get_corum
+from casskit.io.ontology.cosmic import get_cosmic
+from casskit.io.ontology.trrust import get_trrust
 
 
 def build_ontology_cache():
