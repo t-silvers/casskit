@@ -16,14 +16,14 @@ class PPSignal(Validator):
     def __init__(
         self,
         eval_func: str = "default",
-        tol: float = 0.5,
-        error_tol: float = 0.9,
+        tol: float = 0.8,
+        error_tol: float = 0.2,
         error_f: float = 0.1,
     ):
         self.eval_func = self.eval_funcs.get(eval_func)
-        if error_tol < tol:
+        if error_tol > tol:
             warnings.warn("Error threshold, error_tol, is "
-                          "less than warning threshold, tol.")
+                          "greater than warning threshold, tol.")
 
         self.tol = tol
         self.etol = error_tol

@@ -21,7 +21,7 @@ class GTEx(BaseEstimator, TransformerMixin):
     https://github.com/broadinstitute/gtex-pipeline/blob/master/qtl/leafcutter/src/cluster_prepare_fastqtl.py    
     """
     
-    data = PPSignal(tol=0.5, error_tol=0.9, error_f=0.2)
+    data = PPSignal(tol=0.9, error_tol=0.8, error_f=0.2)
     
     def __init__(
         self,
@@ -55,5 +55,11 @@ class GTEx(BaseEstimator, TransformerMixin):
     
     def transform(self, X):
         self.transformed = self.gtex_preprocess.transform(X)
+        self.data = {"original": X, "transformed": self.transformed}
+        return self.transformed
+    
+    def fit_transform(self, X):
+        """Custom fit_transform method for checks."""
+        self.transformed = self.gtex_preprocess.fit_transform(X)
         self.data = {"original": X, "transformed": self.transformed}
         return self.transformed
