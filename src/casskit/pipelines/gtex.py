@@ -42,10 +42,10 @@ class GTEx(BaseEstimator, TransformerMixin):
         self.pp_tol = pp_tol
         self.pp_etol = pp_etol
         self.pp_efrac = pp_efrac
-        self.set_validator()
 
-    def set_validator(self) -> None:
-        self.validator = PPSignal(tol=self.pp_tol, error_tol=self.pp_etol, error_f=self.pp_efrac)
+    @property
+    def validator(self) -> None:
+        return PPSignal(tol=self.pp_tol, error_tol=self.pp_etol, error_f=self.pp_efrac)
 
     @property
     def gtex_preprocess(self) -> Pipeline:
@@ -63,11 +63,11 @@ class GTEx(BaseEstimator, TransformerMixin):
     
     def transform(self, X):
         self.transformed = self.gtex_preprocess.transform(X)
-        self.validator = {"original": X, "transformed": self.transformed}
+        self.validator.validate({"original": X, "transformed": self.transformed})
         return self.transformed
     
-    def fit_transform(self, X):
-        """Custom fit_transform method for checks."""
-        self.transformed = self.gtex_preprocess.fit_transform(X)
-        self.validator = {"original": X, "transformed": self.transformed}
-        return self.transformed
+    # def fit_transform(self, X):
+    #     """Custom fit_transform method for checks."""
+    #     self.transformed = self.gtex_preprocess.fit_transform(X)
+    #     self.validator = {"original": X, "transformed": self.transformed}
+    #     return self.transformed
