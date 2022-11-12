@@ -75,7 +75,7 @@ class RINT(BaseEstimator, TransformerMixin):
         Note:
             - https://cran.r-project.org/web/packages/RNOmni/vignettes/RNOmni.html
         """
-        return stats.norm.ppf((stats.rankdata(A, method="average", axis=0) - k) / (A.shape[1] - 2*k + 1))
+        return stats.norm.ppf((stats.rankdata(A, method="average", axis=0) - k) / (A.shape[0] - 2*k + 1))
 
 class ToCounts(BaseEstimator, TransformerMixin):
     UNITS = ["log2(count+1)", "counts"]
