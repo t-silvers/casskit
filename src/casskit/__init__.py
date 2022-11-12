@@ -1,11 +1,11 @@
 import logging
 import sys
 
+from .config import set_cache
 from . import data, io
 from . import models as mod
 from . import pipelines as pipe
 from . import preprocess as pp
-from .config import set_cache
 
 
 logger = logging.getLogger(__name__)
