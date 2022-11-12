@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
@@ -14,7 +14,7 @@ import casskit.io.utils as io_utils
 class TRRUST(base.DataURLMixin):
     """Fetch TRRUST transcription factor data."""
 
-    cache_dir: Optional[Path] = config.CACHE_DIR
+    cache_dir: Optional[Path] = field(init=True, default=None)
     url: str = "https://www.grnpedia.org/trrust/data/trrust_rawdata.human.tsv"
 
     @io_utils.cache_on_disk
@@ -38,6 +38,8 @@ class TRRUST(base.DataURLMixin):
         return cls(cache_dir).fetch()
 
     def __post_init__(self):
+        if self.cache_dir is None:
+            self.cache_dir = Path(config.CACHE_DIR)
         self.set_cache(self.cache_dir)
 
 get_trrust = TRRUST.get

@@ -12,13 +12,11 @@ import casskit.io.base as base
 import casskit.io.utils as io_utils
 import casskit.config as config
 
-cache_dir = config.CACHE_DIR
-
 
 @dataclass
 class TCGABiolinksSubtype(base.DataURLMixin):
 
-    cache_dir: Optional[Path] = cache_dir
+    cache_dir: Optional[Path] = field(init=True, default=None)
     r_script: str = field(init=False, default=Path(__file__).parent / "tcgabiolinks.R")
     
     @io_utils.cache_on_disk
@@ -47,6 +45,9 @@ class TCGABiolinksSubtype(base.DataURLMixin):
             return data
         
     def __post_init__(self):
+        if self.cache_dir is None:
+            self.cache_dir = Path(config.CACHE_DIR)
+
         self.set_cache(self.cache_dir)
         self.r_script = Path(self.r_script).as_posix()
         

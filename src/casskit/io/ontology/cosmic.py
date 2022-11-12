@@ -1,7 +1,8 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 import logging
 from pathlib import Path
 import subprocess
+from typing import Optional
 
 import pandas as pd
 
@@ -21,7 +22,7 @@ class CancerGeneCensusCOSMIC:
     your own account credentials to access.
     """
     
-    cache_dir: Path = config.CACHE_DIR
+    cache_dir: Optional[Path] = field(init=True, default=None)
     acct_email: str = "tsilvers@stanford.edu"
     acct_pwd: str = "Public212Password&"
     
@@ -56,6 +57,8 @@ class CancerGeneCensusCOSMIC:
         return cls(cache_dir).fetch()
 
     def __post_init__(self):
+        if self.cache_dir is None:
+            self.cache_dir = Path(config.CACHE_DIR)
         self.set_cache(self.cache_dir)
 
 get_cosmic = CancerGeneCensusCOSMIC.get

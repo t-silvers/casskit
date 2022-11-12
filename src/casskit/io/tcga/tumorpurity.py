@@ -10,8 +10,6 @@ import casskit.io.base as base
 import casskit.utils as utils
 import casskit.config as config
 
-cache_dir = config.CACHE_DIR
-
 
 class TCGATumorPurityAran2015(base.ElsevierLink):
     """Tumor purity estimates.
@@ -27,11 +25,14 @@ class TCGATumorPurityAran2015(base.ElsevierLink):
     """
     def __init__(
         self,
-        cache_dir: Optional[Path] = cache_dir,
+        cache_dir: Optional[Path] = None,
         impute: bool = True,
         impute_method: str = "iterative",
         ret_recommended: bool = True,
     ):
+        if cache_dir is None:
+            cache_dir = Path(config.CACHE_DIR)
+
         super().__init__(
             url="https://static-content.springer.com/esm/art%3A10.1038%2Fncomms9971/MediaObjects/41467_2015_BFncomms9971_MOESM1236_ESM.xlsx",
             skiprows=3,

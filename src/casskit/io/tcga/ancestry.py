@@ -8,8 +8,6 @@ import casskit.io.utils as io_utils
 import casskit.utils as utils
 import casskit.config as config
 
-cache_dir = config.CACHE_DIR
-
 
 class TCGAAncestryPCs(base.DataURLMixin):
     
@@ -21,12 +19,15 @@ class TCGAAncestryPCs(base.DataURLMixin):
 
     def __init__(
         self,
-        cache_dir: Optional[Path] = cache_dir,
+        cache_dir: Optional[Path] = None,
         institute: str = "broad",
         sep: str = "\t",
     ):
         self.institute = institute
         self.sep = sep
+        if cache_dir is None:
+            cache_dir = Path(config.CACHE_DIR)
+
         self.set_cache(cache_dir)
     
     @io_utils.cache_on_disk

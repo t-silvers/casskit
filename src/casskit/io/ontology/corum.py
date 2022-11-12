@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
@@ -19,7 +19,7 @@ class CORUM(base.DataURLMixin):
     - complex names are not unique, but complex IDs are unique
     """
 
-    cache_dir: Optional[Path] = config.CACHE_DIR
+    cache_dir: Optional[Path] = field(init=True, default=None)
     url: str = "https://mips.helmholtz-muenchen.de/corum/download/releases/current/allComplexes.txt.zip"
     organism: str = "Human"
     
@@ -44,6 +44,8 @@ class CORUM(base.DataURLMixin):
         return cls(cache_dir).fetch()
 
     def __post_init__(self):
+        if self.cache_dir is None:
+            self.cache_dir = Path(config.CACHE_DIR)
         self.set_cache(self.cache_dir)
 
 get_corum = CORUM.get
