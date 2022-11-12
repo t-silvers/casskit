@@ -12,55 +12,44 @@ import pyranges as pr
 import casskit.io.utils as io_utils
 import casskit.config as config
 
-cache_dir = config.CACHE_DIR
-
 
 class EnsemblData:
     
-    # ensembl_object.species.reference_assemblies
+    # From ensembl_object.species.reference_assemblies
     PYENSEMBL_ASSEMBLIES = {"GRCh38": 77, "GRCh37": 75, "NCBI36": 54}
     
     def __init__(
         self,
         assembly: str = "GRCh37",
-        release: Optional[int] = 75,
-        cache_dir: Optional[Path] = cache_dir
+        cache_dir: Optional[Path] = config.CACHE_DIR
     ):
         self.assembly = assembly
-        if release is None:
-            self.release = self.PYENSEMBL_ASSEMBLIES[assembly]
-        else:
-            self.release = release
+        self.release = self.PYENSEMBL_ASSEMBLIES[assembly]
         self.set_cache(cache_dir)
 
     @property
     def ensembl(self) -> pyensembl.EnsemblRelease:
-        ensembl = pyensembl.EnsemblRelease(self.release)
-        if not ensembl.required_local_files_exist():
-            warnings.warn(f"Downloading GTF file for {self.assembly}...")
-            ensembl.download()
-            ensembl.index()
+        return pyensembl.EnsemblRelease(self.release)
         
-        return ensembl
-
     @property
     def gtf_path(self) -> Path:
-        """Path to GTF file.
-        
-        pyensembl.EnsemblRelease.gtf_path not working ...
-        """
+        """pyensembl.EnsemblRelease.gtf_path"""
         return Path(self.cache_dir, "pyensembl", self.assembly, f"ensembl{self.release}",
                     f"Homo_sapiens.{self.assembly}.{self.release}.gtf.gz")
 
     @property
     def cached_subset(self) -> pr.PyRanges:
-        return self.subset_to_genes()
-        
+        return self.subset_to_genes(self.gtf_path)
+
     def set_cache(self, cache_dir: Path) -> None:
         self.cache_dir = Path(cache_dir)
         
-        # Set pyensembl cache directory
+        # Check pyensembl cache
         os.environ['PYENSEMBL_CACHE_DIR'] = self.cache_dir.as_posix()
+        if not self.gtf_path.exists():
+            warnings.warn(f"Downloading GTF file for {self.assembly}...")
+            self.ensembl.download()
+            self.ensembl.index()
         
         # Set up local cache of subsetted GTF files
         self.path_cache = self.cache_dir / f"ensembl_{self.assembly}_{self.release}_subset.gtf"
@@ -68,16 +57,16 @@ class EnsemblData:
         self.write_cache = lambda data, cache: data.to_gtf(cache)
         
     @io_utils.cache_on_disk
-    def subset_to_genes(self) -> pr.PyRanges:
+    def subset_to_genes(self, gtf_path) -> pr.PyRanges:
         """Get gene feature from Ensembl.
         """
-        gr = pr.read_gtf(self.gtf_path)
+        gr = pr.read_gtf(gtf_path)
         return gr[gr.Feature == "gene"]
     
     @classmethod
     def build_caches(cls):
-        for assembly, release in cls.PYENSEMBL_ASSEMBLIES.items():
-            __ = cls(assembly, release).cached_subset
+        for assembly in cls.PYENSEMBL_ASSEMBLIES.keys():
+            __ = cls(assembly).cached_subset
 
     @classmethod
     def to_pyranges(cls, assembly: str):

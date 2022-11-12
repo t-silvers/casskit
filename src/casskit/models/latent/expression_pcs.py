@@ -1,6 +1,3 @@
-# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
-# License: MIT
-
 from typing import Dict
 
 import numpy as np
