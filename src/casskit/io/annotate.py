@@ -23,12 +23,14 @@ class EnsemblData:
     def __init__(
         self,
         assembly: str = "GRCh37",
-        release: Optional[int] = None,
+        release: Optional[int] = 75,
         cache_dir: Optional[Path] = cache_dir
     ):
         self.assembly = assembly
         if release is None:
             self.release = self.PYENSEMBL_ASSEMBLIES[assembly]
+        else:
+            self.release = release
         self.set_cache(cache_dir)
 
     @property
