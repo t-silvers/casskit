@@ -2,10 +2,10 @@ import logging
 import sys
 
 # from .config import *
+from . import io
+from . import models as mod
 from . import preprocess as pp
 from .config import set_cache
-from .io.tcga.get_tcga import build_tcga_cache, get_tcga
-from .models.latent.expression_pcs import BatchModelEPCS
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
@@ -29,9 +29,9 @@ finally:
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
 __all__ = [
+    "io",
     "pp",
+    "mod",
     "set_cache",
-    "build_tcga_cache",
-    "get_tcga",
     "BatchModelEPCS"
 ]
