@@ -26,13 +26,15 @@ except PackageNotFoundError:  # pragma: no cover
 finally:
     del version, PackageNotFoundError
 
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
+# __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
-__all__ = [
-    "io",
-    "mod",
-    "pipe",
-    "pp",
-    "set_cache",
-    "BatchModelEPCS"
-]
+# __all__ = [
+#     "io",
+#     "mod",
+#     "pipe",
+#     "pp",
+#     "set_cache",
+#     "BatchModelEPCS"
+# ]
+
+sys.modules.update({f'{__name__}.{m}': globals()[m] for m in ["io", "mod", "pipe", "pp"]})
