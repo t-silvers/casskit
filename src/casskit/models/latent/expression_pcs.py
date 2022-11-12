@@ -15,11 +15,19 @@ from .base import BatchModel
 class BatchModelEPCS(BatchModel):
     """Estimate and adjust for expression PCs.
     
+    Adapted from: PCAForQTL https://github.com/heatherjzhou/PCAForQTL
+    
+    Note:
+    -----
+    "we use the fully processed gene expression matrix for Colon - Transverse
+    from GTEx V8 (2020) as an example. In GTEx's case, “fully processed”
+    means TPM normalized, filtered, TMM normalized, and inverse normal
+    transformed." - https://github.com/heatherjzhou/PCAForQTL
+    
     """
     def __init__(self, select_method, **kwargs):
-        super().__init__()
+        super().__init__(**kwargs)
         self.select_method = select_method
-        self.kwargs = kwargs
 
     @property
     def ncomp_methods(self) -> Dict:
@@ -92,6 +100,9 @@ class BatchModelEPCS(BatchModel):
         self.pca_ = PCA(n_components=ncomp).fit(X)
         self.components_ = self.pca_.components_
         self.n_components_ = self.pca_.n_components_
+
+    def filter_known_covariates():
+        pass
 
     def fit(self, X, y=None):
         """    

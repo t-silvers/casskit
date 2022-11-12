@@ -78,7 +78,10 @@ Comparing with related packages
      - Python
      - Yes
      - a database of Disease-Gene Associations
-
+   * - `dalmatian`_
+     - Python
+     - Yes
+     - a collection of high-level functions for interacting with Firecloud via Pandas dataframes
 
 .. Refs
 .. =====
@@ -95,3 +98,4 @@ Comparing with related packages
 .. _sgkit: https://pystatgen.github.io/sgkit/latest/
 .. _TCGAutils: https://github.com/waldronlab/TCGAutils
 .. _TCGAbiolinks: https://github.com/BioinformaticsFMRP/TCGAbiolinks
+.. _dalmatian: https://github.com/getzlab/dalmatian
