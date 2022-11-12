@@ -1,6 +1,3 @@
-# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
-# License: MIT
-
 from typing import Dict, List
 
 import numpy as np
@@ -50,10 +47,7 @@ class GTEx(BaseEstimator, TransformerMixin):
         )
 
     def fit(self, X, y=None):
-        return self
+        return self.gtex_preprocess.fit(X, y)
     
-    def transform(self, X, y=None):
-        return self.gtex_preprocess.transform(X, y)
-    
-    # def fit_transform(self, X, y=None):
-    #     return self.gtex_preprocess.fit_transform(X, y)
+    def transform(self, X):
+        return self.gtex_preprocess.transform(X)
