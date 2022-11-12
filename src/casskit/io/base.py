@@ -7,7 +7,7 @@ from urllib.request import Request, urlopen
 
 import pandas as pd
 
-import casskit.io.utils as io_utils
+# import casskit.io.utils as io_utils
 
 
 class DataURLMixin(ABC):
