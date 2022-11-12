@@ -69,11 +69,15 @@ class PPSignal(Validator):
                           "for some features. Please check your preprocessing steps.")
 
         if (corr_s < self.etol).any():
-            if (corr_s < self.etol).sum() > self.ef:
-                raise ValueError("Correlation between original and transformed data "
-                                f"is below the error threshold {self.etol} for more "
-                                f" than {self.ef:.2%} of features."
-                                "Please check your preprocessing steps.")
+            try:
+                if (corr_s < .8).value_counts(normalize=True).loc[True] > self.ef:
+                    raise ValueError("Correlation between original and transformed data "
+                                    f"is below the error threshold {self.etol} for more "
+                                    f" than {self.ef:.2%} of features."
+                                    "Please check your preprocessing steps.")
+            except KeyError:
+                raise KeyError("Correlation between original and transformed data "
+                               "is below the error threshold for all features.")
 
         perc_above_tol = (corr_s > self.tol).value_counts(normalize=True).loc[True]
         print(f"{perc_above_tol:.2%} of features above threshold {self.tol}.")
