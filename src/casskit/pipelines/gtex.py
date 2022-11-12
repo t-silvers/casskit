@@ -66,7 +66,7 @@ class GTEx(BaseEstimator, TransformerMixin):
         self.fit(X)
         return self.gtex_preprocess.transform(X)
     
-    def fit_transform(self, X):
+    def fit_transform(self, X, y=None):
         """Custom fit_transform method for checks."""
         self.transformed = self.gtex_preprocess.fit_transform(X)
         self.validator.validate({"original": X, "transformed": self.transformed})
