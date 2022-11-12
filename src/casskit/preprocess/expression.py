@@ -144,7 +144,7 @@ class ProteinCoding(BaseEstimator, TransformerMixin):
         self.assembly = assembly
 
     @property
-    def protein_coding_genes(self, biotype) -> List:
+    def protein_coding_genes(self) -> List:
         return (get_ensembl(self.assembly)
                 .query("gene_biotype == 'protein_coding'")
                 ["gene_id"]
