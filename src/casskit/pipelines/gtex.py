@@ -42,10 +42,10 @@ class GTEx(BaseEstimator, TransformerMixin):
         self.pp_tol = pp_tol
         self.pp_etol = pp_etol
         self.pp_efrac = pp_efrac
+        self.set_validator()
 
-    @property
-    def validator(self):
-        return PPSignal(tol=self.pp_tol, error_tol=self.pp_etol, error_f=self.pp_efrac)
+    def set_validator(self) -> None:
+        self.validator = PPSignal(tol=self.pp_tol, error_tol=self.pp_etol, error_f=self.pp_efrac)
 
     @property
     def gtex_preprocess(self) -> Pipeline:
