@@ -1,5 +1,6 @@
 from . import annotate
 from . import ontology
+from . import tcga
 
 # from .annotate import build_ensembl_cache, get_ensembl, annotate_genes
 # from .ontology.get_ontology import build_ontology_cache, get_ontology
@@ -10,4 +11,5 @@ __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 __all__ = [
     "annotate",
     "ontology",
+    "tcga",
 ]
