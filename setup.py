@@ -6,11 +6,13 @@
     PyScaffold helps you to put up the scaffold of your new Python project.
     Learn more under: https://pyscaffold.org/
 """
-from setuptools import setup, find_namespace_packages
+from setuptools import setup
 
 if __name__ == "__main__":
     try:
-        setup(use_scm_version={"version_scheme": "no-guess-dev"})
+        setup(
+            use_scm_version={"version_scheme": "no-guess-dev"},
+        )
     except:  # noqa
         print(
             "\n\nAn error occurred while building the project, "
@@ -19,8 +21,3 @@ if __name__ == "__main__":
             "   pip install -U setuptools setuptools_scm wheel\n\n"
         )
         raise
-    
-    setup(
-        name='casskit-io',
-        packages=find_namespace_packages(include=['casskit.*'])
-    )
