@@ -1,11 +1,11 @@
 import logging
 import sys
 
-from . import data
-from . import io
+from . import data, io
 from . import models as mod
 from . import pipelines as pipe
 from . import preprocess as pp
+from .config import set_cache
 
 
 logger = logging.getLogger(__name__)
@@ -29,4 +29,11 @@ finally:
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
-__all__ = ["data", "io", "mod", "pipe", "pp"]
+__all__ = [
+    "set_cache",
+    "data",
+    "io",
+    "mod",
+    "pipe",
+    "pp"
+]
