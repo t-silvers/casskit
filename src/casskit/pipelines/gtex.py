@@ -26,7 +26,7 @@ class GTEx(BaseEstimator, TransformerMixin):
         genes: List[str] = None,
         min_cpm: float = 1,
         max_freq_zero: float = 0.3,
-        cv2_min: float = 0.1,
+        cv2_min: float = 0.8,
     ):
         self.units = units
         self.lib_size = lib_size

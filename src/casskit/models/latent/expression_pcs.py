@@ -22,9 +22,10 @@ class BatchModelEPCS(BatchModel):
     transformed." - https://github.com/heatherjzhou/PCAForQTL
     
     """
-    def __init__(self, select_method, **kwargs):
+    def __init__(self, select_method, ncomp: int = None, **kwargs):
         super().__init__(**kwargs)
         self.select_method = select_method
+        self.ncomp = ncomp
 
     @property
     def ncomp_methods(self) -> Dict:
@@ -93,8 +94,8 @@ class BatchModelEPCS(BatchModel):
     def buja_eyuboglu(self):
         raise NotImplementedError
 
-    def top_k(self, X, ncomp=3) -> PCA:        
-        self.pca_ = PCA(n_components=ncomp).fit(X)
+    def top_k(self, X) -> PCA:        
+        self.pca_ = PCA(n_components=self.ncomp).fit(X)
         self.components_ = self.pca_.components_
         self.n_components_ = self.pca_.n_components_
 
