@@ -43,6 +43,9 @@ class BioGRID(base.DataURLMixin):
     def __post_init__(self):
         if self.cache_dir is None:
             self.cache_dir = config.CACHE_DIR
+        print(self.cache_dir)
+        self.cache_dir = config.get_cache()
+        print(self.cache_dir)
         self.set_cache(self.cache_dir)
 
 get_biogrid = BioGRID.get
