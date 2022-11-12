@@ -19,7 +19,7 @@ class CORUM(base.DataURLMixin):
     - complex names are not unique, but complex IDs are unique
     """
 
-    cache_dir: Optional[Path] = field(init=True, default=config.get_cache())
+    cache_dir: Optional[Path] = field(init=True, default=None)
     url: str = "https://mips.helmholtz-muenchen.de/corum/download/releases/current/allComplexes.txt.zip"
     organism: str = "Human"
     
@@ -35,15 +35,17 @@ class CORUM(base.DataURLMixin):
                 .explode(column='subunits_gene_name'))
 
     def set_cache(self, cache_dir: Path) -> Path:
-        self.path_cache = Path(cache_dir, f"corum.pkl")
+        self.path_cache = Path(cache_dir, "corum.pkl")
         self.read_cache = lambda cache: pd.read_pickle(cache)
         self.write_cache = lambda data, cache: data.to_pickle(cache)
 
     @classmethod
-    def get(cls, cache_dir: Path = config.CACHE_DIR) -> pd.DataFrame:
-        return cls(cache_dir).fetch()
+    def get(cls) -> pd.DataFrame:
+        return cls().fetch()
 
     def __post_init__(self):
+        if self.cache_dir is None:
+            self.cache_dir = config.CACHE_DIR
         self.set_cache(self.cache_dir)
 
 get_corum = CORUM.get

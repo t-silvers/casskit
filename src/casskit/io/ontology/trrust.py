@@ -14,7 +14,7 @@ import casskit.io.utils as io_utils
 class TRRUST(base.DataURLMixin):
     """Fetch TRRUST transcription factor data."""
 
-    cache_dir: Optional[Path] = field(init=True, default=config.get_cache())
+    cache_dir: Optional[Path] = field(init=True, default=None)
     url: str = "https://www.grnpedia.org/trrust/data/trrust_rawdata.human.tsv"
 
     @io_utils.cache_on_disk
@@ -25,7 +25,7 @@ class TRRUST(base.DataURLMixin):
                 .pipe(utils.column_janitor))
 
     def set_cache(self, cache_dir: Path) -> Path:
-        self.path_cache = Path(cache_dir, f"trrust.pkl")
+        self.path_cache = Path(cache_dir, "trrust.pkl")
         self.read_cache = lambda cache: pd.read_pickle(cache)
         self.write_cache = lambda data, cache: data.to_pickle(cache)
 
@@ -34,10 +34,12 @@ class TRRUST(base.DataURLMixin):
         return s.str.lower().replace({'repression': -1, 'unknown': 0, 'activation': 1})
 
     @classmethod
-    def get(cls, cache_dir: Path = config.CACHE_DIR) -> pd.DataFrame:
-        return cls(cache_dir).fetch()
+    def get(cls) -> pd.DataFrame:
+        return cls().fetch()
 
     def __post_init__(self):
+        if self.cache_dir is None:
+            self.cache_dir = config.CACHE_DIR
         self.set_cache(self.cache_dir)
 
 get_trrust = TRRUST.get
