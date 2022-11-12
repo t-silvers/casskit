@@ -12,8 +12,6 @@ import casskit.io.utils as io_utils
 import casskit.descriptors as descriptors
 import casskit.config as config
 
-cache_dir = config.get_cache()
-
 
 TCGA_CANCERS = [
     "TCGA-ACC", "TCGA-BLCA", "TCGA-BRCA", "TCGA-CESC", "TCGA-CHOL",
@@ -55,7 +53,7 @@ class TCGAXenaLoader(base.DataURLMixin):
         self,
         cancer: str,
         xena_data: XenaData,
-        cache_dir: Optional[Path] = cache_dir,
+        cache_dir: Optional[Path] = config.get_cache(),
     ):
         io_utils.check_package_version("pyarrow")
         
@@ -94,14 +92,14 @@ class TCGAXenaLoader(base.DataURLMixin):
         self.write_cache = lambda data, cache: data.to_parquet(cache, engine="pyarrow")
 
     @classmethod
-    def get(cls, cancer: str, data: str, cache_dir: Path = cache_dir) -> pd.DataFrame:
+    def get(cls, cancer: str, data: str, cache_dir: Path = config.get_cache()) -> pd.DataFrame:
         return cls(cancer, TCGA_XENA_DATASETS[data], cache_dir).raw_data
 
     @classmethod
     def build_cache(
         cls,
         cancer: str,
-        cache_dir: Path = cache_dir,
+        cache_dir: Path = config.get_cache(),
         overwrite: bool = False
     ) -> None:
         for xena_data in TCGA_XENA_DATASETS.values():
