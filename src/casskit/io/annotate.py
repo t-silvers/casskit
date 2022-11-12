@@ -65,6 +65,7 @@ class EnsemblData:
     
     @classmethod
     def build_caches(cls):
+        os.environ['PYENSEMBL_CACHE_DIR'] = cls(assembly).cache_dir.as_posix()
         for assembly in cls.PYENSEMBL_ASSEMBLIES.keys():
             __ = cls(assembly).cached_subset
 
