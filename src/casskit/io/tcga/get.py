@@ -1,3 +1,8 @@
+from distutils.log import warn
+from logging import warning
+import urllib
+import warnings
+
 from casskit.io.tcga.gdc_xena import build_tcga, get_gdc_tcga
 from casskit.io.tcga.ancestry import get_ancestry_pcs
 from casskit.io.tcga.subtype import get_subtypes
@@ -29,5 +34,8 @@ def get_tcga(feature, cancer=None):
         case _:
             try:
                 return get_gdc_tcga(cancer, feature)
+            except urllib.error.HTTPError:
+                warnings.warn(f"URL for {feature} not valid.")
+                pass
             except Exception as e:
                 raise ValueError(f"Feature {feature} not found.") from e

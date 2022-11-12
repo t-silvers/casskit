@@ -45,7 +45,7 @@ class EdgeRCPM(BaseEstimator, TransformerMixin):
         with argument lib_size.
         """
         if lib_size is None:
-            lib_size = counts_df.sum(axis=1)
+            lib_size = counts_df.sum(axis=0)
         tmm = qtl_norm.edger_calcnormfactors(counts_df)
         lib_size *= tmm
         
