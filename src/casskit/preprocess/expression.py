@@ -38,6 +38,7 @@ class EdgeRCPM(BaseEstimator, TransformerMixin):
     def transform(self, X):
         return self.edger_cpm(X.T, self.lib_size).T
 
+    @staticmethod
     def edger_cpm(counts_df, lib_size=None):
         """
         Reproduces qtl_norm.edger_cpm, which reproduces edgeR::cpm.DGEList,
