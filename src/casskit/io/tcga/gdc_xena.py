@@ -53,7 +53,7 @@ class TCGAXenaLoader(base.DataURLMixin):
         self,
         cancer: str,
         xena_data: XenaData,
-        cache_dir: Optional[Path] = config.CACHE_DIR,
+        cache_dir: Optional[Path] = None,
     ):
         io_utils.check_package_version("pyarrow")
         
@@ -63,8 +63,8 @@ class TCGAXenaLoader(base.DataURLMixin):
         self.compression = xena_data.compression
 
         self.stem = f"{self.cancer}.{self.omic}"
-        # if cache_dir is None:
-        #     cache_dir = config.get_cache()
+        if cache_dir is None:
+            cache_dir = config.get_cache()
 
         self.set_cache(cache_dir)
         self.raw_data = self.fetch()
@@ -102,13 +102,13 @@ class TCGAXenaLoader(base.DataURLMixin):
     def build_cache(
         cls,
         cancer: str,
-        cache_dir: Path = config.CACHE_DIR,
+        cache_dir: Path = None,
         overwrite: bool = False
     ) -> None:
         for xena_data in TCGA_XENA_DATASETS.values():
             print(f"Building {xena_data}")
-            # if cache_dir is None:
-            #     cache_dir = config.get_cache()
+            if cache_dir is None:
+                cache_dir = config.get_cache()
 
             # exceptions to patterns
             gzip_exceptions = (xena_data.omic == "GDC_phenotype" or cancer == "GDC-PANCAN")

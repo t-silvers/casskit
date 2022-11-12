@@ -12,8 +12,6 @@ import pyranges as pr
 import casskit.io.utils as io_utils
 import casskit.config as config
 
-cache_dir = config.get_cache()
-
 
 class EnsemblData:
     
@@ -23,10 +21,12 @@ class EnsemblData:
     def __init__(
         self,
         assembly: str = "GRCh37",
-        cache_dir: Optional[Path] = cache_dir
+        cache_dir: Optional[Path] = None
     ):
         self.assembly = assembly
         self.release = self.PYENSEMBL_ASSEMBLIES[assembly]
+        if cache_dir is None:
+            cache_dir = Path(config.CACHE_DIR)
         self.set_cache(cache_dir)
 
     @property
