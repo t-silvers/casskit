@@ -9,7 +9,7 @@ from .config import set_cache
 
 from .models.latent.expression_pcs import BatchModelEPCS as ePCS
 
-from preprocess.expression import (
+from .preprocess.expression import (
     CountThreshold,
     EdgeRCPM,
     ProteinCoding,
