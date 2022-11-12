@@ -143,13 +143,7 @@ class ProteinCoding(BaseEstimator, TransformerMixin):
     def __init__(self, genes, assembly: str = "GRCh37"):
         self.genes = genes
         self.assembly = assembly
-
-    @property
-    def protein_coding_genes(self) -> List:
-        return (get_ensembl(self.assembly)
-                .query("gene_biotype == 'protein_coding'")
-                ["gene_id"]
-                .tolist())
+        self.protein_coding_genes = self.get_protein_coding(assembly)
 
     def fit(self, X, y=None):
         return self
@@ -157,6 +151,13 @@ class ProteinCoding(BaseEstimator, TransformerMixin):
     def transform(self, X):
         ix = self.filter_protein_coding(self.genes, self.protein_coding_genes)
         return np.take(X, ix, axis=1)
+
+    @staticmethod
+    def get_protein_coding(assembly) -> List:
+        return (get_ensembl(assembly)
+                .query("gene_biotype == 'protein_coding'")
+                ["gene_id"]
+                .tolist())
     
     @staticmethod
     def filter_protein_coding(X_genes, protein_coding_genes):

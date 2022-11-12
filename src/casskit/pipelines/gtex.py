@@ -43,7 +43,7 @@ class GTEx(BaseEstimator, TransformerMixin):
              ("Protein coding", ProteinCoding(genes=self.genes)),
              ("Filter low expression", CountThreshold(self.min_cpm, self.max_freq_zero)),
              ("Filter low variance", VariationThreshold(self.cv2_min)),
-             ("RINT", RINT)]
+             ("RINT", RINT())]
         )
 
     def fit(self, X, y=None):
