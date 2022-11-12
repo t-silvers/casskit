@@ -104,6 +104,8 @@ class TCGAXenaLoader(base.DataURLMixin):
     ) -> None:
         for xena_data in TCGA_XENA_DATASETS.values():
             print(cache_dir)
+            print(config.CACHE_DIR)
+            print(config.get_cache())
             print(f"Building {xena_data}")
 
             # exceptions to patterns
