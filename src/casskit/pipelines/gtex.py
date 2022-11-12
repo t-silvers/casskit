@@ -50,7 +50,10 @@ class GTEx(BaseEstimator, TransformerMixin):
         )
 
     def fit(self, X, y=None):
-        return self.gtex_preprocess.fit(X, y)
+        return self
     
     def transform(self, X, y=None):
-        return self.gtex_preprocess.fit(X, y)
+        return self.gtex_preprocess.transform(X, y)
+    
+    # def fit_transform(self, X, y=None):
+    #     return self.gtex_preprocess.fit_transform(X, y)
