@@ -14,7 +14,7 @@ import casskit.io.utils as io_utils
 class BioGRID(base.DataURLMixin):
     """Fetch BioGRID interaction data."""
 
-    cache_dir: Optional[Path] = field(init=True, default=config.CACHE_DIR)
+    cache_dir: Optional[Path] = field(init=True, default=None)
     url: str = "https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-4.4.212/BIOGRID-ALL-4.4.212.tab3.zip"
     organism: str = "Homo sapiens"
     
@@ -41,6 +41,8 @@ class BioGRID(base.DataURLMixin):
         return cls().fetch()
 
     def __post_init__(self):
+        if self.cache_dir is None:
+            self.cache_dir = config.CACHE_DIR
         self.set_cache(self.cache_dir)
 
 get_biogrid = BioGRID.get
