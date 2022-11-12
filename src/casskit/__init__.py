@@ -1,7 +1,7 @@
 import logging
 import sys
 
-from . import io
+from .io import *
 from . import preprocess as pp
 
 logger = logging.getLogger(__name__)
