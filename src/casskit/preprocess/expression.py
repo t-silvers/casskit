@@ -96,11 +96,7 @@ class ToCounts(BaseEstimator, TransformerMixin):
         return (np.exp2(x) - 1).astype(int)
 
 class CountThreshold(BaseEstimator, TransformerMixin):
-    METHODS = ["count"]
-    method = OneOf(*METHODS)
-    
-    def __init__(self, method: str = "count", min_cpm: int = 1, max_freq_zero: float = 0.3):
-        self.method = method
+    def __init__(self, min_cpm: int = 1, max_freq_zero: float = 0.3):
         self.min_cpm = min_cpm
         self.max_freq_zero = max_freq_zero
 
