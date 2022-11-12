@@ -59,7 +59,8 @@ class RINT(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
-        return self.rank_inverse_normal_transform(X, self.k)
+        return pd.DataFrame(self.rank_inverse_normal_transform(X, self.k),
+                            index=X.index, columns=X.columns)
 
     @staticmethod
     def rank_inverse_normal_transform(A, k: float = 3.0/8):
