@@ -1,7 +1,6 @@
 import logging
 import sys
 
-# from .config import *
 from . import io
 from . import models as mod
 from . import pipelines as pipe
