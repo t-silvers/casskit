@@ -12,12 +12,12 @@
 #     "get_tcga",
 # ]
 
-from . import ontology
-from . import tcga
+from .ontology import get_ontology
+from .tcga import get_tcga
 
 __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
 __all__ = [
     "ontology",
-    "tcga"
+    "get_tcga"
 ]
