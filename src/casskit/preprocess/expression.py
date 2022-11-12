@@ -6,8 +6,8 @@ import pandas as pd
 from qtl import norm as qtl_norm
 from scipy.special import erfinv
 from scipy.stats import rankdata, norm
-from sklearn.base import TransformerMixin
-from sklearn.preprocessing import BaseEstimator, FunctionTransformer
+from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.preprocessing import FunctionTransformer
 
 from ..descriptors import OneOf
 
