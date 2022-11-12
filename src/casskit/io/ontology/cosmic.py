@@ -22,7 +22,7 @@ class CancerGeneCensusCOSMIC:
     your own account credentials to access.
     """
     
-    cache_dir: Optional[Path] = field(init=True, default=None)
+    cache_dir: Optional[Path] = field(init=True, default=config.get_cache())
     acct_email: str = "tsilvers@stanford.edu"
     acct_pwd: str = "Public212Password&"
     
@@ -57,8 +57,6 @@ class CancerGeneCensusCOSMIC:
         return cls(cache_dir).fetch()
 
     def __post_init__(self):
-        if self.cache_dir is None:
-            self.cache_dir = Path(config.CACHE_DIR)
         self.set_cache(self.cache_dir)
 
 get_cosmic = CancerGeneCensusCOSMIC.get
