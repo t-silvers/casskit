@@ -4,6 +4,7 @@ import sys
 # from .config import *
 from . import io
 from . import models as mod
+from . import pipelines as pipe
 from . import preprocess as pp
 from .config import set_cache
 
@@ -30,8 +31,9 @@ __path__ = __import__('pkgutil').extend_path(__path__, __name__)
 
 __all__ = [
     "io",
-    "pp",
     "mod",
+    "pipe",
+    "pp",
     "set_cache",
     "BatchModelEPCS"
 ]

@@ -3,12 +3,18 @@
 
 import numpy as np
 import pandas as pd
-import qtl
+from qtl import norm as qtl_norm
 from scipy.special import erfinv
 from scipy.stats import rankdata, norm
 from sklearn.base import TransformerMixin
-from sklearn.preprocessing import FunctionTransformer
+from sklearn.preprocessing import BaseEstimator, FunctionTransformer
 
+from ..descriptors import OneOf
+
+
+@FunctionTransformer
+def edger_cpm(A):
+    return qtl_norm.edger_cpm(A.T).T
 
 @FunctionTransformer
 def rank_inverse_normal(A, k: float = 3.0/8):
@@ -25,19 +31,25 @@ def rank_inverse_normal(A, k: float = 3.0/8):
     """
     return norm.ppf((rankdata(A, method="average", axis=1) - k) / (A.shape[1] - 2*k + 1))
 
-
-class ExpressionPreprocess(TransformerMixin):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self.kwargs = kwargs
+class ToCounts(BaseEstimator, TransformerMixin):
+    UNITS = ["log2(count+1)", "counts"]
+    units = OneOf(*UNITS)
     
-    @property
-    def library_size(self) -> pd.Series:
-        """Library size used to normalize the data."""
-        if self.units == 'count':
-            return self.data.sum(axis=0).astype(int)
+    def __init__(self, units: str = "log2(count+1)"):
+        self.units = units
 
-        return self.data.sum(axis=0)
+    def fit(self, X, y=None):
+        return self
+
+    def transform(self, X):
+        if self.units == "log2(count+1)":
+            return self.log21p_to_abs(X)
+        elif self.units == "counts":
+            return X
+
+    @staticmethod
+    def log21p_to_abs(x):
+        return (np.exp2(x) - 1).astype(int)
 
 
 
