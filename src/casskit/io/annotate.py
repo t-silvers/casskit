@@ -99,7 +99,7 @@ class EnsemblData:
         return cls.annotate_pyranges(assembly, identifier, gene_ids).df
 
 
-build_caches = EnsemblData.build_caches
+build_ensembl_cache = EnsemblData.build_caches
 """"""
 
 get_ensembl = EnsemblData.to_df
