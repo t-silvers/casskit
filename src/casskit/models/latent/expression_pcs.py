@@ -94,7 +94,7 @@ class BatchModelEPCS(BatchModel):
     def buja_eyuboglu(self):
         raise NotImplementedError
 
-    def top_k(self, X) -> PCA:        
+    def top_k(self, X) -> PCA:
         self.pca_ = PCA(n_components=self.ncomp).fit(X)
         self.components_ = self.pca_.components_
         self.n_components_ = self.pca_.n_components_
@@ -112,7 +112,7 @@ class BatchModelEPCS(BatchModel):
         return self
 
     def transform(self, X, y=None):
-        return self.pca_.inverse_transform(self.pca_.transform(X))
+        return pd.DataFrame(self.pca_.inverse_transform(self.pca_.transform(X)), index=X.index, columns=X.columns)
 
     def _fit(self, X):
         self.ncomp_methods[self.select_method](X, **self.kwargs)

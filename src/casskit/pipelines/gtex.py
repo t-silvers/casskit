@@ -5,6 +5,7 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 
 from casskit.descriptors import OneOf
+from casskit.preprocess.utils import PPSignal
 from casskit.preprocess.expression import (
     CountThreshold,
     EdgeRCPM,
@@ -19,6 +20,9 @@ class GTEx(BaseEstimator, TransformerMixin):
     """
     https://github.com/broadinstitute/gtex-pipeline/blob/master/qtl/leafcutter/src/cluster_prepare_fastqtl.py    
     """
+    
+    data = PPSignal(tol=0.5, error_tol=0.9, error_f=0.2)
+    
     def __init__(
         self,
         units: OneOf("log2(count+1)", "counts") = "log2(count+1)",
@@ -50,4 +54,6 @@ class GTEx(BaseEstimator, TransformerMixin):
         return self.gtex_preprocess.fit(X, y)
     
     def transform(self, X):
-        return self.gtex_preprocess.transform(X)
+        self.transformed = self.gtex_preprocess.transform(X)
+        self.data = {"original": X, "transformed": self.transformed}
+        return self.transformed
