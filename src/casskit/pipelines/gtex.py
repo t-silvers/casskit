@@ -8,28 +8,44 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.pipeline import Pipeline
 
 from ..descriptors import OneOf
-from ..preprocess import EdgeRCPM, RINT, ToCounts
+from ..preprocess import (
+    CountThreshold,
+    EdgeRCPM,
+    ProteinCoding,
+    RINT,
+    ToCounts,
+    VariationThreshold
+)
 
 
 class GTEx(BaseEstimator, TransformerMixin):
     """
-    https://github.com/broadinstitute/gtex-pipeline/blob/master/qtl/leafcutter/src/cluster_prepare_fastqtl.py
-    
-    we use the fully processed gene expression matrix for Colon - Transverse
-    from GTEx V8 (2020) as an example. In GTEx's case, “fully processed”
-    means TPM normalized, filtered, TMM normalized, and inverse normal
-    transformed
+    https://github.com/broadinstitute/gtex-pipeline/blob/master/qtl/leafcutter/src/cluster_prepare_fastqtl.py    
     """
-    def __init__(self, units: OneOf("log2(count+1)", "counts") = "log2(count+1)"):
+    def __init__(
+        self,
+        units: OneOf("log2(count+1)", "counts") = "log2(count+1)",
+        lib_size: np.ndarray = None,
+        min_cpm: float = 1,
+        max_freq_zero: float = 0.3,
+        cv2_min: float = 0.1,
+    ):
         self.units = units
+        self.lib_size = lib_size
+        self.min_cpm = min_cpm
+        self.max_freq_zero = max_freq_zero
+        self.cv2_min = cv2_min
 
     @property
     def gtex_preprocess(self) -> Pipeline:
-        return Pipeline([
-            ("to counts", ToCounts(units=self.units)),
-            ("TMM", EdgeRCPM),
-            ("RINT", RINT)
-        ])
+        return Pipeline(
+            [("As counts", ToCounts(units=self.units)),
+             ("TMM", EdgeRCPM(lib_size=self.lib_size)),
+             ("Protein coding", ProteinCoding()),
+             ("Filter low expression", CountThreshold(self.min_cpm, self.max_freq_zero)),
+             ("Filter low variance", VariationThreshold(self.cv2_min)),
+             ("RINT", RINT)]
+        )
 
     def fit(self, X, y=None):
         return self.gtex_preprocess.fit(X, y)

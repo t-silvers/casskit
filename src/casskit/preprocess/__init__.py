@@ -1,6 +1,18 @@
-from .expression import rank_inverse_normal as RINT
-from .expression import edger_cpm as EdgeRCPM
-from .expression import ToCounts
+from .expression import (
+    CountThreshold,
+    EdgeRCPM,
+    ProteinCoding,
+    RINT,
+    ToCounts,
+    VariationThreshold
+)
 
 
-__all__ = ["RINT", "EdgeRCPM", "ToCounts"]
+__all__ = [
+    "RINT",
+    "EdgeRCPM",
+    "ToCounts",
+    "CountThreshold",
+    "ProteinCoding",
+    "VariationThreshold"
+]
