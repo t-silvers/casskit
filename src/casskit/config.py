@@ -32,8 +32,11 @@ def set_cache(cache_dir, subdirs=[".cache", _CACHE_BASE_SUBDIR]):
     """Set cache directory."""
     global CACHE_DIR
     CACHE_DIR = Path(cache_dir)
-    os.environ[_CACHE_DIR_ENV_KEY] = cache_dir
     if len(subdirs) > 0:
         CACHE_DIR = Path(cache_dir, *subdirs)
     
     CACHE_DIR.mkdir(parents=True, exist_ok=True)
+    
+def get_cache():
+    """Get cache directory."""
+    return CACHE_DIR

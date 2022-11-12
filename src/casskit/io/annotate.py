@@ -12,7 +12,7 @@ import pyranges as pr
 import casskit.io.utils as io_utils
 import casskit.config as config
 
-cache_dir = config.CACHE_DIR
+cache_dir = config.get_cache()
 
 
 class EnsemblData:
