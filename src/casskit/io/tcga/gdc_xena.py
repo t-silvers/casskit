@@ -105,6 +105,7 @@ class TCGAXenaLoader(base.DataURLMixin):
         overwrite: bool = False
     ) -> None:
         for xena_data in TCGA_XENA_DATASETS.values():
+            print(cache_dir)
             print(f"Building {xena_data}")
 
             # exceptions to patterns
