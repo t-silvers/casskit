@@ -3,6 +3,7 @@ from pathlib import Path
 import pkg_resources
 import subprocess
 from typing import Any, Callable, Dict, List, Union
+import warnings
 
 import pandas as pd
 
@@ -12,7 +13,7 @@ def cache_on_disk(f: Callable) -> Callable:
     
     Light-weight caching decorator that caches class function output on disk.
     This decorator will only work on functions that return a single pandas
-    DataFrame object.    
+    DataFrame object.
     """
     @wraps(f)
     def wrapper(self, *args, **kwargs):
@@ -27,7 +28,10 @@ def cache_on_disk(f: Callable) -> Callable:
                 print(f"Caching to disk: {cache}")
                 Path(cache).parent.mkdir(exist_ok=True, parents=True)
                 data = f(self, *args, **kwargs)
-                self.write_cache(data, cache)
+                if (data is not None and data.empty is False):
+                    self.write_cache(data, cache)
+                else:
+                    warnings.warn(f"Data is empty. Not writing to cache: {cache}")
 
         else:
             data = f(self, *args, **kwargs)
