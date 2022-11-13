@@ -60,7 +60,7 @@ class TCGAXenaLoader(base.DataURLMixin):
         io_utils.check_package_version("pyarrow")
         
         self.cancer = cancer
-        self.xena_data = xena_data
+        self._units = xena_data.units
         self.omic = xena_data.omic
         self.sep = xena_data.sep
         self.compression = xena_data.compression
@@ -83,7 +83,7 @@ class TCGAXenaLoader(base.DataURLMixin):
 
     @property
     def units(self):
-        if self.xena_data.units == "from_metadata":
+        if self._units == "from_metadata":
             if (self.metadata is not None & "unit" in self.metadata.index):
                 return self.metadata.loc["unit"][0]
 
