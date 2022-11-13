@@ -63,7 +63,6 @@ class DaskCluster:
                 '--no-dashboard'
             ]
         )
-        print("here")
 
         cluster.scale(self.numworkers)
         client = Client(cluster, timeout="30s")
