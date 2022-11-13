@@ -91,8 +91,7 @@ Comparing with related packages
 TO-DO
 =========
 
-- [ ] Add ``pygenometracks`` to the list of related packages
-https://hypothesis.readthedocs.io/en/latest/index.html
+- [ ] Extend test suite with ``hypothesis`` [`hypothesis docs`_] and ``pytest-benchmark`` [`pytest-benchmark docs`_]
 
 
 
@@ -113,3 +112,6 @@ https://hypothesis.readthedocs.io/en/latest/index.html
 .. _TCGAbiolinks: https://github.com/BioinformaticsFMRP/TCGAbiolinks
 .. _dalmatian: https://github.com/getzlab/dalmatian
 .. _HTSeq 2.0: https://htseq.readthedocs.io/en/master/index.html
+
+.. _hypothesis docs: https://hypothesis.readthedocs.io/en/latest/index.html
+.. _pytest-benchmark docs: https://pytest-benchmark.readthedocs.io/en/latest/
