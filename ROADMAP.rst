@@ -1,11 +1,11 @@
 =========
-Comparing with related packages
+Summary of related packages
 =========
 
-.. list-table:: Related packages
+
+.. list-table:: Fetching and parsing TCGA
    :widths: 30 10 10 65
    :header-rows: 1
-
    * - Name
      - Language
      - Active?
@@ -14,18 +14,20 @@ Comparing with related packages
      - R
      - Yes
      - An R/Bioconductor package for integrative analysis with TCGA data
-   * - `PyBDA`_
-     - Python
+   * - `TCGAutils`_
+     - R
      - Yes
-     - A Python package for the analysis of biological data
-   * - `pypath`_ / `OmniPath`_
-     - Python, R
-     - Yes
-     - A Python module for molecular signaling prior knowledge processing
-   * - PyBEL
-     - Python
-     - Yes
-     - A Python module for biological expression language
+     - ``MultiAssayExperiment`` for TCGA
+
+
+.. list-table:: Biological data structures
+   :widths: 30 10 10 65
+   :header-rows: 1
+
+   * - Name
+     - Language
+     - Active?
+     - Description
    * - ExperimentHub
      - R
      - Yes
@@ -34,18 +36,10 @@ Comparing with related packages
      - Python
      - Yes
      - precision medicine and proteogenomics
-   * - `pyensembl`_
-     - Python
-     - Yes
-     - annotation
    * - `MultiAssayExperiment`_
      - R
      - Yes
      - A Bioconductor package for the representation of multi-assay experiments
-   * - `TCGAutils`_
-     - R
-     - Yes
-     - ``MultiAssayExperiment`` for TCGA
    * - `scverse`_
      - R, Python
      - Yes
@@ -66,18 +60,6 @@ Comparing with related packages
      - Python
      - Yes
      - mainly microbial genomics
-   * - pycellbase
-     - Python
-     - Yes
-     - mainly microbial genomics
-   * - pygenometracks
-     - Python
-     - Yes
-     - 
-   * - eDGAR
-     - Python
-     - Yes
-     - a database of Disease-Gene Associations
    * - `dalmatian`_
      - Python
      - Yes
@@ -86,6 +68,52 @@ Comparing with related packages
      - Python
      - Yes
      - HTSeq is a Python package for analysis of high-throughput sequencing data
+
+
+.. list-table:: Annotations
+   :widths: 30 10 10 65
+   :header-rows: 1
+   * - Name
+     - Language
+     - Active?
+     - Description
+   * - `pypath`_ / `OmniPath`_
+     - Python, R
+     - Yes
+     - A Python module for molecular signaling prior knowledge processing
+   * - `pyensembl`_
+     - Python
+     - Yes
+     - annotation
+   * - eDGAR
+     - Python
+     - Yes
+     - a database of Disease-Gene Associations
+
+
+.. list-table:: Other
+   :widths: 30 10 10 65
+   :header-rows: 1
+   * - Name
+     - Language
+     - Active?
+     - Description
+   * - `PyBDA`_
+     - Python
+     - Yes
+     - A Python package for the analysis of biological data
+   * - PyBEL
+     - Python
+     - Yes
+     - A Python module for biological expression language
+   * - pycellbase
+     - Python
+     - Yes
+     - mainly microbial genomics
+   * - pygenometracks
+     - Python
+     - Yes
+     - 
 
 =========
 TO-DO
