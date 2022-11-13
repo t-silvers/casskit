@@ -82,6 +82,10 @@ Comparing with related packages
      - Python
      - Yes
      - a collection of high-level functions for interacting with Firecloud via Pandas dataframes
+   * - `HTSeq 2.0`_
+     - Python
+     - Yes
+     - HTSeq is a Python package for analysis of high-throughput sequencing data
 
 .. Refs
 .. =====
@@ -99,3 +103,4 @@ Comparing with related packages
 .. _TCGAutils: https://github.com/waldronlab/TCGAutils
 .. _TCGAbiolinks: https://github.com/BioinformaticsFMRP/TCGAbiolinks
 .. _dalmatian: https://github.com/getzlab/dalmatian
+.. _HTSeq 2.0: https://htseq.readthedocs.io/en/master/index.html

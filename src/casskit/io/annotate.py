@@ -1,10 +1,9 @@
-from collections import namedtuple
-import logging
 import os
 from pathlib import Path
 from typing import List, Optional
 import warnings
 
+import numpy as np
 import pandas as pd
 import pyensembl
 import pyranges as pr
@@ -79,6 +78,34 @@ class EnsemblData:
         return cls(assembly).cached_subset.df
 
     @classmethod
+    def get_tss(cls, assembly: str):
+        tss_ensembl = cls(assembly)
+        return tss_ensembl.tss_from_ensembl(pr.read_gtf(tss_ensembl.gtf_path))
+        
+    def tss_from_ensembl(self, ensembl_pr) -> pr.PyRanges:
+        """Get TSS feature from Ensembl.
+        
+        Returns the first exon of each protein-coding gene
+        and pseudogene.
+        """
+        return (ensembl_pr[((ensembl_pr.Feature == "exon") &
+                            (ensembl_pr.exon_number == "1") &
+                            ((ensembl_pr.gene_biotype == "protein_coding") | 
+                             (ensembl_pr.gene_biotype == "pseudogene")))]
+                .df
+                .astype({
+                    "Chromosome": str, "Start": "int32", "End": "int32",
+                    "gene_name": str, "gene_id": str
+                })
+                .groupby(["Chromosome", "gene_name", "gene_id"])
+                .agg(
+                    Start=pd.NamedAgg(column="Start", aggfunc=np.nanmin),
+                    End=pd.NamedAgg(column="End", aggfunc=np.nanmax),
+                )
+                .reset_index()
+                .pipe(pr.PyRanges, int64=True))
+
+    @classmethod
     def annotate_pyranges(cls, assembly: str, identifier:str, gene_ids: List[str]) -> pr.PyRanges:
         gr = cls.to_pyranges(assembly)
         if identifier == "ensembl_gene_id":
@@ -91,6 +118,9 @@ class EnsemblData:
     def annotate_df(cls, assembly: str, identifier:str, gene_ids: List[str]) -> pd.DataFrame:
         return cls.annotate_pyranges(assembly, identifier, gene_ids).df
 
+
+get_ensembl_tss = EnsemblData.get_tss
+""""""
 
 build_ensembl_cache = EnsemblData.build_caches
 """"""
