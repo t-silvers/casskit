@@ -77,26 +77,6 @@ class RINT(BaseEstimator, TransformerMixin):
         """
         return stats.norm.ppf((stats.rankdata(A, method="average", axis=0) - k) / (A.shape[0] - 2*k + 1))
 
-class ToCounts(BaseEstimator, TransformerMixin):
-    UNITS = ["log2(count+1)", "counts"]
-    units = OneOf(*UNITS)
-    
-    def __init__(self, units: str = "log2(count+1)"):
-        self.units = units
-
-    def fit(self, X, y=None):
-        return self
-
-    def transform(self, X):
-        if self.units == "log2(count+1)":
-            return self.log21p_to_abs(X)
-        elif self.units == "counts":
-            return X
-
-    @staticmethod
-    def log21p_to_abs(x):
-        return (np.exp2(x) - 1).astype(int)
-
 class CountThreshold(BaseEstimator, TransformerMixin):
     def __init__(self, min_cpm: int = 1, max_freq_zero: float = 0.3):
         self.min_cpm = min_cpm

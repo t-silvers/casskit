@@ -1,9 +1,39 @@
 from typing import List
 
 import numpy as np
+import ruptures as rpt
 
 import casskit.data.simulate.base as base
 
+
+def nhpp_sim_constwindow():
+    """Simulate a Non-Homogeneous PP with constant window spike
+    
+    Implements seqCBS::nhppSimConstWindowGen() from the
+    [seqCBS R package](https://cran.r-project.org/web/packages/seqCBS/index.html)
+    [paper](https://arxiv.org/abs/1206.6627)
+    """
+    pass
+
+def pw_constant(n_samples: int = 500, dim: int = 3, n_bkps: int = 6, sigma: float = 1.0) -> np.ndarray:
+    """Piecewise constant signal.
+    
+    Thin wrapper around ruptures.datasets.pw_constant.
+
+    Args:
+        n_samples (int): number of samples
+        dim (int): dimension
+        n_bkps (int): number of breakpoints
+        sigma (float): standard deviation of the noise
+
+    Returns:
+        np.ndarray: signal
+        np.ndarray: breakpoints
+    """
+    bkps = np.sort(np.random.randint(0, n_samples, size=n_bkps))
+    signal, bkps = rpt.pw_constant(n_samples, dim, n_bkps, noise_std=sigma)
+
+    return signal, bkps
 
 class SimCopynumber(base.SimulationMixin):
 

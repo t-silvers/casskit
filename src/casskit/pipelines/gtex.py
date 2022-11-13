@@ -11,9 +11,9 @@ from casskit.preprocess.expression import (
     EdgeRCPM,
     ProteinCoding,
     RINT,
-    ToCounts,
     VariationThreshold
 )
+from casskit.preprocess.units import ToCounts
 
 
 class GTEx(BaseEstimator, TransformerMixin):
