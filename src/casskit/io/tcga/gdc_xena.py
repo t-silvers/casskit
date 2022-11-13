@@ -60,6 +60,7 @@ class TCGAXenaLoader(base.DataURLMixin):
         io_utils.check_package_version("pyarrow")
         
         self.cancer = cancer
+        self.xena_data = xena_data
         self.omic = xena_data.omic
         self.sep = xena_data.sep
         self.compression = xena_data.compression
@@ -70,7 +71,6 @@ class TCGAXenaLoader(base.DataURLMixin):
 
         self.set_cache(cache_dir)
         self.raw_data = self.fetch()
-        self.units = self.metadata.loc["unit"][0] if xena_data.units == "from_metadata" else None
 
     @property
     def basename(self):
@@ -80,6 +80,14 @@ class TCGAXenaLoader(base.DataURLMixin):
     @base.DataURLMixin.safe_fetch
     def metadata(self) -> Dict[str, object]:
         return pd.read_json(f"{self.basename}.tsv.json", orient="index")
+
+    @property
+    def units(self):
+        if self.xena_data.units == "from_metadata":
+            if (self.metadata is not None & "unit" in self.metadata.index):
+                return self.metadata.loc["unit"][0]
+
+        return None
 
     @io_utils.cache_on_disk
     def fetch(self) -> pd.DataFrame:
