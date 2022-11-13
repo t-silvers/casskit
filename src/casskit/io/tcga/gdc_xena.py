@@ -4,6 +4,8 @@ from collections import namedtuple
 import logging
 from pathlib import Path
 from typing import Dict, Optional
+import urllib
+import warnings
 
 import pandas as pd
 
@@ -85,9 +87,13 @@ class TCGAXenaLoader(base.DataURLMixin):
             url += ".gz"
         try:
             return pd.read_csv(url, sep=self.sep, compression=self.compression)
+        except urllib.error.HTTPError:
+            warnings.warn(f"URL {url} not valid.")
+            pass
         except Exception as e:
             logging.error(f"Error fetching {url}: {e}")
-            raise
+            raise ValueError(f"{url} not found.") from e
+
     
     def set_cache(self, cache_dir: Path) -> Path:
         self.path_cache = Path(cache_dir, f"{self.stem}.raw.parquet")
