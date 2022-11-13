@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
+from contextlib import suppress
+from functools import wraps
+import logging
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
+import urllib
 from urllib.request import Request, urlopen
 
 import pandas as pd
@@ -27,6 +31,17 @@ class DataURLMixin(ABC):
     @abstractmethod
     def set_cache(self):
         pass
+
+    def safe_fetch(f: Callable) -> Callable:
+        @wraps(f)
+        def wrapper(self, *args, **kwargs):
+            with suppress(urllib.error.HTTPError):
+                try:
+                    return f(self, *args, **kwargs)
+                except Exception as e:
+                    logging.error(f"Error fetching: {e}")
+                    raise ValueError(f"URL not found.") from e
+        return wrapper
 
 class ElsevierLink(DataURLMixin):
     """Data parser for Springer, Elsevier."""

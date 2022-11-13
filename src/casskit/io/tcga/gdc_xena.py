@@ -85,15 +85,12 @@ class TCGAXenaLoader(base.DataURLMixin):
         url = self.basename + ".tsv"
         if self.compression == "gzip":
             url += ".gz"
-        try:
-            return pd.read_csv(url, sep=self.sep, compression=self.compression)
-        except urllib.error.HTTPError:
-            warnings.warn(f"URL {url} not valid.")
-            pass
-        except Exception as e:
-            logging.error(f"Error fetching {url}: {e}")
-            raise ValueError(f"{url} not found.") from e
+        
+        return self._fetch(url)
 
+    @base.DataURLMixin.safe_fetch
+    def _fetch(self, url) -> pd.DataFrame:
+        return pd.read_csv(url, sep=self.sep, compression=self.compression)
     
     def set_cache(self, cache_dir: Path) -> Path:
         self.path_cache = Path(cache_dir, f"{self.stem}.raw.parquet")
