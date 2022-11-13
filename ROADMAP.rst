@@ -87,6 +87,15 @@ Comparing with related packages
      - Yes
      - HTSeq is a Python package for analysis of high-throughput sequencing data
 
+=========
+TO-DO
+=========
+
+- [ ] Add ``pygenometracks`` to the list of related packages
+https://hypothesis.readthedocs.io/en/latest/index.html
+
+
+
 .. Refs
 .. =====
 .. _MultiAssayExperiment: https://github.com/waldronlab/MultiAssayExperiment
