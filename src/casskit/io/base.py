@@ -36,11 +36,7 @@ class DataURLMixin(ABC):
         @wraps(f)
         def wrapper(self, *args, **kwargs):
             with suppress(urllib.error.HTTPError):
-                try:
-                    return f(self, *args, **kwargs)
-                except Exception as e:
-                    logging.error(f"Error fetching: {e}")
-                    raise ValueError(f"URL not found.") from e
+                return f(self, *args, **kwargs)
         return wrapper
 
 class ElsevierLink(DataURLMixin):
