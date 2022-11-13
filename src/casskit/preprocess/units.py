@@ -8,26 +8,29 @@ from sklearn.preprocessing import FunctionTransformer
 from ..descriptors import OneOf
 
 
-def abstolog21p(X):
+def _abstolog21p(X):
     return np.log2(1 + X)
 
-@FunctionTransformer(inverse_func=lambda X: abstolog21p(X))
-def log21ptoabs(X):
+def _log21ptoabs(X):
     return (np.exp2(X) - 1).astype(int)
 
-def abstolog2r(X):
+log21ptoabs = FunctionTransformer(_log21ptoabs, inverse_func=_abstolog21p)
+
+def _abstolog2r(X):
     return np.log2(X/2)
 
-@FunctionTransformer(inverse_func=lambda X: abstolog2r(X))
-def log2rtoabs(X):
+def _log2rtoabs(X):
     return np.exp2(X) * 2
+
+log2rtoabs = FunctionTransformer(_log2rtoabs, inverse_func=_abstolog2r)
+
 
 class ToCounts(BaseEstimator, TransformerMixin):
     
     TFORM_FUNCS = {
-        "log2(count+1)": log21ptoabs,
+        "log2(count+1)": log21ptoabs.fit_transform,
         "counts": lambda X: X,
-        "log2(copy-number/2)": log2rtoabs,
+        "log2(copy-number/2)": log2rtoabs.fit_transform,
     }
     
     units = OneOf(*TFORM_FUNCS.keys())
@@ -39,12 +42,4 @@ class ToCounts(BaseEstimator, TransformerMixin):
         return self
 
     def transform(self, X):
-        if self.units == "log2(count+1)":
-            return self.log21ptoabs(X)
-        
-        elif self.units == "counts":
-            return X
-
-    @staticmethod
-    def log21ptoabs(x):
-        return (np.exp2(x) - 1).astype(int)
+        return self.TFORM_FUNCS[self.units](X)
