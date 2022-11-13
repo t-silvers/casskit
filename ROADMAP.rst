@@ -6,6 +6,7 @@ Summary of related packages
 .. list-table:: Fetching and parsing TCGA
    :widths: 30 10 10 65
    :header-rows: 1
+
    * - Name
      - Language
      - Active?
@@ -73,6 +74,7 @@ Summary of related packages
 .. list-table:: Annotations
    :widths: 30 10 10 65
    :header-rows: 1
+
    * - Name
      - Language
      - Active?
@@ -94,6 +96,7 @@ Summary of related packages
 .. list-table:: Other
    :widths: 30 10 10 65
    :header-rows: 1
+
    * - Name
      - Language
      - Active?
@@ -114,6 +117,7 @@ Summary of related packages
      - Python
      - Yes
      - 
+
 
 =========
 TO-DO
