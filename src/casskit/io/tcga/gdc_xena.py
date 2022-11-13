@@ -77,6 +77,7 @@ class TCGAXenaLoader(base.DataURLMixin):
         return f"https://gdc-hub.s3.us-east-1.amazonaws.com/download/{self.stem}"
 
     @property
+    @base.DataURLMixin.safe_fetch
     def metadata(self) -> Dict[str, object]:
         return pd.read_json(f"{self.basename}.tsv.json", orient="index")
 
