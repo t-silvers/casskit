@@ -29,15 +29,21 @@
 
 |
 
+
+.. image:: https://raw.githubusercontent.com/t-silvers/casskit/docs/temp-brandmark-logo.png
+  :width: 400
+  :alt: casskit logo
+
+
 =======
 casskit
 =======
 
 
-    Add a short description here!
+    Toolkit for Cancer Association studies.
 
 
-A longer description of your project goes here...
+lorem ipsum
 
 
 .. _pyscaffold-notes:
@@ -63,6 +69,10 @@ Summary of related packages
      - R
      - Yes
      - ``MultiAssayExperiment`` for TCGA
+   * - `LinkedOmics`_
+     - GUI
+     - 
+     - 
 
 
 .. list-table:: Biological data structures
@@ -161,7 +171,10 @@ Summary of related packages
      - R, Python
      - Yes
      - Multi-omic factor analysis
-
+   * - `OmicsEV`_
+     - R
+     - Yes
+     - OmicsEV: A tool for large scale omics data tables evaluation
 
 
 .. list-table:: Annotations
@@ -244,8 +257,10 @@ information on PyScaffold see https://pyscaffold.org/.
 .. _Hugging Face: https://huggingface.co
 .. _kipoi/kipoiseq: https://github.com/kipoi/kipoiseq
 .. _kipoi/models: https://github.com/kipoi/models
+.. _LinkedOmics: http://www.linkedomics.org/login.php
 .. _MOFA: https://biofam.github.io/MOFA2/
 .. _MultiAssayExperiment: https://github.com/waldronlab/MultiAssayExperiment
+.. _OmicsEV: https://bzhanglab.github.io/OmicsEV/
 .. _OmniPath: https://omnipathdb.org
 .. _PyBDA: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
 .. _pycellbase: https://pypi.org/project/pycellbase/

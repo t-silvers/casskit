@@ -3,9 +3,12 @@ TO-DO
 =========
 
 - [ ] Extend test suite with ``hypothesis`` [`hypothesis docs`_] and ``pytest-benchmark`` [`pytest-benchmark docs`_]
-
+- [ ] Identifying mislabeled samples with `COSMO`_ (split out from nf implementation). Include known TCGA mislabeling (Are known samples eg `Subchallenge 1 Training Key`_ corrected?)
+- [ ] TCGA CPTAC data
 
 .. Refs
 .. =====
+.. _Subchallenge 1 Training Key: https://precision.fda.gov/challenges/4
+.. _COSMO : https://github.com/bzhanglab/COSMO
 .. _hypothesis docs: https://hypothesis.readthedocs.io/en/latest/index.html
 .. _pytest-benchmark docs: https://pytest-benchmark.readthedocs.io/en/latest/

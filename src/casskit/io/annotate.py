@@ -130,5 +130,3 @@ get_ensembl = EnsemblData.to_df
 
 annotate_genes = EnsemblData.annotate_df
 """"""
-
-# Need resource for TSSs

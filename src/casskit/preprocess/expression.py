@@ -1,15 +1,11 @@
-# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
-# License: MIT
+from typing import List
 
 import numpy as np
 import pandas as pd
 from qtl import norm as qtl_norm
 from scipy import stats
 from sklearn.base import BaseEstimator, TransformerMixin
-from sklearn.preprocessing import FunctionTransformer
-from typing import List
 
-from ..descriptors import OneOf
 from casskit.io import get_ensembl
 
 
