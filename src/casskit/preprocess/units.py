@@ -7,6 +7,8 @@ from sklearn.preprocessing import FunctionTransformer
 
 from ..descriptors import OneOf
 
+# TODO: FunctionTransformer arg check_inverse doesn't work when input has no dtype (eg pd.DataFrame)
+
 
 def _abstolog21p(X):
     return np.log2(1 + X)
@@ -14,7 +16,9 @@ def _abstolog21p(X):
 def _log21ptoabs(X):
     return (np.exp2(X) - 1).astype(int)
 
-log21ptoabs = FunctionTransformer(_log21ptoabs, inverse_func=_abstolog21p)
+log21ptoabs = FunctionTransformer(
+    _log21ptoabs, inverse_func=_abstolog21p, check_inverse=False
+)
 
 def _abstolog2r(X):
     return np.log2(X/2)
@@ -22,7 +26,9 @@ def _abstolog2r(X):
 def _log2rtoabs(X):
     return np.exp2(X) * 2
 
-log2rtoabs = FunctionTransformer(_log2rtoabs, inverse_func=_abstolog2r)
+log2rtoabs = FunctionTransformer(
+    _log2rtoabs, inverse_func=_abstolog2r, check_inverse=False
+)
 
 
 class ToCounts(BaseEstimator, TransformerMixin):
