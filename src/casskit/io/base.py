@@ -68,6 +68,7 @@ class ElsevierLink(DataURLMixin):
     def set_cache(self, cache_dir: Path, cache_name: str = None) -> Path:
         if cache_name is None:
             print(self)
+
         self.path_cache = Path(cache_dir, f"{cache_name}.pkl")
         self.read_cache = lambda cache: pd.read_pickle(cache)
         self.write_cache = lambda data, cache: data.to_pickle(cache)

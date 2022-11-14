@@ -23,6 +23,9 @@ class TCGATumorPurityAran2015(base.ElsevierLink):
     CPE = Consensus Purity Estimate
 
     """
+    
+    URL = "https://static-content.springer.com/esm/art%3A10.1038%2Fncomms9971/MediaObjects/41467_2015_BFncomms9971_MOESM1236_ESM.xlsx"
+    
     def __init__(
         self,
         cache_dir: Optional[Path] = None,
@@ -34,7 +37,7 @@ class TCGATumorPurityAran2015(base.ElsevierLink):
             cache_dir = Path(config.CACHE_DIR)
 
         super().__init__(
-            url="https://static-content.springer.com/esm/art%3A10.1038%2Fncomms9971/MediaObjects/41467_2015_BFncomms9971_MOESM1236_ESM.xlsx",
+            url=self.URL,
             skiprows=3,
             cache_name="tumor_purity_aran2015",
             cache_dir=cache_dir,
