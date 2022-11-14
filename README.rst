@@ -201,6 +201,11 @@ Summary of related packages
      - Python
      - Yes
      - a database of Disease-Gene Associations
+   * - `NDEx-The Network Data Exchange`_
+     - Web, API
+     - Yes
+     - The NDEx Project provides an open-source framework where scientists and organizations can store, share, manipulate, and publish biological network knowledge.
+
 
 
 .. list-table:: Other
@@ -264,6 +269,7 @@ information on PyScaffold see https://pyscaffold.org/.
 .. _LinkedOmics: http://www.linkedomics.org/login.php
 .. _MOFA: https://biofam.github.io/MOFA2/
 .. _MultiAssayExperiment: https://github.com/waldronlab/MultiAssayExperiment
+.. _NDEx-The Network Data Exchange : https://home.ndexbio.org/index/
 .. _OmicsEV: https://bzhanglab.github.io/OmicsEV/
 .. _OmniPath: https://omnipathdb.org
 .. _PyBDA: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
