@@ -31,7 +31,7 @@
 
 
 .. image:: https://github.com/t-silvers/casskit/blob/243e2ab344bb341e05435b1f8403e43319a2722d/docs/temp-brandmark-logo-wide.png
-  :width: 400
+  :width: 600
   :alt: casskit logo
 
 
