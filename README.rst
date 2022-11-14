@@ -31,7 +31,7 @@
 
 
 .. image:: https://github.com/t-silvers/casskit/blob/4110e5b1441c3e51826087fadb4136f2b2fab713/docs/temp-brandmark-logo-med.png
-  :width: 600
+  :width: 800
   :alt: casskit logo
 
 
