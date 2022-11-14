@@ -30,7 +30,7 @@
 |
 
 
-.. image:: https://raw.githubusercontent.com/t-silvers/casskit/docs/temp-brandmark-logo.png
+.. image:: https://github.com/t-silvers/casskit/blob/387a8a99a6bc64326dc19daf54ffa02e34beca4b/docs/temp-brandmark-logo.png
   :width: 400
   :alt: casskit logo
 
