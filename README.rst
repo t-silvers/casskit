@@ -153,6 +153,10 @@ Summary of related packages
      - Python
      - Yes
      - Transformers library built for natural language processing applications and its platform that allows users to share machine learning models and datasets
+   * - `SKOPS`_
+     - Python
+     - Yes
+     - a Python library helping you share your scikit-learn based models and put them in production. At the moment, it includes tools to easily integrate models on the Hugging Face Hub
 
 
 .. list-table:: Multi-omic data integration
@@ -272,6 +276,7 @@ information on PyScaffold see https://pyscaffold.org/.
 .. _scverse: https://scverse.org
 .. _sgkit: https://pystatgen.github.io/sgkit/latest/
 .. _skorch: https://github.com/skorch-dev/skorch
+.. _SKOPS: https://github.com/skops-dev/skops
 .. _TCGAutils: https://github.com/waldronlab/TCGAutils
 .. _TCGAbiolinks: https://github.com/BioinformaticsFMRP/TCGAbiolinks
 .. _TorchData: https://pytorch.org/data/main/tutorial.html

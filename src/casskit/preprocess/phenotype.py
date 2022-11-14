@@ -7,6 +7,7 @@ from sklearn.preprocessing import OrdinalEncoder
 
 
 class ReplaceNA(BaseEstimator, TransformerMixin):
+    """Replace non-standard missing values with np.nan."""
     def __init__(self, replace_vals: List[str] = ["not reported"]):
         self.replace_vals = replace_vals
 
@@ -31,6 +32,7 @@ class ReplaceNA(BaseEstimator, TransformerMixin):
         return self.feature_names
 
 class TumorStageEncoder(TransformerMixin, BaseEstimator):
+    """Clean tumor stage data."""
     def __init__(self):
         pass
 

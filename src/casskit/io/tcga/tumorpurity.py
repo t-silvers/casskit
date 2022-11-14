@@ -4,7 +4,7 @@ from typing import Optional
 import pandas as pd
 from scipy.stats import norm
 from sklearn.experimental import enable_iterative_imputer # explicitly require experimental feature
-from sklearn.impute import IterativeImputer
+from sklearn.impute import IterativeImputer, KNNImputer
 
 import casskit.io.base as base
 import casskit.utils as utils
@@ -30,7 +30,7 @@ class TCGATumorPurityAran2015(base.ElsevierLink):
         self,
         cache_dir: Optional[Path] = None,
         impute: bool = True,
-        impute_method: str = "iterative",
+        impute_method: str = "knn", # "iterative" broken in dev branch
         ret_recommended: bool = True,
     ):
         if cache_dir is None:
@@ -54,21 +54,27 @@ class TCGATumorPurityAran2015(base.ElsevierLink):
         return self.prepare()
 
     def impute_missing(self, data: pd.DataFrame) -> pd.DataFrame:
-        # TODO: Performance https://scikit-learn.org/stable/auto_examples/impute/plot_missing_values.html#missing-information
-        imp = IterativeImputer(imputation_order="roman")
+        if self.impute_method == "iterative":
+            # TODO: IterativeImputer is broken in dev branch with output="pandas"
+            # TODO: Performance https://scikit-learn.org/stable/auto_examples/impute/plot_missing_values.html#missing-information
+            imp = IterativeImputer(imputation_order="roman")
 
-        # Order of columns is important for IterativeImputer?
-        col_order = data.count().drop("cpe").sort_values(ascending=False).index.tolist() + ["cpe"]
+            # Order of columns is important for IterativeImputer?
+            col_order = data.count().drop("cpe").sort_values(ascending=False).index.tolist() + ["cpe"]
 
-        data_imputed = (data.copy()
-                        # Probit transform. Subtract constant to avoid inf.
-                        .sub(1E-3)
-                        .apply(norm.ppf)
-                        .filter(col_order)
-                        .pipe(imp.fit_transform))
-        
-        # Inverse probit transform and return as df
-        return pd.DataFrame(norm.cdf(data_imputed), index=data.index, columns=data.columns)
+            data_imputed = (data.copy()
+                            # Probit transform. Subtract constant to avoid inf.
+                            .sub(1E-3)
+                            .apply(norm.ppf)
+                            .filter(col_order)
+                            .pipe(imp.fit_transform))
+            
+            # Inverse probit transform and return as df
+            return pd.DataFrame(norm.cdf(data_imputed), index=data.index, columns=data.columns)
+
+        elif self.impute_method == "knn":
+            imp = KNNImputer(n_neighbors=10)
+            return imp.fit_transform(data)
 
     def return_recommendation(self, data: pd.DataFrame) -> pd.DataFrame:
         """Return the CPE column."""
