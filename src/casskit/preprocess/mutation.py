@@ -1,5 +1,6 @@
 from pathlib import Path
 from typing import List
+import warnings
 
 import numpy as np
 import pandas as pd
@@ -28,7 +29,7 @@ class AggMutations(BaseEstimator, TransformerMixin):
     def transform(self, X, y=None):
         self.feature_names = X.columns
         X_agg = self.cis_mut_agg(X)
-        if self.binary:
+        if (self.binary and not X_agg.empty):
             return self._binarize_mutation(X_agg)
         return X_agg
 
@@ -58,12 +59,17 @@ class AggMutations(BaseEstimator, TransformerMixin):
                 
                 Long JS (1997) "Regression Models for categorical and limited dependent variables"
                 RD Riley, et al. (2018) "Minimum sample size for developing a multivariable prediction model: PART II - binary and time-to-event outcomes"        
-        """        
-        return ((X_ := self._filter_by_vaf(X))
-                .pivot_table(index=["gene", "effect"], columns="Sample_ID", values="dna_vaf")
-                .reindex(self._filter_by_cases(X_))
-                .transpose()
-                .pipe(self._combine_multiidx))
+        """
+        try:
+            return ((X_ := self._filter_by_vaf(X))
+                    .pivot_table(index=["gene", "effect"], columns="Sample_ID", values="dna_vaf")
+                    .reindex(self._filter_by_cases(X_))
+                    .transpose()
+                    .pipe(self._combine_multiidx))
+        
+        except KeyError:
+            warnings.warn("No passing mutations found in dataset.")
+            return pd.DataFrame()
 
     def _filter_by_vaf(self, X):
         """Tally mutations."""
