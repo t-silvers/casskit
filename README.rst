@@ -113,6 +113,55 @@ Summary of related packages
      - Python
      - Yes
      - HTSeq is a Python package for analysis of high-throughput sequencing data
+   * - `Hail`_
+     - Python
+     - Yes
+     - Cloud-native genomic dataframes and batch computing
+   * - `hail.matrixtable.MatrixTable`_
+     - Python
+     - Yes
+     - A MatrixTable is a distributed two-dimensional extension of a Table
+
+
+.. list-table:: Modeling
+   :widths: 30 10 10 65
+   :header-rows: 1
+
+   * - Name
+     - Language
+     - Active?
+     - Description
+   * - `kipoi/kipoiseq`_
+     - Python
+     - Yes
+     - Standard set of data-loaders for training and making predictions for DNA sequence-based models
+   * - `kipoi/models`_
+     - Python
+     - Yes
+     - Model zoo for genomics
+   * - `Hugging Face`_
+     - Python
+     - Yes
+     - Transformers library built for natural language processing applications and its platform that allows users to share machine learning models and datasets
+
+
+.. list-table:: Multi-omic data integration
+   :widths: 30 10 10 65
+   :header-rows: 1
+
+   * - Name
+     - Language
+     - Active?
+     - Description
+   * - `GLUE (Graph-Linked Unified Embedding)`_
+     - Python
+     - Yes
+     - Graph-linked unified embedding for single-cell multi-omics data integration
+   * - `MOFA`_
+     - R, Python
+     - Yes
+     - Multi-omic factor analysis
+
 
 
 .. list-table:: Annotations
@@ -161,6 +210,14 @@ Summary of related packages
      - Python
      - Yes
      - 
+   * - `skorch`_
+     - Python
+     - Yes
+     - A scikit-learn compatible neural network library that wraps PyTorch.
+   * - `TorchData`_
+     - Python
+     - Yes
+     - A PyTorch repo for data loading and utilities
 
 
 =========
@@ -179,6 +236,15 @@ information on PyScaffold see https://pyscaffold.org/.
 
 .. Refs
 .. =====
+.. _dalmatian: https://github.com/getzlab/dalmatian
+.. _GLUE (Graph-Linked Unified Embedding): https://github.com/gao-lab/GLUE
+.. _Hail: https://hail.is
+.. _hail.matrixtable.MatrixTable: https://hail.is/docs/0.2/overview/matrix_table.html
+.. _HTSeq 2.0: https://htseq.readthedocs.io/en/master/index.html
+.. _Hugging Face: https://huggingface.co
+.. _kipoi/kipoiseq: https://github.com/kipoi/kipoiseq
+.. _kipoi/models: https://github.com/kipoi/models
+.. _MOFA: https://biofam.github.io/MOFA2/
 .. _MultiAssayExperiment: https://github.com/waldronlab/MultiAssayExperiment
 .. _OmniPath: https://omnipathdb.org
 .. _PyBDA: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
@@ -190,7 +256,7 @@ information on PyScaffold see https://pyscaffold.org/.
 .. _scikit-genome: https://cnvkit.readthedocs.io/en/stable/skgenome.html
 .. _scverse: https://scverse.org
 .. _sgkit: https://pystatgen.github.io/sgkit/latest/
+.. _skorch: https://github.com/skorch-dev/skorch
 .. _TCGAutils: https://github.com/waldronlab/TCGAutils
 .. _TCGAbiolinks: https://github.com/BioinformaticsFMRP/TCGAbiolinks
-.. _dalmatian: https://github.com/getzlab/dalmatian
-.. _HTSeq 2.0: https://htseq.readthedocs.io/en/master/index.html
+.. _TorchData: https://pytorch.org/data/main/tutorial.html
