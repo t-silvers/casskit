@@ -28,10 +28,18 @@ class AggMutations(BaseEstimator, TransformerMixin):
     def transform(self, X, y=None):
         self.feature_names = X.columns
         X_agg = self.cis_mut_agg(X)
-        X_agg.columns = ['_'.join(col) for col in X_agg.columns.values]
         if self.binary:
-            return self.encode_mutation(X_agg)
+            return self._binarize_mutation(X_agg)
         return X_agg
+
+    @staticmethod
+    def _binarize_mutation(df):
+        return df.fillna(0).mask(lambda x: x > 0, 1).astype("category")
+
+    @staticmethod
+    def _combine_multiidx(df):
+        df.columns = ['_'.join(col) for col in df.columns.values]
+        return df
 
     def cis_mut_agg(self, X):
         """Aggregate mutation types.
@@ -54,7 +62,8 @@ class AggMutations(BaseEstimator, TransformerMixin):
         return ((X_ := self._filter_by_vaf(X))
                 .pivot_table(index=["gene", "effect"], columns="Sample_ID", values="dna_vaf")
                 .reindex(self._filter_by_cases(X_))
-                .transpose())
+                .transpose()
+                .pipe(self._combine_multiidx))
 
     def _filter_by_vaf(self, X):
         """Tally mutations."""
@@ -64,13 +73,13 @@ class AggMutations(BaseEstimator, TransformerMixin):
                 .explode("effect"))
 
     def _filter_by_cases(self, X):
-        """Tally mutations."""
+        """Tally mutations.
+        
+        More performant than comparable transformers.
+        """
         return (X
                 .value_counts(subset=["gene", "effect"])
                 .mask(lambda x: x < self.min_cases)
                 .dropna()
                 .index)
 
-    @staticmethod
-    def encode_mutation(df):
-        return df.mask(lambda df: df > 0, "mut").mask(lambda df: df == 0, "wt")

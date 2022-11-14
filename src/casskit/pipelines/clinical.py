@@ -53,6 +53,16 @@ class ClinicalCovariates(BaseEstimator, TransformerMixin):
         return self.clinical_preprocessor.fit_transform(X[self.TCGA_VARS])
     
     @property
+    def clinical_preprocessor(self) -> Pipeline:
+        return Pipeline(
+            [("null_vals", self.null_values),
+             ("stage_encoder", self.stage_encoder),
+             ("impute1", self.impute),
+             ("one_hot", self.one_hot),
+             ("var_thresh", self.singular)]
+        )
+    
+    @property
     def null_values(self) -> ColumnTransformer:
         return ColumnTransformer(transformers=[
             ("null", ReplaceNA(),
@@ -88,13 +98,3 @@ class ClinicalCovariates(BaseEstimator, TransformerMixin):
             ("singular", VarianceThreshold(threshold=0),
              make_column_selector(dtype_include=np.number))
             ], verbose_feature_names_out=False, remainder="passthrough")
-    
-    @property
-    def clinical_preprocessor(self) -> Pipeline:
-        return Pipeline(
-            [("null_vals", self.null_values),
-             ("stage_encoder", self.stage_encoder),
-             ("impute1", self.impute),
-             ("one_hot", self.one_hot),
-             ("var_thresh", self.singular)]
-        )
