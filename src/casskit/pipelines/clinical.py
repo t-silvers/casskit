@@ -8,7 +8,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-from casskit.preprocess.phenotype import ReplaceNA, TumorStageEncoder
+from casskit.preprocess.phenotype import SimpleNaNImputer, TumorStageEncoder
 
 
 class ClinicalCovariates(BaseEstimator, TransformerMixin):
@@ -65,7 +65,7 @@ class ClinicalCovariates(BaseEstimator, TransformerMixin):
     @property
     def null_values(self) -> ColumnTransformer:
         return ColumnTransformer(transformers=[
-            ("null", ReplaceNA(),
+            ("null", SimpleNaNImputer(),
              make_column_selector(dtype_include=[object, np.number]))
             ], verbose_feature_names_out=False, remainder="passthrough")
 

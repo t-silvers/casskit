@@ -6,10 +6,23 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OrdinalEncoder
 
 
-class ReplaceNA(BaseEstimator, TransformerMixin):
-    """Replace non-standard missing values with np.nan."""
+class SimpleNaNImputer(BaseEstimator, TransformerMixin):
+    """Replace non-standard missing values with np.nan.
+    
+    Similar behavior to
+    
+    >>> SimpleImputer(missing_values=replace_val, strategy="constant", fill_value=np.nan)
+    
+    except:
+    1. Can accept a *list* of values to replace
+    2. Doesn't type check input or output (i.e. can be used with data containing NaNs),
+        (see sklearn.utils.assert_all_finite)
+    
+    """
     # can use SimpleImputer(missing_values=replace_vals, strategy="constant", fill_value=np.nan)
-    def __init__(self, replace_vals: List[str] = ["not reported"]):
+    def __init__(
+        self, replace_vals: List[str] = ["not reported"]
+    ):
         self.replace_vals = replace_vals
 
     def fit(self, X, y=None):
