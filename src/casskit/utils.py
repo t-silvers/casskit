@@ -1,6 +1,6 @@
 import re
 from difflib import SequenceMatcher
-from typing import Dict
+from typing import Dict, List
 
 import pandas as pd
 
@@ -23,13 +23,17 @@ def janitor(a: str) -> str:
     """
     return re.sub("[^a-zA-Z0-9_]", "_", a.lower()).rstrip('_')
 
-def fuzzy_match(k:list, v:list) -> Dict:
+def fuzzy_match(k: List, v: List, deduped: bool = False) -> Dict:
     """Fuzzy match IDs in (k)ey to IDs in (v)als
         
     Args
     -------
-    key_samples: samples in dict key (<- "to replace...")
-    val_samples: samples in dict values (<- "... with these")
+    k : List
+        Samples in Dict keys (<- "to replace...")
+    v : List
+        Samples in Dict values (<- "... with these")
+    deduped : boolean, default=False
+        Is input unique?
 
     Returns
     -------
@@ -56,14 +60,19 @@ def fuzzy_match(k:list, v:list) -> Dict:
     -------
 
     """
-    # Remove duplicates
-    k_ = list(set(k))
-    v_ = list(set(v))
+    k_, v_ = k, v
+
+    if deduped is False:
+        k_ = list(set(k))
+        v_ = list(set(v))
 
     match_dict = {}
     for k in k_:
         for v in v_:
-            match_size = SequenceMatcher(None, k, v).find_longest_match().size
+            match_size = (SequenceMatcher(None, k, v)
+                          .find_longest_match()
+                          .size)
+            
             if (match_size == len(k) or match_size == len(v)):
                 match_dict[k] = v
 
