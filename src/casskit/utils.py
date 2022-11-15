@@ -23,9 +23,9 @@ def janitor(a: str) -> str:
     """
     return re.sub("[^a-zA-Z0-9_]", "_", a.lower()).rstrip('_')
 
-def fuzzymatch(k:list, v:list) -> Dict:
+def fuzzy_match(k:list, v:list) -> Dict:
     """Fuzzy match IDs in (k)ey to IDs in (v)als
-    
+        
     Args
     -------
     key_samples: samples in dict key (<- "to replace...")
@@ -35,15 +35,25 @@ def fuzzymatch(k:list, v:list) -> Dict:
     -------
     A dict of matched names. A warning is given for un-matched samples.
 
+    Notes
+    -----
+    Lightweight, fast version of fuzzy matching.
+
+    For a more robust version, see:
+    [dirty_cat.fuzzy_join]
+    (https://github.com/dirty-cat/dirty_cat/blob/a920c4761c5f0978056c528176895c747ad6f713/dirty_cat/_fuzzy_join.py#L24)
+
+    TCGA use case:
+
+    Full TCGA sample IDs have 4-5 sections, separated by dashes. The first
+    sections identify the donor, the last sections describe the sample. Many
+    databases of TCGA analyses--particularly those with donor-level analyses--
+    drop the last sections.
+
+    This function matches TCGA names of varying completeness.
+
     Example
     -------
-    TCGA use case:
-        Full TCGA sample IDs have 4-5 sections, separated by dashes. The first
-        sections identify the donor, the last sections describe the sample. Many
-        databases of TCGA analyses--particularly those with donor-level analyses--
-        drop the last sections.
-
-        This function matches TCGA names of varying completeness.
 
     """
     # Remove duplicates
