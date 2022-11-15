@@ -75,7 +75,7 @@ Summary of related packages
      - 
 
 
-.. list-table:: Biological data structures
+.. list-table:: (Biological) Data structures
    :widths: 30 10 10 65
    :header-rows: 1
 
@@ -131,6 +131,11 @@ Summary of related packages
      - Python
      - Yes
      - A MatrixTable is a distributed two-dimensional extension of a Table
+   * - `kartothek`_
+     - Python
+     - Yes
+     - A consistent table management library in python / manage tabular data in object stores
+
 
 
 .. list-table:: Modeling
@@ -264,6 +269,7 @@ information on PyScaffold see https://pyscaffold.org/.
 .. _hail.matrixtable.MatrixTable: https://hail.is/docs/0.2/overview/matrix_table.html
 .. _HTSeq 2.0: https://htseq.readthedocs.io/en/master/index.html
 .. _Hugging Face: https://huggingface.co
+.. _kartothek: https://kartothek.readthedocs.io/en/stable/index.html
 .. _kipoi/kipoiseq: https://github.com/kipoi/kipoiseq
 .. _kipoi/models: https://github.com/kipoi/models
 .. _LinkedOmics: http://www.linkedomics.org/login.php

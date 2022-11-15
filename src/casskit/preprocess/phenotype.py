@@ -8,6 +8,7 @@ from sklearn.preprocessing import OrdinalEncoder
 
 class ReplaceNA(BaseEstimator, TransformerMixin):
     """Replace non-standard missing values with np.nan."""
+    # can use SimpleImputer(missing_values=replace_vals, strategy="constant", fill_value=np.nan)
     def __init__(self, replace_vals: List[str] = ["not reported"]):
         self.replace_vals = replace_vals
 

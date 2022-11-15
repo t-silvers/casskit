@@ -10,7 +10,7 @@ import pyranges as pr
 
 import casskit.io.utils as io_utils
 import casskit.config as config
-
+from casskit.descriptors import OneOf
 
 class EnsemblData:
     
@@ -59,8 +59,7 @@ class EnsemblData:
         
     @io_utils.cache_on_disk
     def subset_to_genes(self, gtf_path) -> pr.PyRanges:
-        """Get gene feature from Ensembl.
-        """
+        """Get gene feature from Ensembl."""
         gr = pr.read_gtf(gtf_path)
         return gr[gr.Feature == "gene"]
     
@@ -83,7 +82,7 @@ class EnsemblData:
         return tss_ensembl.tss_from_ensembl(pr.read_gtf(tss_ensembl.gtf_path))
         
     def tss_from_ensembl(self, ensembl_pr) -> pr.PyRanges:
-        """Get TSS feature from Ensembl.
+        """Get TSSs from Ensembl.
         
         Returns the first exon of each protein-coding gene
         and pseudogene.
@@ -106,16 +105,17 @@ class EnsemblData:
                 .pipe(pr.PyRanges, int64=True))
 
     @classmethod
-    def annotate_pyranges(cls, assembly: str, identifier:str, gene_ids: List[str]) -> pr.PyRanges:
+    def annotate_pyranges(
+        cls, assembly: str, gene_ids: List[str], identifier: str
+    ) -> pr.PyRanges:
+        OneOf("gene_id", "gene_name").validate(identifier)
         gr = cls.to_pyranges(assembly)
-        if identifier == "ensembl_gene_id":
-            return gr[gr.gene_id.isin(gene_ids)]
-
-        elif identifier == "hgnc_symbol":
-            return gr[gr.gene_name.isin(gene_ids)]
+        return gr[getattr(gr, identifier).isin(["NF1"])]
 
     @classmethod
-    def annotate_df(cls, assembly: str, identifier:str, gene_ids: List[str]) -> pd.DataFrame:
+    def annotate_df(
+        cls, assembly: str, identifier:str, gene_ids: List[str]
+    ) -> pd.DataFrame:
         return cls.annotate_pyranges(assembly, identifier, gene_ids).df
 
 

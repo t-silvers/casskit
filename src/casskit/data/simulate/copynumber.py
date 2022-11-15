@@ -6,6 +6,12 @@ import ruptures as rpt
 import casskit.data.simulate.base as base
 
 
+def cic():
+    # Change in covariance
+    # https://github.com/mlondschien/changeforest/tree/main/changeforest-py
+    # https://github.com/mlondschien/changeforest-simulations
+    pass
+
 def nhpp_sim_constwindow():
     """Simulate a Non-Homogeneous PP with constant window spike
     

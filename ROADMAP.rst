@@ -5,6 +5,7 @@ TO-DO
 - [ ] Extend test suite with ``hypothesis`` [`hypothesis docs`_] and ``pytest-benchmark`` [`pytest-benchmark docs`_]
 - [ ] Identifying mislabeled samples with `COSMO`_ (split out from nf implementation). Include known TCGA mislabeling (Are known samples eg `Subchallenge 1 Training Key`_ corrected?)
 - [ ] TCGA CPTAC data
+- [ ] Add native support for `SMOTE` and other oversampling methods
 
 .. Refs
 .. =====
@@ -12,3 +13,4 @@ TO-DO
 .. _COSMO : https://github.com/bzhanglab/COSMO
 .. _hypothesis docs: https://hypothesis.readthedocs.io/en/latest/index.html
 .. _pytest-benchmark docs: https://pytest-benchmark.readthedocs.io/en/latest/
+.. _SMOTE: https://github.com/analyticalmindsltd/smote_variants
