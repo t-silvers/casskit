@@ -16,6 +16,8 @@ class PPSignal(Validator):
     def __init__(
         self,
         eval_func: str = "default",
+        frac_test: float = .1,
+        corr_window: int = 100,
         tol: float = 0.8,
         error_tol: float = 0.2,
         error_f: float = 0.1,
@@ -25,6 +27,8 @@ class PPSignal(Validator):
             warnings.warn("Error threshold, error_tol, is "
                           "greater than warning threshold, tol.")
 
+        self.frac_test = frac_test
+        self.corr_window = corr_window
         self.tol = tol
         self.etol = error_tol
         self.ef = error_f
@@ -52,11 +56,34 @@ class PPSignal(Validator):
                 .apply(lambda df: self.eval_func(df))
                 .dropna())
 
+    def _cnvr_pp_signal(self, X_orig: pd.DataFrame, X_tform: pd.DataFrame):
+        return (X_tform
+                .sample(frac=self.frac_test, replace=False)
+                .melt(ignore_index=False)
+                .reset_index()
+                .merge(X_orig, suffixes=('_bin', '_seg'), on=['sample', 'Chromosome'], how="left")
+                .query("(Start_bin >= Start_seg) & (End_bin <= End_seg)")
+                .sort_values(["Chromosome", "Start_seg", "End_seg"])
+                .filter(like="value_")
+                .rolling(self.corr_window)
+                .corr(pairwise=True)
+                .rename_axis(["ix", "var"])
+                .query("var == 'value_bin'")
+                .loc[:, 'value_seg']
+                .dropna()
+                .reset_index(drop=True))
+        
     def validate(self, data: Dict[str, pd.DataFrame]):
         X_orig = data.get("original")
         X_tform = data.get("transformed")
+        data_type = data.get("type")
         
-        corr_s = self._calculate_pp_signal(X_orig, X_tform)
+        # TODO: Refactor to abstract
+        if data_type == "copynumber":
+            corr_s = self._cnvr_pp_signal(X_orig, X_tform)
+        
+        elif data_type == "expression":
+            corr_s = self._calculate_pp_signal(X_orig, X_tform)
         
         if corr_s.empty:
             raise ValueError("Prepared data is missing feature labels.")
