@@ -8,17 +8,34 @@ from dask.distributed import Client
 
 
 class DaskCluster:
-    def __init__(self, cores, memory, numworkers, time_limit):
+    def __init__(
+        self,
+        cores: int = 4,
+        memory: str = "8GB",
+        numworkers: int = 5,
+        threads: int = 4,
+        time_limit: str = None
+    ):
         self.cores = cores
         self.memory = memory
         self.numworkers = numworkers
+        self.threads = threads
         self.time_limit = time_limit
         if time_limit is None:
             self.time_limit = self.timelimit()
+        elif time_limit == "default":
+            self.time_limit = "0:30:00"
 
     @classmethod
     @contextmanager
-    def dask_cluster(cls, cores, memory, numworkers, time_limit):
+    def dask_cluster(
+        cls,
+        cores: int = 4,
+        memory: str = "8GB",
+        numworkers: int = 5,
+        threads: int = 4,
+        time_limit: str = None
+    ):
         """Context manager to launch a Dask cluster on SLURM.
 
         Example:
@@ -26,7 +43,7 @@ class DaskCluster:
         with DaskCluster(4, '4GB', 2, "0:30:00") as (cluster, client):
             # do stuff
         """
-        cluster, client = cls(cores, memory, numworkers, time_limit).acquire_cluster()
+        cluster, client = cls(cores, memory, numworkers, threads, time_limit).acquire_cluster()
         try:
             yield cluster, client
 
@@ -47,7 +64,7 @@ class DaskCluster:
         
         cluster = SLURMCluster(
             cores=self.cores,
-            processes=1,
+            processes=self.threads,
             queue='hbfraser,hns',
             memory=self.memory,
             walltime=self.time_limit,

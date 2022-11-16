@@ -12,6 +12,7 @@ import casskit.io.utils as io_utils
 import casskit.config as config
 from casskit.descriptors import OneOf
 
+
 class EnsemblData:
     
     # From ensembl_object.species.reference_assemblies

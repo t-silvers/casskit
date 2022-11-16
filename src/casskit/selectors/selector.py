@@ -1,3 +1,4 @@
+import dask_ml
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -26,12 +27,26 @@ class LHSelector(BaseEstimator, TransformerMixin):
                 .fillna(0))
 
 class ColumnSelector(ColumnTransformer):
+    # For dask objects, we need to use the dask-ml version of ColumnTransformer
+    # https://ml.dask.org/modules/generted/dask_ml.compose.ColumnTransformer.html#dask_ml.compose.ColumnTransformer
+    # dask_ml.compose.ColumnTransformer(preserve_dataframe=False)
     def __init__(self, selector_name, **selector_kwargs):
         self.selector_name = selector_name
         super().__init__(
             transformers=[(self.selector_name, "passthrough",
                            make_column_selector(**selector_kwargs))],
             remainder="drop"
+        )
+
+class ColumnSelectorDask(dask_ml.compose.ColumnTransformer):
+    # For dask objects, we need to use the dask-ml version of ColumnTransformer
+    def __init__(self, selector_name, **selector_kwargs):
+        self.selector_name = selector_name
+        super().__init__(
+            transformers=[(self.selector_name, "passthrough",
+                           make_column_selector(**selector_kwargs))],
+            remainder="drop",
+            preserve_dataframe=False
         )
 
 class make_column_selector:
