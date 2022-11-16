@@ -1,3 +1,4 @@
+from multiprocessing.context import SpawnProcess
 from typing import Dict, List, Tuple, Union
 
 import numpy as np
@@ -8,6 +9,7 @@ from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
+import casskit.io.utils as io_utils
 from casskit.preprocess.phenotype import SimpleNaNImputer, TumorStageEncoder
 
 
@@ -78,13 +80,18 @@ class ClinicalCovariates(BaseEstimator, TransformerMixin):
 
     @property
     def one_hot(self) -> ColumnTransformer:
-        return ColumnTransformer(transformers=[
-            ("onehot", OneHotEncoder(
-                min_frequency=self.min_frequency,
-                drop=self.onehot_drop,
-                sparse_output=False    
-            ), self.CAT_VARS)
-            ], verbose_feature_names_out=False, remainder="passthrough")
+        args = dict(
+            min_frequency=self.min_frequency, drop=self.onehot_drop
+        )
+        if io_utils.check_package_version("scikit-learn", "1.2.dev"):
+            args.update(dict(sparse_output=False))
+        else:
+            args.update(dict(sparse=False))
+        
+        return ColumnTransformer(
+            transformers=[("onehot", OneHotEncoder(**args), self.CAT_VARS)],
+            verbose_feature_names_out=False, remainder="passthrough"
+        )
 
     @property
     def stage_encoder(self) -> ColumnTransformer:
