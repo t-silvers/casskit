@@ -106,17 +106,25 @@ class EnsemblData:
 
     @classmethod
     def annotate_pyranges(
-        cls, assembly: str, gene_ids: List[str], identifier: str
+        cls,
+        gene_ids: List[str],
+        assembly: str = "GRCh37",
+        identifier: str = "gene_id"
     ) -> pr.PyRanges:
         OneOf("gene_id", "gene_name").validate(identifier)
         gr = cls.to_pyranges(assembly)
-        return gr[getattr(gr, identifier).isin(["NF1"])]
+        return gr[getattr(gr, identifier).isin(gene_ids)]
 
     @classmethod
     def annotate_df(
-        cls, assembly: str, identifier:str, gene_ids: List[str]
+        cls,
+        gene_ids: List[str],
+        assembly: str = "GRCh37",
+        identifier: str = "gene_id"
     ) -> pd.DataFrame:
-        return cls.annotate_pyranges(assembly, identifier, gene_ids).df
+        return cls.annotate_pyranges(
+            gene_ids, assembly=assembly, identifier=identifier
+        ).df
 
 
 get_ensembl_tss = EnsemblData.get_tss
