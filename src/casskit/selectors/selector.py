@@ -1,4 +1,4 @@
-import dask_ml
+from dask_ml import compose as dask_compose
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -38,7 +38,7 @@ class ColumnSelector(ColumnTransformer):
             remainder="drop"
         )
 
-class ColumnSelectorDask(dask_ml.compose.ColumnTransformer):
+class ColumnSelectorDask(dask_compose.ColumnTransformer):
     # For dask objects, we need to use the dask-ml version of ColumnTransformer
     def __init__(self, selector_name, **selector_kwargs):
         self.selector_name = selector_name
