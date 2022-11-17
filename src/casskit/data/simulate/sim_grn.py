@@ -71,7 +71,7 @@ class SimGRN(base.SimulationMixin):
     @property
     def cis_cn(self) -> List:
         return [Regulator(
-            ID=self.egene_id, coords=self.egene_coords, cis=True, etype="cn"
+            ID=self.egene_id, coords=self.egene_coords, cis=True, etype="copynumber"
         )]
 
     @property
@@ -89,7 +89,7 @@ class SimGRN(base.SimulationMixin):
         for _ in range(int(self.k_cis)):
             coords = self.randcncoords(chroms=[self.egene_coords.chrom])
             cis_eqtls.append(
-                Regulator(ID="", cis=True, coords=coords, etype="variant", efunc="linear")
+                Regulator(ID="", cis=True, coords=coords, etype="copynumber", efunc="linear")
             )
             
         return cis_eqtls
@@ -100,7 +100,7 @@ class SimGRN(base.SimulationMixin):
         for _ in range(int(self.k_trans)):
             coords = self.randcncoords(chroms=list(self.copynumber_ids.keys()))
             trans_eqtls.append(
-                Regulator(ID="", cis=False, coords=coords, etype="variant", efunc="linear")
+                Regulator(ID="", cis=False, coords=coords, etype="copynumber", efunc="linear")
             )
             
         return trans_eqtls

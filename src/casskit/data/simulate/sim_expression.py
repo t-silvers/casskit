@@ -6,6 +6,7 @@ import pandas as pd
 import scipy as sp
 
 import casskit.data.simulate.base as base
+import casskit.data.simulate.sim_grn as grn
 
 
 class SimExpression(base.SimulationMixin):
@@ -16,11 +17,19 @@ class SimExpression(base.SimulationMixin):
         self,
         N: int = 100,
         p: int = 500,
+        regulators: List[grn.Regulator] = None,
+        variants: pd.DataFrame = None,
+        copynumber: pd.DataFrame = None,
         exp_method="gauss",
+        noise_sd: int=1,
         **kwargs
     ) -> None:
         super().__init__(N, p)
+        self.regulators = regulators
+        self.variants = variants
+        self.copynumber = copynumber
         self.exp_method = exp_method
+        self.noise_sd = noise_sd
         self.kwargs = kwargs
         
         # Methods
@@ -31,7 +40,9 @@ class SimExpression(base.SimulationMixin):
 
     @property
     def data(self):
-        return self.make_data()
+        µ = self.sim_loc()
+        y = µ + self.noise(self.noise_sd, self.N)
+        return pd.DataFrame(y, index=self.annotate("TCGA-", size=self.N))
 
     @property
     def latent_vars(self) -> List:
@@ -48,8 +59,26 @@ class SimExpression(base.SimulationMixin):
         
         return pd.DataFrame(y)
 
-    def make_data(self):
-        self.methods[self.cn_method](self.kwargs)
+    def sim_loc(self):
+        µ = 0
+        for eqtl in self.regulators:
+            if eqtl.etype == "copynumber":
+                # Note that this only honors the start position
+                x = self.copynumber.query("""
+                                            Chrom == @eqtl.coords.chrom & \
+                                            Start <= @eqtl.coords.start_pos & \
+                                            End >= @eqtl.coords.start_pos
+                                            """).value.values
+                
+            elif eqtl.etype == "variant":
+                x = self.variants[eqtl.ID].values
+            
+            else:
+                raise ValueError("Unknown eQTL type.")
+            
+            µ += eqtl.expression_contribution(x)
+
+        return µ
 
     def gauss(self):
         # ill-conditioned
@@ -63,6 +92,7 @@ class SimExpression(base.SimulationMixin):
         noise_sd = self.kwargs.get("noise_sd", 1)
         intercept = self.kwargs.get("intercept", 1)
         design = self.kwargs.get("design", None)
+        
         if design is None:
             raise ValueError("Must provide a design matrix.")
         
@@ -81,7 +111,16 @@ class SimExpression(base.SimulationMixin):
         return np.exp(µ)
 
     @classmethod
-    def linmod(cls, X, link_func=lambda x: x):
-        pass
+    def simulate(
+        cls,
+        N: int = 100,
+        p: int = 500,
+        regulators: List[grn.Regulator] = None,
+        variants: pd.DataFrame = None,
+        copynumber: pd.DataFrame = None,
+        exp_method="gauss",
+        **kwargs
+    ) -> pd.DataFrame:
+        return cls(N, p, regulators, variants, copynumber, exp_method, **kwargs).data
 
-simulate_expression = SimExpression.linmod
+simulate_expression = SimExpression.simulate
