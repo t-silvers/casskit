@@ -3,6 +3,9 @@ from typing import List
 import numpy as np
 
 
+# https://github.com/yaglm/yaglm/blob/bf8169aa73ae1ecea8f8bb0f6d3c093886dc8507/yaglm/toy_data.py
+
+
 def get_seed():
     return np.random.SeedSequence().entropy
 
@@ -44,5 +47,11 @@ class SimulationMixin(FunctionMixin):
         self.rng = np.random.default_rng(self.seed)
     
     @staticmethod
-    def annotate(stem, size) -> List[str]:
-        return [f"{stem}_{i:04}" for i in range(size)]
+    def annotate(stem, size: int = None, range_ : List = []) -> List[str]:
+        if size is not None:
+            # return map(lambda x: f"{stem}_{x:04}", range(size))
+            return [f"{stem}-{i:04}" for i in range(size)]
+        elif len(range_) > 0:
+            return [f"{stem}-{i:04}" for i in range_]
+        else:
+            raise ValueError("Must provide either size or range_.")

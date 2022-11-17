@@ -1,3 +1,6 @@
+# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
+# License: MIT
+
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional

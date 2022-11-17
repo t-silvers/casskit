@@ -16,8 +16,9 @@ from casskit.descriptors import OneOf
 class EnsemblData:
     
     # From ensembl_object.species.reference_assemblies
-    PYENSEMBL_ASSEMBLIES = {"GRCh38": 77, "GRCh37": 75, "NCBI36": 54}
-    
+    # PYENSEMBL_ASSEMBLIES = {"GRCh38": 77, "GRCh37": 75, "NCBI36": 54}
+    PYENSEMBL_ASSEMBLIES = {"GRCh38": 77, "GRCh37": 75}
+
     def __init__(
         self,
         assembly: str = "GRCh37",

@@ -1,3 +1,6 @@
+# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
+# License: MIT
+
 import pandas as pd
 
 from casskit.io.ontology.biogrid import get_biogrid

@@ -1,3 +1,6 @@
+# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
+# License: MIT
+
 from __future__ import annotations
 
 from collections import namedtuple

@@ -1,3 +1,6 @@
+# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
+# License: MIT
+
 import certifi
 from pathlib import Path
 import ssl

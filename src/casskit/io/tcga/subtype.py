@@ -1,3 +1,6 @@
+# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
+# License: MIT
+
 import csv
 from dataclasses import dataclass, field
 import io

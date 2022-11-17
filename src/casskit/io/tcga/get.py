@@ -1,3 +1,6 @@
+# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
+# License: MIT
+
 from casskit.io.tcga.ancestry import get_ancestry_pcs
 from casskit.io.tcga.aneuploidy_score import get_tcga_aneuploidy_scores
 from casskit.io.tcga.gdc_xena import build_tcga, get_gdc_tcga
