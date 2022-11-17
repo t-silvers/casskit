@@ -90,7 +90,7 @@ class PPSignal(Validator):
                         .set_index("cnvr_id")
                         .sort_values("Start_tformed")
                         .filter(like="value_")
-                        .rolling(100)
+                        .rolling(self.corr_window)
                         .corr(pairwise=True)
                         .dropna()
                         .rename_axis(["cnvr_id", "var"])
@@ -126,7 +126,7 @@ class PPSignal(Validator):
 
         if (corr_s < self.etol).any():
             try:
-                if (corr_s < .8).value_counts(normalize=True).loc[True] > self.ef:
+                if (corr_s < self.etol).value_counts(normalize=True).loc[True] > self.ef:
                     raise ValueError("Correlation between original and transformed data "
                                     f"is below the error threshold {self.etol} for more "
                                     f" than {self.ef:.2%} of features."
