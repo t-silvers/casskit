@@ -1,11 +1,18 @@
-# Author: Thomas R. Silvers <thomas.silvers.1@gmail.com>
-# License: MIT
-
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import FunctionTransformer
 
 from ..descriptors import OneOf
+
+UNITS = {
+    "log1p": "log1p",
+    "log2": "log2",
+    "log10": "log10",
+    "log2(count+1)": "log1p",
+    "absolute": "counts",
+    "abs": "counts",
+    "counts": "counts"
+}
 
 # TODO: FunctionTransformer arg check_inverse doesn't work when input has no dtype (eg pd.DataFrame)
 

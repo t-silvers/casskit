@@ -42,15 +42,6 @@ except:
 
 CACHE_DIR.mkdir(parents=True, exist_ok=True)
 
-UNITS = {
-    "log1p": "log1p",
-    "log2": "log2",
-    "log10": "log10",
-    "log2(count+1)": "log1p",
-    "absolute": "counts",
-    "abs": "counts",
-    "counts": "counts"
-}
 
 def set_cache(cache_dir, subdirs=[".cache", _CACHE_BASE_SUBDIR]):
     """Set cache directory."""
@@ -64,3 +55,20 @@ def set_cache(cache_dir, subdirs=[".cache", _CACHE_BASE_SUBDIR]):
 def get_cache():
     """Get cache directory."""
     return CACHE_DIR
+
+def set_threads(
+    threads: int = None, env_var: str = "SLURM_CPUS_PER_TASK"
+) -> None:
+    
+    if threads is None:
+        try:
+            threads = os.environ[env_var]
+        except:
+            threads = "1"
+
+    os.environ["BLIS_NUM_THREADS"] = threads
+    os.environ["MKL_NUM_THREADS"] = threads
+    os.environ["NUMEXPR_NUM_THREADS"] = threads
+    os.environ["OMP_NUM_THREADS"] = threads
+    os.environ["OPENBLAS_NUM_THREADS"] = threads
+    os.environ["VECLIB_MAXIMUM_THREADS"] = threads

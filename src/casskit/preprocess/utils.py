@@ -146,8 +146,8 @@ class PPSignal(Validator):
 
         if mean_val < self.etol:
             raise ValueError("Correlation between original and transformed data "
-                            f"is below the error threshold {self.etol} for more "
-                            f"than {self.ef:.2%} of features."
+                            f"is below the error threshold {self.etol:.2%} for "
+                            f"more than {self.ef:.2%} of features."
                             "Please check your preprocessing steps.")
             
         print(f"Processed features have average corr {mean_val:.2f} with original.")
