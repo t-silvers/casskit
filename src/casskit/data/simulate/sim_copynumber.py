@@ -228,6 +228,6 @@ Examples:
 
     >>> import casskit as ck
     >>> copynumber_raw = ck.io.get_tcga("cnv", cancer)
-    >>> ck.data.simulate_copynumber(cn_method="swap_augment", copynumber_template=copynumber)
+    >>> ck.data.simulate_copynumber(cn_method="swap_augment", copynumber_template=copynumber_raw)
 
 """

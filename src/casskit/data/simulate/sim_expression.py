@@ -33,6 +33,21 @@ class SimExpression(base.SimulationMixin):
     def data(self):
         return self.make_data()
 
+    @property
+    def latent_vars(self) -> List:
+        # https://cran.r-project.org/web/packages/simstandard/vignettes/simstandard_tutorial.html
+        # https://bookdown.org/marklhc/notes/simulation-example-on-structural-equation-modeling-sem.html
+        
+        alphas = self.rng.normal([0, 0.5])
+        phi = np.array([[1, 0.1], [0.1, 0.2]])
+        lambd = np.array([[1, 1, 1, 1], [0, 1, 2, 3]])
+        theta = np.diag([0.5, 0.5, 0.5, 0.5])
+        eta = self.rng.multivariate_normal(mean=alphas, cov=phi, size=self.N)
+        e = self.rng.multivariate_normal(mean=[0, 0, 0, 0], cov=theta, size=self.N)
+        y = np.dot(eta, lambd) + e
+        
+        return pd.DataFrame(y)
+
     def make_data(self):
         self.methods[self.cn_method](self.kwargs)
 
@@ -64,3 +79,9 @@ class SimExpression(base.SimulationMixin):
     def poireg(self):
         µ = self.linreg()
         return np.exp(µ)
+
+    @classmethod
+    def linmod(cls, X, link_func=lambda x: x):
+        pass
+
+simulate_expression = SimExpression.linmod
