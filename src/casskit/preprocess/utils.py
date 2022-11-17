@@ -56,7 +56,7 @@ class PPSignal(Validator):
                 .apply(lambda df: self.eval_func(df))
                 .dropna())
 
-    def _cnvr_pp_signal(self, X_orig: pd.DataFrame, X_tform: pd.DataFrame):
+    def _cnvrbins_pp_signal(self, X_orig: pd.DataFrame, X_tform: pd.DataFrame):
         return (X_tform
                 .sample(frac=self.frac_test, replace=False)
                 .melt(ignore_index=False)
@@ -72,15 +72,44 @@ class PPSignal(Validator):
                 .loc[:, 'value_seg']
                 .dropna()
                 .reset_index(drop=True))
-        
+
+    def _cnvrmvcpd_pp_signal(self, X_orig: pd.DataFrame, X_tform: pd.DataFrame):
+        X_orig = (X_orig.melt(var_name="sample", ignore_index=False).reset_index().astype({"Start": int, "End": int}))
+
+        return (X_tform
+                .sample(frac=self.frac_test, replace=False)
+                .melt(var_name="sample", ignore_index=False)
+                .reset_index()
+                .astype({"Start": int, "End": int})
+                .merge(X_orig, suffixes=("_tformed", "_original"), on=['sample', 'Chromosome'], how="left")
+                .query("(Start_original >= Start_tformed) & (End_original <= End_tformed)")
+                .groupby("Chromosome")
+                .apply(
+                    lambda df: (
+                        df
+                        .set_index("cnvr_id")
+                        .sort_values("Start_tformed")
+                        .filter(like="value_")
+                        .rolling(100)
+                        .corr(pairwise=True)
+                        .dropna()
+                        .rename_axis(["cnvr_id", "var"])
+                        .query("var == 'value_original'")
+                        .loc[:, 'value_tformed']
+                        .reset_index(drop=True)
+                    )))
+
     def validate(self, data: Dict[str, pd.DataFrame]):
         X_orig = data.get("original")
         X_tform = data.get("transformed")
         data_type = data.get("type")
         
         # TODO: Refactor to abstract
-        if data_type == "copynumber":
-            corr_s = self._cnvr_pp_signal(X_orig, X_tform)
+        if data_type in ["copynumber_gene", "copynumber_bins"]:
+            corr_s = self._cnvrbins_pp_signal(X_orig, X_tform)
+
+        elif data_type == "copynumber_mvcpd":
+            corr_s = self._cnvrmvcpd_pp_signal(X_orig, X_tform)
         
         elif data_type == "expression":
             corr_s = self._calculate_pp_signal(X_orig, X_tform)
