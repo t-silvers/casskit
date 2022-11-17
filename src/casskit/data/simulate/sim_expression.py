@@ -83,3 +83,5 @@ class SimExpression(base.SimulationMixin):
     @classmethod
     def linmod(cls, X, link_func=lambda x: x):
         pass
+
+simulate_expression = SimExpression.linmod
