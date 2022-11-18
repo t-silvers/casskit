@@ -79,12 +79,23 @@ class SimTCGA:
         tcga_cn_start = self.tcga_cn.Start.round(coarsen).astype(int)
         cn_bin_starts = np.arange(tcga_cn_start.min(), tcga_cn_start.max()+self.cneqtl_size, self.cneqtl_size)
 
+        # For filtering by high variance cns
+        N = self.tcga_cn["sample"].nunique()
+        N_cutoff = int(N/10)
+        var_cutoff = 1
+
         return (self.tcga_cn
                 .assign(
                     cn_bin_start=pd.cut(
                         tcga_cn_start, bins=cn_bin_starts, labels=cn_bin_starts[:-1]
                     ).astype(float),
-                ).drop_duplicates(subset=["Chrom", "cn_bin_start"])
+                )
+                # filter by high variance cns
+                .groupby(["Chrom", "cn_bin_start"])
+                [["value"]].agg({"value": ["var", "count"]})
+                ["value"]
+                .query("count > @N_cutoff & var > @var_cutoff")
+                .index.to_frame(index=False)
                 .groupby("Chrom", group_keys=False)
                 ["cn_bin_start"]
                 .apply(lambda x: x.tolist())

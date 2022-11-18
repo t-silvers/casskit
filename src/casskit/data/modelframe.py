@@ -129,5 +129,5 @@ class CNVRCopyNumber:
             self.preprocessing = self.prepare()
         prepared = self.preprocessing.fit_transform(self.raw)
         self.prepared = (prepared
-                         .droplevel(["Chromosome", "start_pos", "end_pos"])
+                         .droplevel(["Chromosome", "Start", "End"])
                          .transpose())
