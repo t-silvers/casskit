@@ -38,8 +38,8 @@ class SimTCGA:
         if self.tcga_cn is None:
             super().__setattr__("tcga_cn", get_tcga("cnv", self.cancer))
         
-        super().__setattr__("egenes", self.get_candidate_egenes())
         super().__setattr__("chroms", self.tcga_cn.Chrom.unique().tolist())
+        super().__setattr__("egenes", self.get_candidate_egenes())
         
         # Simulate omics
         super().__setattr__("candidate_cneqtls", self.get_candidate_cneqtls())
