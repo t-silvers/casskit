@@ -25,8 +25,8 @@ class SimTCGA:
 
     cneqtl_size: int = int(1E5)
     cn_method: str = "swap_augment"
-    k_cis: int = 2
-    k_var: int = 5
+    k_cis: int = 0
+    k_var: int = 2
     k_trans: int = 10
 
     tcga_expression: pd.DataFrame = field(init=False, default=None)
