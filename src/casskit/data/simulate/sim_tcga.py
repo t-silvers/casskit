@@ -77,7 +77,7 @@ class SimTCGA:
                 .to_dict("records"))
 
     def get_candidate_cneqtls(self, coarsen=-4) -> Dict:
-        tcga_cn_start = self.tcga_cn.Start_pos.round(coarsen).astype(int)
+        tcga_cn_start = self.tcga_cn.Start.round(coarsen).astype(int)
         cn_bin_starts = np.arange(tcga_cn_start.min(), tcga_cn_start.max()+self.cneqtl_size, self.cneqtl_size)
 
         return (self.tcga_cn
