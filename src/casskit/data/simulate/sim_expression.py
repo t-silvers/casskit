@@ -42,7 +42,7 @@ class SimExpression(base.SimulationMixin):
 
     @property
     def sim_samples(self):
-        return self.annotate("TCGA", size=self.N)
+        return self.annotate("TCGA-00", size=self.N)
 
     @property
     def data(self):

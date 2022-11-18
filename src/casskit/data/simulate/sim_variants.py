@@ -27,7 +27,7 @@ class SimVariants(base.SimulationMixin):
         return pd.DataFrame(
             self.make_data(),
             columns=self.annotate("snp", size=self.p),
-            index=self.annotate("TCGA-", size=self.N),
+            index=self.annotate("TCGA-00", size=self.N),
         )
 
     def make_data(self):
