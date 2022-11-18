@@ -11,6 +11,7 @@ from casskit.data.simulate.sim_variants import simulate_variants
 from casskit.data.simulate.sim_copynumber import simulate_copynumber
 from casskit.data.simulate.sim_grn import simulate_grn
 from casskit.data.simulate.sim_expression import simulate_expression
+from casskit.preprocess.units import ToCounts
 
 
 @dataclass(frozen=True)
@@ -36,7 +37,9 @@ class SimTCGA:
             super().__setattr__("tcga_expression", get_tcga("htseq_counts", self.cancer))
         
         if self.tcga_cn is None:
-            super().__setattr__("tcga_cn", get_tcga("cnv", self.cancer))
+            super().__setattr__(
+                "tcga_cn", ToCounts("log2(copy-number/2)").fit_transform(get_tcga("cnv", self.cancer))
+            )
         
         super().__setattr__("chroms", self.tcga_cn.Chrom.unique().tolist())
         super().__setattr__("egenes", self.get_candidate_egenes())
