@@ -64,11 +64,14 @@ class SimExpression(base.SimulationMixin):
         for eqtl in self.regulators:
             if eqtl.etype == "copynumber":
                 # Note that this only honors the start position
-                x = self.copynumber.query("""
-                                            Chrom == @eqtl.coords.chrom & \
-                                            Start <= @eqtl.coords.start_pos & \
-                                            End >= @eqtl.coords.start_pos
-                                            """).value.values
+                x = (self.copynumber
+                     .query("""
+                            Chrom == @eqtl.coords.chrom & \
+                            Start <= @eqtl.coords.start_pos & \
+                            End >= @eqtl.coords.start_pos
+                            """)
+                     .groupby("sample")
+                     ["value"].mean().values)
                 
             elif eqtl.etype == "variant":
                 x = self.variants[eqtl.ID].values
