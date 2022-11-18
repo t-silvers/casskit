@@ -119,6 +119,7 @@ class SimExpression(base.SimulationMixin):
     @classmethod
     def simulate(
         cls,
+        gene_id,
         N: int = 100,
         p: int = 500,
         regulators: List[grn.Regulator] = None,
@@ -127,6 +128,6 @@ class SimExpression(base.SimulationMixin):
         exp_method="gauss",
         **kwargs
     ) -> pd.DataFrame:
-        return cls(N, p, regulators, variants, copynumber, exp_method, **kwargs).data
+        return cls(gene_id, N, p, regulators, variants, copynumber, exp_method, **kwargs).data
 
 simulate_expression = SimExpression.simulate
