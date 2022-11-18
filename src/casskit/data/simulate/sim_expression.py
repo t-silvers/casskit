@@ -41,11 +41,14 @@ class SimExpression(base.SimulationMixin):
                         "poireg": self.poireg}
 
     @property
+    def sim_samples(self):
+        return self.annotate("TCGA", size=self.N)
+
+    @property
     def data(self):
         µ = self.sim_loc()
         y = µ + self.noise(self.noise_sd, self.N)
-        return pd.DataFrame(y, index=self.annotate("TCGA", size=self.N),
-                            columns=[f"expression_{self.gene_id}"])
+        return pd.DataFrame(y, index=self.sim_samples, columns=[f"expression_{self.gene_id}"])
 
     @property
     def latent_vars(self) -> List:
@@ -76,7 +79,7 @@ class SimExpression(base.SimulationMixin):
                             """)
                      .groupby("sample")
                      ["value"].mean()
-                     .reindex(self.copynumber.index)
+                     .reindex(self.sim_samples)
                      .values)
                 
             elif eqtl.etype == "variant":
