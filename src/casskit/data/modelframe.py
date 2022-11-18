@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 
-from cneqtl.cnvrs import BinCaller, GeneCaller, CPDcaller
 import pandas as pd
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
