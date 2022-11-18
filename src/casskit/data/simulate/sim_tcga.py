@@ -3,6 +3,7 @@ from typing import Dict, List
 
 import numpy as np
 import pandas as pd
+import tqdm
 
 from casskit.io import get_tcga, get_ensembl_tss
 from casskit.data.simulate.sim_variants import simulate_variants
@@ -33,7 +34,7 @@ class SimTCGA:
 
         self.tcga_expression = get_tcga("htseq_counts", cancer)
         self.tcga_cn = get_tcga("cnv", cancer)
-        
+
     @property
     def egenes(self) -> Dict:
         return self.get_candidate_egenes()
@@ -93,7 +94,9 @@ class SimTCGA:
 
     def simulate_egene_grn(self, gene_id, gene_name, gene_coords):
         return simulate_grn(
-            gene_id, gene_name, egene_coords=gene_coords,
+            gene_id,
+            gene_name,
+            egene_coords=gene_coords,
             chroms=self.chroms,
             var_ids=self.candidate_variants,
             copynumber_ids=self.candidate_cneqtls,
@@ -105,14 +108,16 @@ class SimTCGA:
 
     def simulate_egene_expression(self, gene_id, grn_sim):
         return simulate_expression(
-            gene_id, regulators=grn_sim,
+            gene_id,
+            regulators=grn_sim,
             variants=self.variants,
             copynumber=self.copynumber
         )
 
     def make_expression(self):
         grns, expressions = [], []
-        for egene in self.egenes:
+        for egene in tqdm.tqdm(self.egenes):
+            print(egene)
             grn, grn_df = self.simulate_egene_grn(
                 egene.get("gene_id"), egene.get("gene_name"),
                 (egene.get("Chromosome"), egene.get("Start"), egene.get("End"))
@@ -124,6 +129,5 @@ class SimTCGA:
             expressions.append(expression)
 
         return pd.concat(grns, axis=1), pd.concat(expressions, axis=1)
-
 
 simulate_tcga = lambda cancer: SimTCGA(cancer, I=100, N=100, P=500, seed=1234)
