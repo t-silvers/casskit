@@ -27,8 +27,15 @@ class EnsemblData:
         self.assembly = assembly
         self.release = self.PYENSEMBL_ASSEMBLIES[assembly]
         if cache_dir is None:
-            cache_dir = Path(config.CACHE_DIR)
-        self.set_cache(cache_dir)
+            cache_dir = config.CACHE_DIR
+        self.cache_dir = Path(cache_dir)
+        
+        # Set up local cache of subsetted GTF files
+        os.environ['PYENSEMBL_CACHE_DIR'] = self.cache_dir.as_posix()
+        if not self.gtf_path.exists():
+            warnings.warn(f"Downloading GTF file for {self.assembly}...")
+            self.ensembl.download()
+            self.ensembl.index()
 
     @property
     def ensembl(self) -> pyensembl.EnsemblRelease:
@@ -42,20 +49,16 @@ class EnsemblData:
 
     @property
     def cached_subset(self) -> pr.PyRanges:
+        self.set_cache(self.cache_dir / f"ensembl_{self.assembly}_{self.release}_subset.gtf")
         return self.subset_to_genes(self.gtf_path)
 
-    def set_cache(self, cache_dir: Path) -> None:
-        self.cache_dir = Path(cache_dir)
-        
-        # Check pyensembl cache
-        os.environ['PYENSEMBL_CACHE_DIR'] = self.cache_dir.as_posix()
-        if not self.gtf_path.exists():
-            warnings.warn(f"Downloading GTF file for {self.assembly}...")
-            self.ensembl.download()
-            self.ensembl.index()
-        
-        # Set up local cache of subsetted GTF files
-        self.path_cache = self.cache_dir / f"ensembl_{self.assembly}_{self.release}_subset.gtf"
+    @property
+    def cached_tss(self) -> pr.PyRanges:
+        self.set_cache(self.cache_dir / f"ensembl_{self.assembly}_{self.release}_tss.gtf")
+        return self.tss_from_ensembl(pr.read_gtf(self.gtf_path))
+
+    def set_cache(self, path_cache: Path) -> None:
+        self.path_cache = path_cache
         self.read_cache = lambda cache: pr.read_gtf(cache)
         self.write_cache = lambda data, cache: data.to_gtf(cache)
         
@@ -71,18 +74,18 @@ class EnsemblData:
             __ = cls(assembly).cached_subset
 
     @classmethod
-    def to_pyranges(cls, assembly: str):
+    def to_pyranges(cls, assembly: str = "GRCh37"):
         return cls(assembly).cached_subset
 
     @classmethod
-    def to_df(cls, assembly: str):
+    def to_df(cls, assembly: str = "GRCh37"):
         return cls(assembly).cached_subset.df
 
     @classmethod
-    def get_tss(cls, assembly: str):
-        tss_ensembl = cls(assembly)
-        return tss_ensembl.tss_from_ensembl(pr.read_gtf(tss_ensembl.gtf_path))
-        
+    def get_tss(cls, assembly: str = "GRCh37"):
+        return cls(assembly).cached_tss.df
+
+    @io_utils.cache_on_disk
     def tss_from_ensembl(self, ensembl_pr) -> pr.PyRanges:
         """Get TSSs from Ensembl.
         
