@@ -31,7 +31,7 @@ class SimTCGA:
         self.k_var = 5
         self.k_trans = 10
 
-        self.tcga_expression = get_tcga("expression", cancer)
+        self.tcga_expression = get_tcga("htseq_counts", cancer)
         self.tcga_cn = get_tcga("cnv", cancer)
         
     @property
