@@ -1,3 +1,4 @@
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, List
 
@@ -12,62 +13,53 @@ from casskit.data.simulate.sim_grn import simulate_grn
 from casskit.data.simulate.sim_expression import simulate_expression
 
 
+@dataclass(frozen=True)
 class SimTCGA:
-    def __init__(
-        self,
-        cancer,
-        I: int = 100,
-        N: int = 100,
-        P: int = 500,
-        seed: int = None
-    ):
-        self.cancer = cancer
-        self.I = I
-        self.N = N
-        self.P = P
-        self.seed = seed
-        self.cneqtl_size = 1E5
-        self.cn_method = "swap_augment"
-        self.k_cis = 2
-        self.k_var = 5
-        self.k_trans = 10
 
-        self.tcga_expression = get_tcga("htseq_counts", cancer)
-        self.tcga_cn = get_tcga("cnv", cancer)
+    cancer: str
+    I: int
+    N: int
+    P: int
+    seed: int = 212
 
-    @property
-    def egenes(self) -> Dict:
-        return self.get_candidate_egenes()
+    cneqtl_size: int = int(1E5)
+    cn_method: str = "swap_augment"
+    k_cis: int = 2
+    k_var: int = 5
+    k_trans: int = 10
 
-    @property
-    def chroms(self) -> List:
-        return self.tcga_cn.Chrom.unique().tolist()
+    tcga_expression: pd.DataFrame = field(init=False, default=None)
+    tcga_cn: pd.DataFrame = field(init=False, default=None)
 
-    @property
-    def candidate_variants(self) -> pd.DataFrame:
-        return self.variants.columns.tolist()
-
-    @property
-    def candidate_cneqtls(self) -> Dict:
-        return self.get_candidate_cneqtls()
-
-    @property
-    def variants(self) -> pd.DataFrame:
-        return simulate_variants(self.N, self.P)
-
-    @property
-    def copynumber(self) -> pd.DataFrame:
-        return simulate_copynumber(
-            self.N, self.P, cn_method=self.cn_method, copynumber_template=self.tcga_cn
+    def __post_init__(self):
+        if self.tcga_expression is None:
+            super().__setattr__("tcga_expression", get_tcga("htseq_counts", self.cancer))
+        
+        if self.tcga_cn is None:
+            super().__setattr__("tcga_cn", get_tcga("cnv", self.cancer))
+        
+        super().__setattr__("egenes", self.get_candidate_egenes())
+        super().__setattr__("chroms", self.tcga_cn.Chrom.unique().tolist())
+        
+        # Simulate omics
+        super().__setattr__("candidate_cneqtls", self.get_candidate_cneqtls())
+        super().__setattr__("variants", simulate_variants(self.N, self.P))
+        super().__setattr__("candidate_variants", self.variants.columns.tolist())
+        super().__setattr__("copynumber",
+            simulate_copynumber(
+                self.N, self.P, cn_method=self.cn_method,
+                copynumber_template=self.tcga_cn
+            )
         )
-
-    @property
-    def expression(self) -> pd.DataFrame:
-        grn, expression = self.make_expression()
-        self.grn = grn
-        return expression
-
+        
+        # Simulate expression
+        grns, grn_df = self.make_grns()
+        super().__setattr__("grns", grns)
+        super().__setattr__("grn_df", grn_df)
+        super().__setattr__("expression", self.make_expression(grns))
+    
     def get_candidate_egenes(self) -> np.ndarray:
+        print(self.tcga_expression.shape)
         egenes = self.tcga_expression.Ensembl_ID.str.split(".", expand=True)[0].unique()
         egene_tss = get_ensembl_tss()
         
@@ -114,20 +106,28 @@ class SimTCGA:
             copynumber=self.copynumber
         )
 
-    def make_expression(self):
-        grns, expressions = [], []
+    def make_grns(self):
+        grns, grn_dfs = {}, []
         for egene in tqdm.tqdm(self.egenes):
             print(egene)
             grn, grn_df = self.simulate_egene_grn(
                 egene.get("gene_id"), egene.get("gene_name"),
                 (egene.get("Chromosome"), egene.get("Start"), egene.get("End"))
             )
-            expression = self.simulate_egene_expression(
-                egene.get("gene_id"), grn
-            )
-            grns.append(grn_df)
-            expressions.append(expression)
+            grns[egene.get("gene_id")] = grn
+            grn_dfs.append(grn_df.assign(gene_id=egene.get("gene_id")))
 
-        return pd.concat(grns, axis=1), pd.concat(expressions, axis=1)
+        return grns, pd.concat(grn_dfs)
+
+    def make_expression(self, grns):
+        return pd.concat(
+            [self.simulate_egene_expression(
+                egene.get("gene_id"), grns[egene.get("gene_id")]
+             ) for egene in tqdm.tqdm(self.egenes)],
+            axis=1
+        )
+
+    def __repr__(self) -> str:
+        return f"SimTCGA(cancer={self.cancer}, I={self.I}, N={self.N}, P={self.P}, seed={self.seed})"
 
 simulate_tcga = lambda cancer: SimTCGA(cancer, I=100, N=100, P=500, seed=1234)
