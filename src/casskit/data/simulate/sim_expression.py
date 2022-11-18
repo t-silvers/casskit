@@ -75,7 +75,9 @@ class SimExpression(base.SimulationMixin):
                             End >= @eqtl.coords.start_pos
                             """)
                      .groupby("sample")
-                     ["value"].mean().values)
+                     ["value"].mean()
+                     .reindex(self.copynumber.index)
+                     .values)
                 
             elif eqtl.etype == "variant":
                 x = self.variants[eqtl.ID].values
