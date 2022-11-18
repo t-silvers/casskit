@@ -59,7 +59,6 @@ class SimTCGA:
         super().__setattr__("expression", self.make_expression(grns))
     
     def get_candidate_egenes(self) -> np.ndarray:
-        print(self.tcga_expression.shape)
         egenes = self.tcga_expression.Ensembl_ID.str.split(".", expand=True)[0].unique()
         egene_tss = get_ensembl_tss()
         
@@ -108,8 +107,7 @@ class SimTCGA:
 
     def make_grns(self):
         grns, grn_dfs = {}, []
-        for egene in tqdm.tqdm(self.egenes):
-            print(egene)
+        for egene in self.egenes:
             grn, grn_df = self.simulate_egene_grn(
                 egene.get("gene_id"), egene.get("gene_name"),
                 (egene.get("Chromosome"), egene.get("Start"), egene.get("End"))
@@ -130,4 +128,5 @@ class SimTCGA:
     def __repr__(self) -> str:
         return f"SimTCGA(cancer={self.cancer}, I={self.I}, N={self.N}, P={self.P}, seed={self.seed})"
 
-simulate_tcga = lambda cancer: SimTCGA(cancer, I=100, N=100, P=500, seed=1234)
+def simulate_tcga(cancer, I=100, N=100, P=500, seed=212):
+    return SimTCGA(cancer, I, N, P, seed=seed)
