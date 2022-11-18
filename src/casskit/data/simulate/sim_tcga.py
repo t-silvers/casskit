@@ -63,7 +63,7 @@ class SimTCGA:
         egene_tss = get_ensembl_tss()
         
         return (egene_tss
-                .query("gene_id in @egenes")
+                .query("gene_id in @egenes & Chromosome in @self.chroms")
                 .sample(n=self.I, random_state=self.seed, replace=False)
                 .filter(["gene_id", "gene_name", "Chromosome", "Start", "End"])
                 .to_dict("records"))
