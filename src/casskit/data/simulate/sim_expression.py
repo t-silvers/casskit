@@ -65,6 +65,7 @@ class SimExpression(base.SimulationMixin):
     def sim_loc(self):
         µ = 0
         for eqtl in self.regulators:
+            print(eqtl)
             if eqtl.etype == "copynumber":
                 # Note that this only honors the start position
                 x = (self.copynumber
