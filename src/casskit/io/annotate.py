@@ -83,7 +83,7 @@ class EnsemblData:
 
     @classmethod
     def get_tss(cls, assembly: str = "GRCh37"):
-        return cls(assembly).cached_tss.df
+        return cls(assembly).cached_tss
 
     @io_utils.cache_on_disk
     def tss_from_ensembl(self, gtf_path) -> pr.PyRanges:

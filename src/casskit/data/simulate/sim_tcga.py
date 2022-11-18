@@ -67,7 +67,7 @@ class SimTCGA:
     
     def get_candidate_egenes(self) -> np.ndarray:
         egenes = self.tcga_expression.Ensembl_ID.str.split(".", expand=True)[0].unique()
-        egene_tss = get_ensembl_tss()
+        egene_tss = get_ensembl_tss().df
         
         return (egene_tss
                 .query("gene_id in @egenes & Chromosome in @self.chroms")
