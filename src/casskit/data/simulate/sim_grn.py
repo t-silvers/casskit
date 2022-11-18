@@ -21,6 +21,7 @@ class Regulator(base.SimulationMixin):
     cis: bool = True
     etype: str = "variant"
     efunc: str = "linear"
+    beta: float = field(init=True, default=None)
 
     @property
     def functional_relationship(self) -> Callable:
@@ -29,8 +30,7 @@ class Regulator(base.SimulationMixin):
             return lambda x: x
         return getattr(np, self.efunc)
 
-    @property
-    def beta(self) -> float:
+    def set_beta(self) -> float:
         return self.rng.normal(loc={True: 2, False: 0}[self.cis], scale=1)
 
     def expression_contribution(self, x):
@@ -49,6 +49,9 @@ class Regulator(base.SimulationMixin):
     
     def __post_init__(self):
         super().__init__()
+
+        if self.beta is None:
+            super().__setattr__("beta", self.set_beta())
 
 
 @dataclass
@@ -70,9 +73,13 @@ class SimGRN(base.SimulationMixin):
 
     @property
     def cis_cn(self) -> List:
-        return [Regulator(
-            ID=self.egene_id, coords=self.egene_coords, cis=True, etype="copynumber"
-        )]
+        return [
+            Regulator(ID=self.egene_id,
+                      coords=self.egene_coords,
+                      cis=True,
+                      etype="copynumber",
+                      beta=self.rng.normal(loc=2, scale=1))
+        ]
 
     @property
     def var_eqtls(self) -> List:
