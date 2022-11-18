@@ -15,6 +15,7 @@ class SimExpression(base.SimulationMixin):
 
     def __init__(
         self,
+        gene_id,
         N: int = 100,
         p: int = 500,
         regulators: List[grn.Regulator] = None,
@@ -25,6 +26,7 @@ class SimExpression(base.SimulationMixin):
         **kwargs
     ) -> None:
         super().__init__(N, p)
+        self.gene_id = gene_id
         self.regulators = regulators
         self.variants = variants
         self.copynumber = copynumber
@@ -42,7 +44,8 @@ class SimExpression(base.SimulationMixin):
     def data(self):
         µ = self.sim_loc()
         y = µ + self.noise(self.noise_sd, self.N)
-        return pd.DataFrame(y, index=self.annotate("TCGA-", size=self.N))
+        return pd.DataFrame(y, index=self.annotate("TCGA", size=self.N),
+                            columns=[f"expression_{self.gene_id}"])
 
     @property
     def latent_vars(self) -> List:
