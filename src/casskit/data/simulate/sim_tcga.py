@@ -124,3 +124,6 @@ class SimTCGA:
             expressions.append(expression)
 
         return pd.concat(grns, axis=1), pd.concat(expressions, axis=1)
+
+
+simulate_tcga = lambda cancer: SimTCGA(cancer, I=100, N=100, P=500, seed=1234)
