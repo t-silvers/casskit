@@ -38,7 +38,11 @@ class SimTCGA:
         
         if self.tcga_cn is None:
             super().__setattr__(
-                "tcga_cn", ToCounts("log2(copy-number/2)").fit_transform(get_tcga("cnv", self.cancer))
+                "tcga_cn",
+                (get_tcga("cnv", self.cancer)
+                 .assign(
+                     value=lambda x: ToCounts("log2(copy-number/2)").fit_transform(x.pop("value"))
+                 ))
             )
         
         super().__setattr__("chroms", self.tcga_cn.Chrom.unique().tolist())
