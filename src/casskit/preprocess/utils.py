@@ -8,7 +8,7 @@ from pathlib import Path
 from casskit.descriptors import Validator
 from casskit import config
 
-logging.basicConfig(filename=config.get_logging(), level=logging.INFO)
+# logging.basicConfig(filename=config.get_logging(), level=logging.INFO)
 
 
 class PPSignal(Validator):
