@@ -100,6 +100,8 @@ class SimTCGA:
     def simulate_egene_expression(self, gene_id, grn_sim):
         return simulate_expression(
             gene_id,
+            N=self.N,
+            p=self.P,
             regulators=grn_sim,
             variants=self.variants,
             copynumber=self.copynumber
