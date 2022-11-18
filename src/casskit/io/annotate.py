@@ -55,7 +55,7 @@ class EnsemblData:
     @property
     def cached_tss(self) -> pr.PyRanges:
         self.set_cache(self.cache_dir / f"ensembl_{self.assembly}_{self.release}_tss.gtf")
-        return self.tss_from_ensembl(pr.read_gtf(self.gtf_path))
+        return self.tss_from_ensembl(self.gtf_path)
 
     def set_cache(self, path_cache: Path) -> None:
         self.path_cache = path_cache
@@ -86,12 +86,13 @@ class EnsemblData:
         return cls(assembly).cached_tss.df
 
     @io_utils.cache_on_disk
-    def tss_from_ensembl(self, ensembl_pr) -> pr.PyRanges:
+    def tss_from_ensembl(self, gtf_path) -> pr.PyRanges:
         """Get TSSs from Ensembl.
         
         Returns the first exon of each protein-coding gene
         and pseudogene.
         """
+        ensembl_pr = pr.read_gtf(self.gtf_path)
         return (ensembl_pr[((ensembl_pr.Feature == "exon") &
                             (ensembl_pr.exon_number == "1") &
                             ((ensembl_pr.gene_biotype == "protein_coding") | 
