@@ -135,7 +135,22 @@ Summary of related packages
      - Python
      - Yes
      - A consistent table management library in python / manage tabular data in object stores
-
+   * - `EUGENe`_
+     - Python
+     - Yes
+     - computational framework for machine learning based modeling of regulatory sequences
+   * - `eugene.dataload.dataloaders.SeqData`_
+     - Python
+     - Yes
+     - SeqData object used to containerize and store data for EUGENe workflows
+   * - `Janggu`_
+     - Python
+     - Yes
+     - Janggu is a python package that facilitates deep learning in the context of genomics
+   * - `janggu.data`_
+     - Python
+     - Yes
+     - genomics datasets maintains coverage or sequence type of information along with the associated genomic intervals. Externally, the datasets behave similar to a numpy array
 
 
 .. list-table:: Modeling
@@ -162,6 +177,14 @@ Summary of related packages
      - Python
      - Yes
      - a Python library helping you share your scikit-learn based models and put them in production. At the moment, it includes tools to easily integrate models on the Hugging Face Hub
+   * - `EUGENe`_
+     - Python
+     - Yes
+     - computational framework for machine learning based modeling of regulatory sequences
+   * - `Janggu`_
+     - Python
+     - Yes
+     - Janggu is a python package that facilitates deep learning in the context of genomics
 
 
 .. list-table:: Multi-omic data integration
@@ -264,11 +287,15 @@ information on PyScaffold see https://pyscaffold.org/.
 .. Refs
 .. =====
 .. _dalmatian: https://github.com/getzlab/dalmatian
+.. _EUGENe: https://github.com/cartercompbio/EUGENe
+.. _eugene.dataload.dataloaders.SeqData: https://github.com/cartercompbio/EUGENe
 .. _GLUE (Graph-Linked Unified Embedding): https://github.com/gao-lab/GLUE
 .. _Hail: https://hail.is
 .. _hail.matrixtable.MatrixTable: https://hail.is/docs/0.2/overview/matrix_table.html
 .. _HTSeq 2.0: https://htseq.readthedocs.io/en/master/index.html
 .. _Hugging Face: https://huggingface.co
+.. _Janggu: https://janggu.readthedocs.io/en/latest/readme.html
+.. _janggu.data: https://janggu.readthedocs.io/en/latest/reference/janggu.data.html#main-dataset-classes
 .. _kartothek: https://kartothek.readthedocs.io/en/stable/index.html
 .. _kipoi/kipoiseq: https://github.com/kipoi/kipoiseq
 .. _kipoi/models: https://github.com/kipoi/models

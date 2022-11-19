@@ -10,6 +10,14 @@ import ruptures as rpt
 import casskit.data.simulate.base as base
 
 
+def bamgineer():
+    # https://github.com/pughlab/bamgineer
+    pass
+
+def xome_blender():
+    # https://github.com/rsemeraro/XomeBlender
+    pass
+
 def cic():
     # Change in covariance
     # https://github.com/mlondschien/changeforest/tree/main/changeforest-py

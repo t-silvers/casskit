@@ -4,6 +4,7 @@
 from casskit.io.tcga.ancestry import get_ancestry_pcs
 from casskit.io.tcga.aneuploidy_score import get_tcga_aneuploidy_scores
 from casskit.io.tcga.gdc_xena import build_tcga, get_gdc_tcga
+from casskit.io.tcga.scna_score import get_scna_scores
 from casskit.io.tcga.subtype import get_subtypes
 from casskit.io.tcga.survival_cdr import get_tcga_cdr_survival
 from casskit.io.tcga.tumorpurity import get_tumor_purity
@@ -34,6 +35,9 @@ def get_tcga(feature, cancer=None):
         case "purity":
             return get_tumor_purity()
         
+        case "scna_score":
+            return get_scna_scores()
+
         case "subtypes":
             return get_subtypes()
 
