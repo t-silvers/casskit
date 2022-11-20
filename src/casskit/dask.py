@@ -43,13 +43,24 @@ class DaskCluster:
         with DaskCluster(4, '4GB', 2, "0:30:00") as (cluster, client):
             # do stuff
         """
-        cluster, client = cls(cores, memory, numworkers, threads, time_limit).acquire_cluster()
+        cluster, client = cls.start(cores, memory, numworkers, threads, time_limit)
         try:
             yield cluster, client
 
         finally:
             client.close()
             cluster.close()
+
+    @classmethod
+    def start(
+        cls,
+        cores: int = 4,
+        memory: str = "8GB",
+        numworkers: int = 5,
+        threads: int = 4,
+        time_limit: str = None
+    ):
+        return cls(cores, memory, numworkers, threads, time_limit).acquire_cluster()
 
     def acquire_cluster(self):
         """
