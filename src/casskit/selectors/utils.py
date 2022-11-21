@@ -8,7 +8,7 @@ from casskit.typing import DATAFRAME
 
 def feature_selector(
     model_frame: DATAFRAME,
-    ixs: Tuple(int, range),
+    ixs: tuple(int, range),
     ret_df: bool = True,
     fillna: bool = True,
 ):
