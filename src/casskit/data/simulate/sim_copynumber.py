@@ -82,10 +82,11 @@ def pw_constant(n_samples: int = 500, dim: int = 3, n_bkps: int = 6, sigma: floa
 def chrom_swap_augmented(
     copynumber: pd.DataFrame,
     n_samples: int = 500,
-    samples: List = [None],
-    groups: List = [None],
     rng = np.random.default_rng(),
 ):
+    samples = copynumber["sample"].unique()
+    groups = copynumber["Chrom"].unique()
+
     return (
         pd.DataFrame(rng.choice(samples,
                                 replace=True,
@@ -127,11 +128,12 @@ class SimCopynumber(base.SimulationMixin):
         
         # Methods
         self.methods = {"gauss": self.gauss, "markov": self.markov,
-                        "swap_augment": self.swap_augment}
+                        "swap_augment": self.swap_augment,
+                        "original": self.original}
 
     @property
     def data(self):
-        return self.make_data()        
+        return self.make_data()
 
     def make_data(self):
         sim_data = self.methods[self.cn_method]()
@@ -141,6 +143,9 @@ class SimCopynumber(base.SimulationMixin):
     def gauss(self):
         # ill-conditioned
         return self.rng.standard_normal((self.N, self.p))
+
+    def original(self):
+        return self.kwargs.get("copynumber_template", None) 
 
     def markov(self):
         G = self.kwargs.get("groups", 1)
@@ -189,15 +194,11 @@ class SimCopynumber(base.SimulationMixin):
                 where sample is the simulated sample
                 
         """
-        copynumber_template = self.kwargs.get("copynumber_template", None)
-        samples = copynumber_template["sample"].unique()
-        chroms = copynumber_template["Chrom"].unique()
-        
+        copynumber_template = self.kwargs.get("copynumber_template", None) 
+               
         return chrom_swap_augmented(
             copynumber=copynumber_template,
             n_samples=self.N,
-            samples=samples,
-            groups=chroms,
             rng=self.rng,
         )
 

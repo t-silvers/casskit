@@ -23,11 +23,14 @@ class SimTCGA:
     P: int
     seed: int = 212
 
-    cneqtl_size: int = int(1E5)
     cn_method: str = "swap_augment"
     k_cis: int = 0
     k_var: int = 2
     k_trans: int = 10
+
+    cneqtl_size: int = int(1E5)
+    cn_cand_frequency = 0.1
+    cn_cand_var = 1
 
     tcga_expression: pd.DataFrame = field(init=False, default=None)
     tcga_cn: pd.DataFrame = field(init=False, default=None)
@@ -81,8 +84,6 @@ class SimTCGA:
 
         # For filtering by high variance cns
         N = self.tcga_cn["sample"].nunique()
-        N_cutoff = int(N/10)
-        var_cutoff = 1
 
         return (self.tcga_cn
                 .assign(
@@ -94,7 +95,7 @@ class SimTCGA:
                 .groupby(["Chrom", "cn_bin_start"])
                 [["value"]].agg({"value": ["var", "count"]})
                 ["value"]
-                .query("count > @N_cutoff & var > @var_cutoff")
+                .query("count > @self.cn_cand_frequency & var > @self.cn_cand_var")
                 .index.to_frame(index=False)
                 .groupby("Chrom", group_keys=False)
                 ["cn_bin_start"]
@@ -129,7 +130,8 @@ class SimTCGA:
         grns, grn_dfs = {}, []
         for egene in self.egenes:
             grn, grn_df = self.simulate_egene_grn(
-                egene.get("gene_id"), egene.get("gene_name"),
+                egene.get("gene_id"),
+                egene.get("gene_name"),
                 (egene.get("Chromosome"), egene.get("Start"), egene.get("End"))
             )
             grns[egene.get("gene_id")] = grn
@@ -148,5 +150,15 @@ class SimTCGA:
     def __repr__(self) -> str:
         return f"SimTCGA(cancer={self.cancer}, I={self.I}, N={self.N}, P={self.P}, seed={self.seed})"
 
-def simulate_tcga(cancer, I=100, N=100, P=500, seed=212):
-    return SimTCGA(cancer, I, N, P, seed=seed)
+def simulate_tcga(
+    cancer,
+    I=100,
+    N=100,
+    P=500,
+    cn_method="swap_augment",
+    k_cis=0,
+    k_var=0,
+    k_trans=5,
+    seed=212
+):
+    return SimTCGA(cancer, I, N, P, seed, cn_method, k_cis, k_var, k_trans)
