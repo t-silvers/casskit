@@ -3,11 +3,11 @@ import sys
 
 from .config import set_cache, set_logging
 from .dask import DaskCluster
-from . import data, io
+from . import data, io, factory
 from . import models as mod
 from . import pipelines as pipe
 from . import preprocess as pp
-from . import selectors
+from . import selectors as sel
 
 dask_cluster = DaskCluster.dask_cluster
 
@@ -37,8 +37,9 @@ __all__ = [
     "dask_cluster",
     "data",
     "io",
+    "factory",
     "mod",
     "pipe",
     "pp",
-    "selectors"
+    "sel",
 ]
