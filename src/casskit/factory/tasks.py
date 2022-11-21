@@ -34,6 +34,7 @@ def task_factory(
         
     task_gathered = {}
     for task in task_schema:
+        print(task["client_method"])
         task_futures = getattr(client, task["client_method"])(
             task["callable"],
             *parse_inputs(task["inputs"],

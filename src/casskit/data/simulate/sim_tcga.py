@@ -26,7 +26,7 @@ class SimTCGA:
         return (self.template
                 .groupby("Chromosome")
                 .agg({"Start": "min", "End": "max"})
-                .apply(lambda x: self.rng.binomial(1, p=.4, size=self.I) * \
+                .apply(lambda x: self.rng.binomial(1, p=.5, size=self.I) * \
                        self.rng.integers(x[0], x[1], size=self.I), axis=1)
                 .rename("Start")
                 .apply(pd.Series)
@@ -73,8 +73,14 @@ class SimTCGA:
                   .merge(self.copynumber, on="Chromosome", suffixes=("", "_seg"))
                   .query("Start >= Start_seg and Start <= End")
                   .pivot_table(index=["gene_id", "beta"], columns="sample", values="value", fill_value=0))
+        
+        # Filter by variance
+        design_ = (design
+                   .assign(hfilt=lambda x: x.var(axis=1) * x.index.get_level_values("beta")**2 > .1)
+                   .query("hfilt")
+                   .drop("hfilt", axis=1))
 
-        expression = (design
+        expression = (design_
                       .reset_index()
                       .groupby("gene_id")
                       .apply(lambda df: np.dot(df.beta.values, df.drop("beta", axis=1).values))
@@ -82,7 +88,7 @@ class SimTCGA:
 
         expression.columns = design.columns
 
-        return expression
+        return expression.T
 
 
 def simulate_tcga(
