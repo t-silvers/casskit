@@ -207,6 +207,10 @@ Summary of related packages
      - R
      - Yes
      - OmicsEV: A tool for large scale omics data tables evaluation
+   * - `_SCENIC`_
+     - R, Python
+     - Yes
+     - SCENIC Suite is a set of tools to study and decipher gene regulation. Its core is based on SCENIC (Single-Cell rEgulatory Network Inference and Clustering) which enables you to infer transcription factors, gene regulatory networks and cell types from single-cell RNA-seq data (using SCENIC) or the combination of single-cell RNA-seq and single-cell ATAC-seq data (using SCENIC+).
 
 
 .. list-table:: Annotations
@@ -312,6 +316,7 @@ information on PyScaffold see https://pyscaffold.org/.
 .. _scikit-allel: https://scikit-allel.readthedocs.io/en/stable/
 .. _scikit-bio: http://scikit-bio.org
 .. _scikit-genome: https://cnvkit.readthedocs.io/en/stable/skgenome.html
+.. _SCENIC: https://scenic.aertslab.org
 .. _scverse: https://scverse.org
 .. _sgkit: https://pystatgen.github.io/sgkit/latest/
 .. _skorch: https://github.com/skorch-dev/skorch
