@@ -1,164 +1,94 @@
 from dataclasses import dataclass, field
-from pathlib import Path
-from typing import Dict, List
 
 import numpy as np
 import pandas as pd
-import tqdm
-
-from casskit.io import get_tcga, get_ensembl_tss
-from casskit.data.simulate.sim_variants import simulate_variants
-from casskit.data.simulate.sim_copynumber import simulate_copynumber
-from casskit.data.simulate.sim_grn import simulate_grn
-from casskit.data.simulate.sim_expression import simulate_expression
-from casskit.preprocess.units import ToCounts
 
 
 @dataclass(frozen=True)
 class SimTCGA:
-
-    cancer: str
-    I: int
-    N: int
-    P: int
-    seed: int = 212
-
-    cn_method: str = "swap_augment"
-    k_cis: int = 0
-    k_var: int = 2
-    k_trans: int = 10
-
-    cneqtl_size: int = int(1E5)
-    cn_cand_frequency = 0.1
-    cn_cand_var = 1
-
-    tcga_expression: pd.DataFrame = field(init=False, default=None)
-    tcga_cn: pd.DataFrame = field(init=False, default=None)
-
-    def __post_init__(self):
-        if self.tcga_expression is None:
-            super().__setattr__("tcga_expression", get_tcga("htseq_counts", self.cancer))
-        
-        if self.tcga_cn is None:
-            super().__setattr__(
-                "tcga_cn",
-                (get_tcga("cnv", self.cancer)
-                 .assign(
-                     value=lambda x: ToCounts("log2(copy-number/2)").fit_transform(x.pop("value"))
-                 ))
-            )
-        
-        super().__setattr__("chroms", self.tcga_cn.Chrom.unique().tolist())
-        super().__setattr__("egenes", self.get_candidate_egenes())
-        
-        # Simulate omics
-        super().__setattr__("candidate_cneqtls", self.get_candidate_cneqtls())
-        super().__setattr__("variants", simulate_variants(self.N, self.P))
-        super().__setattr__("candidate_variants", self.variants.columns.tolist())
-        super().__setattr__("copynumber",
-            simulate_copynumber(
-                self.N, self.P, cn_method=self.cn_method,
-                copynumber_template=self.tcga_cn
-            )
-        )
-        
-        # Simulate expression
-        grns, grn_df = self.make_grns()
-        super().__setattr__("grns", grns)
-        super().__setattr__("grn_df", grn_df)
-        super().__setattr__("expression", self.make_expression(grns))
     
-    def get_candidate_egenes(self) -> np.ndarray:
-        egenes = self.tcga_expression.Ensembl_ID.str.split(".", expand=True)[0].unique()
-        egene_tss = get_ensembl_tss().df
-        
-        return (egene_tss
-                .query("gene_id in @egenes & Chromosome in @self.chroms")
-                .sample(n=self.I, random_state=self.seed, replace=False)
-                .filter(["gene_id", "gene_name", "Chromosome", "Start", "End"])
-                .to_dict("records"))
+    template: pd.DataFrame
+    N: int = 500
+    I: int = 10
+    seed: int = 212
+    rng: np.random.Generator = field(init=False)
+    grn: pd.DataFrame = field(init=False)
+    copynumber: pd.DataFrame = field(init=False)
+    expression: pd.DataFrame = field(init=False)
+    
+    def __post_init__(self):
+        super().__setattr__("rng", np.random.default_rng(self.seed))
+        super().__setattr__("grn", self.make_grn())
+        super().__setattr__("copynumber", self.make_copynumber())
+        super().__setattr__("expression", self.make_expression())
 
-    def get_candidate_cneqtls(self, coarsen=-4) -> Dict:
-        tcga_cn_start = self.tcga_cn.Start.round(coarsen).astype(int)
-        cn_bin_starts = np.arange(tcga_cn_start.min(), tcga_cn_start.max()+self.cneqtl_size, self.cneqtl_size)
+    def make_grn(self):
+        return (self.template
+                .groupby("Chromosome")
+                .agg({"Start": "min", "End": "max"})
+                .apply(lambda x: self.rng.binomial(1, p=.4, size=self.I) * \
+                       self.rng.integers(x[0], x[1], size=self.I), axis=1)
+                .rename("Start")
+                .apply(pd.Series)
+                .melt(ignore_index=False, value_name="Start")
+                .assign(gene_id=lambda x: x.pop("variable").map('egene-{}'.format),
+                        beta=lambda x: self.rng.normal(0, 1, size=len(x)),)
+                .reset_index()
+                .query("Start != 0"))
 
-        # For filtering by high variance cns
-        N = self.tcga_cn["sample"].nunique()
+    def make_copynumber(self):
+        chroms = self.template.Chromosome.unique()
+        cn_skeleton = self.chrom_swap_augmented(self.N,
+                                                self.template["sample"].unique(),
+                                                chroms,
+                                                self.rng)
 
-        return (self.tcga_cn
-                .assign(
-                    cn_bin_start=pd.cut(
-                        tcga_cn_start, bins=cn_bin_starts, labels=cn_bin_starts[:-1]
-                    ).astype(float),
-                )
-                # filter by high variance cns
-                .groupby(["Chrom", "cn_bin_start"])
-                [["value"]].agg({"value": ["var", "count"]})
-                ["value"]
-                .query("count > @self.cn_cand_frequency & var > @self.cn_cand_var")
-                .index.to_frame(index=False)
-                .groupby("Chrom", group_keys=False)
-                ["cn_bin_start"]
-                .apply(lambda x: x.tolist())
-                .to_dict())
+        return (cn_skeleton
+                .assign(sample_sim = lambda x: [f"TCGA-00-{i:04}" for i in x.pop("sample_sim")])
+                .merge(self.template)
+                .drop("sample", axis=1)
+                .rename(columns=dict(sample_sim="sample")))
 
-    def simulate_egene_grn(self, gene_id, gene_name, gene_coords):
-        return simulate_grn(
-            gene_id,
-            gene_name,
-            egene_coords=gene_coords,
-            chroms=self.chroms,
-            var_ids=self.candidate_variants,
-            copynumber_ids=self.candidate_cneqtls,
-            k_cis=self.k_cis,
-            k_var=self.k_var,
-            k_trans=self.k_trans,
-            return_df=True
+    @staticmethod
+    def chrom_swap_augmented(
+        n_samples: int = 500,
+        samples: list = None,
+        groups: list = None,
+        rng = np.random.default_rng(),
+    ):
+        return (
+            pd.DataFrame(rng.choice(samples,
+                                    replace=True,
+                                    size=[len(groups), n_samples]),
+                        index=groups)
+            .rename_axis("Chromosome")
+            .melt(value_name="sample",
+                var_name="sample_sim",
+                ignore_index=False)
+            .reset_index()
         )
 
-    def simulate_egene_expression(self, gene_id, grn_sim):
-        return simulate_expression(
-            gene_id,
-            N=self.N,
-            p=self.P,
-            regulators=grn_sim,
-            variants=self.variants,
-            copynumber=self.copynumber
-        )
+    def make_expression(self):
+        design = (self.grn
+                  .merge(self.copynumber, on="Chromosome", suffixes=("", "_seg"))
+                  .query("Start >= Start_seg and Start <= End")
+                  .pivot_table(index=["gene_id", "beta"], columns="sample", values="value", fill_value=0))
 
-    def make_grns(self):
-        grns, grn_dfs = {}, []
-        for egene in self.egenes:
-            grn, grn_df = self.simulate_egene_grn(
-                egene.get("gene_id"),
-                egene.get("gene_name"),
-                (egene.get("Chromosome"), egene.get("Start"), egene.get("End"))
-            )
-            grns[egene.get("gene_id")] = grn
-            grn_dfs.append(grn_df.assign(gene_id=egene.get("gene_id")))
+        expression = (design
+                      .reset_index()
+                      .groupby("gene_id")
+                      .apply(lambda df: np.dot(df.beta.values, df.drop("beta", axis=1).values))
+                      .apply(pd.Series))
 
-        return grns, pd.concat(grn_dfs)
+        expression.columns = design.columns
 
-    def make_expression(self, grns):
-        return pd.concat(
-            [self.simulate_egene_expression(
-                egene.get("gene_id"), grns[egene.get("gene_id")]
-             ) for egene in tqdm.tqdm(self.egenes)],
-            axis=1
-        )
+        return expression
 
-    def __repr__(self) -> str:
-        return f"SimTCGA(cancer={self.cancer}, I={self.I}, N={self.N}, P={self.P}, seed={self.seed})"
 
 def simulate_tcga(
-    cancer,
-    I=100,
-    N=100,
-    P=500,
-    cn_method="swap_augment",
-    k_cis=0,
-    k_var=0,
-    k_trans=5,
-    seed=212
+    template: pd.DataFrame,
+    N = 500,
+    I = 10,
+    seed: int = 212,
 ):
-    return SimTCGA(cancer, I, N, P, seed, cn_method, k_cis, k_var, k_trans)
+    return SimTCGA(template=template, N=N, I=I, seed=seed)

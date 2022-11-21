@@ -34,6 +34,7 @@ class DaskCluster:
         self.log_dir = log_dir
         if log_dir is None:
             self.log_dir = config.get_cache() / "dask_logs"
+            self.log_dir.mkdir(exist_ok=True)
 
     @classmethod
     @contextmanager
@@ -91,8 +92,8 @@ class DaskCluster:
             job_extra_directives=[
                 '--job-name="smk-dask-worker"',
                 '--propagate=NONE',
-                f'--error={self.log_dir}smk-dask-worker-%j.err',
-                f'--output={self.log_dir}smk-dask-worker-%j.out'
+                f'--error={self.log_dir}/smk-dask-worker-%j.err',
+                f'--output={self.log_dir}/smk-dask-worker-%j.out'
             ],
             job_script_prologue=[
                 'export MALLOC_TRIM_THRESHOLD_=0',

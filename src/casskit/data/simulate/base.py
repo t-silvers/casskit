@@ -55,3 +55,4 @@ class SimulationMixin(FunctionMixin):
             return [f"{stem}-{i:04}" for i in range_]
         else:
             raise ValueError("Must provide either size or range_.")
+    

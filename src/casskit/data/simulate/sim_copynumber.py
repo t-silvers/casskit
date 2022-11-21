@@ -102,7 +102,6 @@ def chrom_swap_augmented(
         .rename(columns={"sample_sim": "sample"})
     )
 
-
 class SimCopynumber(base.SimulationMixin):
     """Simulated copynumber data.
 
