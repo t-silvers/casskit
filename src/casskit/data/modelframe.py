@@ -70,7 +70,7 @@ class Expression:
 
     def prepare(self) -> Pipeline:
         return Pipeline([
-            ("GTEx preprocess", self.gtex_preprocess),
+            ("GTEx preprocess", self.gtex_preprocessing),
             ("Batch effects", BatchModelEPCS("elbow")),
             ("center", StandardScaler(with_mean=True, with_std=False)),
         ])
