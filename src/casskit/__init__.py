@@ -2,7 +2,7 @@ import logging
 import sys
 
 from .config import set_cache, set_logging
-from .dask import DaskCluster
+from .dask_cluster import DaskCluster
 from . import data, io, factory
 from . import models as mod
 from . import pipelines as pipe
