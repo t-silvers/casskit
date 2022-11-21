@@ -6,6 +6,8 @@ import subprocess
 from dask_jobqueue import SLURMCluster
 from dask.distributed import Client
 
+import casskit.config as config
+
 
 class DaskCluster:
     def __init__(
@@ -14,17 +16,23 @@ class DaskCluster:
         memory: str = "8GB",
         numworkers: int = 5,
         threads: int = 4,
-        time_limit: str = None
+        time_limit: str = None,
+        log_dir: str = None,
     ):
         self.cores = cores
         self.memory = memory
         self.numworkers = numworkers
         self.threads = threads
         self.time_limit = time_limit
+        
         if time_limit is None:
             self.time_limit = self.timelimit()
+        
         elif time_limit == "default":
             self.time_limit = "0:30:00"
+            
+        if log_dir is None:
+            log_dir = config.get_cache() / "dask_logs"
 
     @classmethod
     @contextmanager
@@ -81,7 +89,9 @@ class DaskCluster:
             walltime=self.time_limit,
             job_extra_directives=[
                 '--job-name="smk-dask-worker"',
-                '--propagate=NONE'
+                '--propagate=NONE',
+                f'--error={self.log_dir}smk-dask-worker-%j.err',
+                f'--output={self.log_dir}smk-dask-worker-%j.out'
             ],
             job_script_prologue=[
                 'export MALLOC_TRIM_THRESHOLD_=0',
