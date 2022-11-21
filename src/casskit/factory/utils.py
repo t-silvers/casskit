@@ -2,7 +2,8 @@ from collections import namedtuple
 import itertools
 from typing import Dict, List
 
-from dask.distributed import Future, get_client, rejoin, secede, as_completed, wait
+import dask.distributed
+from dask.distributed import get_client, rejoin, secede, as_completed, wait
 import pandas as pd
 
 
@@ -11,8 +12,26 @@ ParamArg = namedtuple("ParamArg", ["inputs", "params"])
 
 def task_factory(
     task_schema,
-    client,
+    client: dask.distributed.Client = None,
+    dry_run: bool = False,
 ):
+    if dry_run is True:
+        dry_run_results = {}
+        for task in task_schema:
+            try:
+                inputs = parse_inputs(task["inputs"],
+                                      dry_run_results,
+                                      pd.json_normalize(task_schema))
+                
+                dry_run_results[task["taskID"]] = task.get("callable")(*inputs)
+            
+            except Exception as e:
+                print(f"Error in task {task['taskID']}: {e}")
+                print(f"Task: {task}")
+                return inputs
+        
+        return dry_run_results
+        
     task_gathered = {}
     for task in task_schema:
         
@@ -30,7 +49,7 @@ def task_factory(
 
 def parse_inputs(
     inputs,
-    task_futures: Dict[str, Future],
+    task_futures: Dict[str, dask.distributed.Future],
     schema: pd.DataFrame
 ):
     if isinstance(inputs, list):
@@ -45,7 +64,7 @@ def parse_inputs(
             parse_inputs(getattr(inputs, "inputs"), task_futures, schema),
             len(getattr(inputs, "params"))
         ))
-    elif isinstance(inputs, Future):
+    elif isinstance(inputs, dask.distributed.Future):
         return inputs
     else:
         # warnings.warn(f"Unknown input type: {type(inputs)}. "
