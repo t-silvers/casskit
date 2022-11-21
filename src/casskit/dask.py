@@ -30,9 +30,10 @@ class DaskCluster:
         
         elif time_limit == "default":
             self.time_limit = "0:30:00"
-            
+        
+        self.log_dir = log_dir
         if log_dir is None:
-            log_dir = config.get_cache() / "dask_logs"
+            self.log_dir = config.get_cache() / "dask_logs"
 
     @classmethod
     @contextmanager
