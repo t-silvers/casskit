@@ -16,6 +16,9 @@ from casskit.preprocess.units import ToCounts
 from casskit.typing import DATAFRAME
 
 
+SKIP = Pipeline(["skip", "passthrough"])
+
+
 @dataclass(frozen=False)
 class ModelFrame:
     model_frame: DATAFRAME = field(default=None)
