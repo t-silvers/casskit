@@ -7,6 +7,9 @@ import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
 
+__all__ = ["ThinCopynumber", "DiploidGISTIC"]
+
+
 class ThinCopynumber(BaseEstimator, TransformerMixin):
     """Thin copynumber data to decrease correlations."""
     def __init__(

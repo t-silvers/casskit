@@ -6,6 +6,9 @@ from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import OrdinalEncoder
 
 
+__all__ = ["SimpleNaNImputer", "TumorStageEncoder"]
+
+
 class SimpleNaNImputer(BaseEstimator, TransformerMixin):
     """Replace non-standard missing values with np.nan.
     

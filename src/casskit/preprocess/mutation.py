@@ -7,6 +7,9 @@ import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
 
+__all__ = ["AggMutations"]
+
+
 class AggMutations(BaseEstimator, TransformerMixin):
     """Aggregate mutation data."""
     def __init__(
