@@ -26,15 +26,10 @@ class ModelFrame:
     
     def load(self, **kwargs):
         self.expression = kwargs.get("expression", None)
-
         self.cnvr_copynumber = kwargs.get("cnvr_copynumber", None)
         self.gene_copynumber = kwargs.get("gene_copynumber", None)
         self.phenotype = kwargs.get("phenotype", None)
         self.variants = kwargs.get("variants", None)
-
-        self.index = kwargs.get("index")
-        self.impute = kwargs.get("impute", True)
-        self.impute_method = kwargs.get("impute_method", "most_frequent")
         
         self.model_frame = self._make_model_frame()
         
@@ -45,7 +40,7 @@ class ModelFrame:
         # TODO: Add prefixes (based on arg?)
 
         model_frame = pd.concat([
-            self.expression.add_prefix("expr_"),
+            self.expression,
             self.cnvr_copynumber,
             self.gene_copynumber.add_prefix("cn_"),
             self.phenotype,
