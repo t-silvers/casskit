@@ -101,6 +101,9 @@ class ModelFrame:
             self._validate_model_frame(self.model_frame)
 
     def __getitem__(self, key):
+        if key in self.indices:
+            return self.model_frame.iloc[:, self.indices[key]]
+        
         return self.model_frame[key]
 
     def __repr__(self):
