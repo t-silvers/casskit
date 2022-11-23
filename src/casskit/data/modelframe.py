@@ -185,11 +185,12 @@ class GeneCopyNumber:
     def __post_init__(self):
         if self.preprocessing is None:
             self.preprocessing = self.prepare()
-            self.prepared = (prepared
-                            .droplevel(["Chromosome", "Start", "End"])
-                            .transpose())
+            self.prepared = (self.preprocessing
+                             .fit_transform(self.raw)
+                             .droplevel(["Chromosome", "Start", "End"])
+                             .transpose())
 
-        prepared = self.preprocessing.fit_transform(self.raw)
+        self.prepared = self.preprocessing.fit_transform(self.raw)
 
 @dataclass
 class BinCopyNumber:
