@@ -53,9 +53,14 @@ class ModelFrame:
         for k in [
             "expression", "cnvr_copynumber", "gene_copynumber", "phenotype", "variants"
         ]:
-            nvars = getattr(self, k).shape[1]
-            self.indices[k] = range(extent, extent+nvars)
-            extent += nvars
+            try:
+                nvars = getattr(self, k).shape[1]
+                self.indices[k] = range(extent, extent+nvars)
+                extent += nvars
+            
+            except AttributeError:
+                # No data for this component loaded
+                pass
         
         model_frame = self._process_model_frame(model_frame)
         self._validate_model_frame(model_frame)
@@ -89,6 +94,7 @@ class ModelFrame:
 
     def _validate_model_frame(self, model_frame):
         self.N, self.P = model_frame.shape
+        self.variables = model_frame.columns # should be an Index
 
     def __post_init__(self):
         if self.model_frame is not None:
