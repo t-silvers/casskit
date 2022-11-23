@@ -59,7 +59,7 @@ class ModelFrame:
             "expression", "cnvr_copynumber", "gene_copynumber", "phenotype", "variants"
         ]:
             nvars = getattr(self, k).shape[1]
-            self.indices[k] = range(extent, nvars)
+            self.indices[k] = range(extent, extent+nvars)
             extent += nvars
         
         model_frame = self._process_model_frame(model_frame)
