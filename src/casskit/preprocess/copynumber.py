@@ -15,7 +15,7 @@ class ThinCopynumber(BaseEstimator, TransformerMixin):
     def __init__(
         self,
         drop_duplicates: bool = True,
-        dups_tol_abs: float = 0,
+        dups_tol_abs: int = 0,
         dups_tol_corr: float = 0.9,
         thinning: bool = True,
         thin_ar: float = 0.5,
@@ -44,11 +44,9 @@ class ThinCopynumber(BaseEstimator, TransformerMixin):
 
     def drop_dups(self, X):
         """Drop duplicate columns."""
-        # Drop duplicate columns
-        X = X.loc[:, ~X.columns.duplicated()]
-        # Drop columns with absolute correlation greater than tolerance
         if self.dups_tol_abs:
             X = self.drop_dups_abs(X)
+        
         # Drop columns with correlation greater than tolerance
         if self.dups_tol_corr:
             X = self.drop_dups_corr(X)
@@ -57,7 +55,12 @@ class ThinCopynumber(BaseEstimator, TransformerMixin):
     
     def drop_dups_abs(self, X):
         """Coarsen copynumber and drop duplicate columns."""
-        return X.drop_duplicates()
+        if self.dups_tol_abs == 0:
+            return X.drop_duplicates()
+
+        else:
+            X_coarse = X.round(self.dups_tol_abs)
+            return X.loc[X_coarse.drop_duplicates().index]
     
     def drop_dups_corr(self, X):
         """Drop duplicate columns with absolute correlation greater than tolerance."""
@@ -66,7 +69,7 @@ class ThinCopynumber(BaseEstimator, TransformerMixin):
         corr_matrix = X.corr().abs()
         for i in range(len(corr_matrix.columns)):
             for j in range(i):
-                if corr_matrix.iloc[i, j] > self.dups_tol_abs:
+                if corr_matrix.iloc[i, j] > self.dups_tol_corr:
                     colname = corr_matrix.columns[i]
                     dups.add(colname)
         

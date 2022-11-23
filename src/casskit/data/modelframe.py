@@ -1,3 +1,4 @@
+from ast import Return
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
 import warnings
@@ -24,11 +25,13 @@ class ModelFrame:
     impute_method: str = "most_frequent"
     
     def load(self, **kwargs):
-        self.variants = kwargs.get("variants", None)
-        self.gene_copynumber = kwargs.get("gene_copynumber", None)
-        self.cnvr_copynumber = kwargs.get("cnvr_copynumber", None)
         self.expression = kwargs.get("expression", None)
+
+        self.cnvr_copynumber = kwargs.get("cnvr_copynumber", None)
+        self.gene_copynumber = kwargs.get("gene_copynumber", None)
         self.phenotype = kwargs.get("phenotype", None)
+        self.variants = kwargs.get("variants", None)
+
         self.index = kwargs.get("index")
         self.impute = kwargs.get("impute", True)
         self.impute_method = kwargs.get("impute_method", "most_frequent")
@@ -42,15 +45,25 @@ class ModelFrame:
         # TODO: Add prefixes (based on arg?)
 
         model_frame = pd.concat([
-            self.expression,
-            self.gene_copynumber,
+            self.expression.add_prefix("expr_"),
             self.cnvr_copynumber,
-            self.expression,
+            self.gene_copynumber.add_prefix("cn_"),
             self.phenotype,
+            self.variants,
         ], axis=1)
         
+        # Indices of components
+        self.indices = {}
+        extent = 0
+        for k in [
+            "expression", "cnvr_copynumber", "gene_copynumber", "phenotype", "variants"
+        ]:
+            nvars = getattr(self, k).shape[1]
+            self.indices[k] = range(extent, nvars)
+            extent += nvars
+        
         model_frame = self._process_model_frame(model_frame)
-        self.N, self.P = model_frame.shape
+        self._validate_model_frame(model_frame)
         
         return model_frame
 
@@ -78,17 +91,22 @@ class ModelFrame:
                 model_frame = model_frame.dropna()
     
         return model_frame
-    
+
+    def _validate_model_frame(self, model_frame):
+        self.N, self.P = model_frame.shape
+
     def __post_init__(self):
         if self.model_frame is not None:
             self.model_frame = self._process_model_frame(self.model_frame)
-            self.N, self.P = self.model_frame.shape
+            self._validate_model_frame(self.model_frame)
 
     def __getitem__(self, key):
         return self.model_frame[key]
 
     def __repr__(self):
-        return f"ModelFrame with {self.N} samples and {self.P} variables"
+        if self.model_frame is not None:
+            return f"ModelFrame with {self.N} samples and {self.P} variables"
+        return "ModelFrame with no data"
 
 @dataclass
 class Phenotype:
