@@ -16,9 +16,6 @@ from casskit.preprocess.units import ToCounts
 from casskit.typing import DATAFRAME
 
 
-SKIP = Pipeline(["skip", "passthrough"])
-
-
 @dataclass(frozen=False)
 class ModelFrame:
     model_frame: DATAFRAME = field(default=None)
@@ -188,10 +185,11 @@ class GeneCopyNumber:
     def __post_init__(self):
         if self.preprocessing is None:
             self.preprocessing = self.prepare()
+            self.prepared = (prepared
+                            .droplevel(["Chromosome", "Start", "End"])
+                            .transpose())
+
         prepared = self.preprocessing.fit_transform(self.raw)
-        self.prepared = (prepared
-                         .droplevel(["Chromosome", "Start", "End"])
-                         .transpose())
 
 @dataclass
 class BinCopyNumber:

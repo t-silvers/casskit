@@ -4,6 +4,7 @@ import warnings
 
 import pandas as pd
 from pathlib import Path
+from sklearn.pipeline import Pipeline
 
 from casskit.descriptors import Validator
 from casskit import config
@@ -11,6 +12,9 @@ from casskit import config
 # logging.basicConfig(filename=config.get_logging(), level=logging.INFO)
 
 __all__ = ["PPSignal"]
+
+
+SKIP = Pipeline([("skip", "passthrough")])
 
 
 class PPSignal(Validator):
