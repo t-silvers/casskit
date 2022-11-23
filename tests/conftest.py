@@ -1,10 +1,17 @@
-"""
-    Dummy conftest.py for casskit.
+import logging
+import pytest
+import re
 
-    If you don't know what this is for, just leave it empty.
-    Read more about conftest.py under:
-    - https://docs.pytest.org/en/stable/fixture.html
-    - https://docs.pytest.org/en/stable/writing_plugins.html
-"""
 
-# import pytest
+def setup_logging(level):
+    if level is None:
+        level = logging.WARN
+    elif re.match(r"\d+", level):
+        level = int(level)
+    logging.basicConfig(level=level)
+
+@pytest.fixture
+def datadir(tmpdir_factory):
+    """Setup base cache directory for a test"""
+    p = tmpdir_factory.mktemp(".cache")
+    return p
