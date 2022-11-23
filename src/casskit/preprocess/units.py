@@ -2,7 +2,11 @@ import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import FunctionTransformer
 
-from ..descriptors import OneOf
+from casskit.descriptors import OneOf
+
+
+__all__ = ["UNITS", "ToCounts"]
+
 
 UNITS = {
     "log1p": "log1p",

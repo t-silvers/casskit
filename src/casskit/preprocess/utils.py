@@ -10,6 +10,8 @@ from casskit import config
 
 # logging.basicConfig(filename=config.get_logging(), level=logging.INFO)
 
+__all__ = ["PPSignal"]
+
 
 class PPSignal(Validator):
 
