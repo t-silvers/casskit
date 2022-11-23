@@ -5,8 +5,6 @@ import pandas as pd
 
 import casskit.data
 
-TEST_ASSETS = Path(__file__).parent / "assets"
-
 
 def test_molqtl():
     
@@ -23,9 +21,8 @@ def test_molqtl():
         casskit.data.cneQTL().load_data([1, 2, 3])
     
     # works with asset data
-    casskit.data.cneQTL().load_data(
-        pd.read_csv(TEST_ASSETS / "eqtl_data.csv")
-    )
+    data = read_eqtl_data()
+    casskit.data.cneQTL().load_data(data)
     
     # check that works with random data with correct columns
     casskit.data.cneQTL().load_data(

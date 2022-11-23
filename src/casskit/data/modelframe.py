@@ -1,7 +1,9 @@
 from dataclasses import dataclass, field
 from typing import List, Optional, Union
+import warnings
 
 import pandas as pd
+from sklearn.impute import SimpleImputer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import StandardScaler
 
@@ -10,15 +12,83 @@ from casskit.pipelines.clinical import ClinicalCovariates
 from casskit.pipelines.gtex import GTEx
 from casskit.preprocess.mutation import AggMutations
 from casskit.preprocess.units import ToCounts
+from casskit.typing import DATAFRAME
 
 
-@dataclass
+@dataclass(frozen=False)
 class ModelFrame:
-    variants: Union[pd.DataFrame, None]
-    gene_copynumber: Union[pd.DataFrame, None]
-    cnvr_copynumber: Union[pd.DataFrame, None]
-    expression: Union[pd.DataFrame, None]
-    phenotype: Union[pd.DataFrame, None]
+    model_frame: DATAFRAME = field(default=None)
+
+    index: List[str] = None
+    impute: Union[bool, str] = True
+    impute_method: str = "most_frequent"
+    
+    def load(self, **kwargs):
+        self.variants = kwargs.get("variants", None)
+        self.gene_copynumber = kwargs.get("gene_copynumber", None)
+        self.cnvr_copynumber = kwargs.get("cnvr_copynumber", None)
+        self.expression = kwargs.get("expression", None)
+        self.phenotype = kwargs.get("phenotype", None)
+        self.index = kwargs.get("index")
+        self.impute = kwargs.get("impute", True)
+        self.impute_method = kwargs.get("impute_method", "most_frequent")
+        
+        self.model_frame = self._make_model_frame()
+        
+        return self
+    
+    def _make_model_frame(self):
+        # TODO: Add checks for column names
+        # TODO: Add prefixes (based on arg?)
+
+        model_frame = pd.concat([
+            self.expression,
+            self.gene_copynumber,
+            self.cnvr_copynumber,
+            self.expression,
+            self.phenotype,
+        ], axis=1)
+        
+        model_frame = self._process_model_frame(model_frame)
+        self.N, self.P = model_frame.shape
+        
+        return model_frame
+
+    def _process_model_frame(self, model_frame):
+        if self.index is not None:
+            model_frame = model_frame.reindex(self.index)
+        
+        if self.impute:
+            if self.impute_method == "most_frequent":
+                imp = SimpleImputer(strategy="most_frequent")
+            elif self.impute_method == "mean":
+                imp = SimpleImputer(strategy="mean")
+            else:
+                raise ValueError(f"impute_method must be 'most_frequent' ",
+                                 f"or 'mean' not {self.impute_method}")
+
+            model_frame = imp.fit_transform(model_frame)
+
+        else:
+            if self.impute_method == "override":
+                pass
+            else:
+                warnings.warn("Impute is False, so rows with NaNs are dropped. "
+                            "To keep rows with NaNs, set impute='override'.")
+                model_frame = model_frame.dropna()
+    
+        return model_frame
+    
+    def __post_init__(self):
+        if self.model_frame is not None:
+            self.model_frame = self._process_model_frame(self.model_frame)
+            self.N, self.P = self.model_frame.shape
+
+    def __getitem__(self, key):
+        return self.model_frame[key]
+
+    def __repr__(self):
+        return f"ModelFrame with {self.N} samples and {self.P} variables"
 
 @dataclass
 class Phenotype:
