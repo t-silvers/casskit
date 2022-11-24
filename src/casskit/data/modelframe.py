@@ -42,7 +42,7 @@ class ModelFrame:
         model_frame = pd.concat([
             self.expression,
             self.cnvr_copynumber,
-            self.gene_copynumber.add_prefix("cn_"),
+            self.gene_copynumber,
             self.phenotype,
             self.variants,
         ], axis=1)
