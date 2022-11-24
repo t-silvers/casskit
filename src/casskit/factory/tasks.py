@@ -39,6 +39,7 @@ def task_factory(
             *parse_inputs(task["inputs"],
                           task_gathered,
                           pd.json_normalize(task_schema)),
+            pure=task.get("pure", True),
         )
         
         task_gathered[task["taskID"]] = task_futures
