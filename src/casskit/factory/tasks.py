@@ -36,15 +36,16 @@ def task_factory(
         
     task_gathered = {}
     for task in task_schema:
-        task_futures = getattr(client, task["client_method"])(
-            task["callable"],
-            *parse_inputs(task["inputs"],
-                          task_gathered,
-                          pd.json_normalize(task_schema)),
-            pure=task.get("pure", True),
-        )
-        
-        task_gathered[task["taskID"]] = task_futures
+        if task is not None:
+            task_futures = getattr(client, task["client_method"])(
+                task["callable"],
+                *parse_inputs(task["inputs"],
+                            task_gathered,
+                            pd.json_normalize(task_schema)),
+                pure=task.get("pure", True),
+            )
+            
+            task_gathered[task["taskID"]] = task_futures
 
     return task_gathered[task["taskID"]]
 
