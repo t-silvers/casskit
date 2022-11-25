@@ -16,6 +16,7 @@ def task_factory(
     task_schema,
     client: dask.distributed.Client = None,
     dry_run: bool = False,
+    **kwargs
 ):
     if dry_run is True:
         dry_run_results = {}
@@ -36,16 +37,21 @@ def task_factory(
         
     task_gathered = {}
     for task in task_schema:
-        if task is not None:
-            task_futures = getattr(client, task["client_method"])(
-                task["callable"],
-                *parse_inputs(task["inputs"],
-                            task_gathered,
-                            pd.json_normalize(task_schema)),
-                pure=task.get("pure", True),
-            )
-            
-            task_gathered[task["taskID"]] = task_futures
+        if (task is not None and len(task) > 0):
+            try:
+                task_futures = getattr(client, task["client_method"])(
+                    task["callable"],
+                    *parse_inputs(task["inputs"],
+                                task_gathered,
+                                pd.json_normalize(task_schema)),
+                    pure=task.get("pure", True),
+                )
+                
+                task_gathered[task["taskID"]] = task_futures
+            except Exception as e:
+                print(f"Error in task {task['taskID']}: {e}")
+                print(f"Task: {task}")
+                raise e
 
     return task_gathered[task["taskID"]]
 
