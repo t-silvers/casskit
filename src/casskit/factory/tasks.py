@@ -81,8 +81,8 @@ def parse_inputs(
         return inputs
 
     else:
-        warnings.warn(f"Unknown input type: {type(inputs)}. "
-                      "Please use schema field to specify input types.")
+        # warnings.warn(f"Unknown input type: {type(inputs)}. "
+        #               "Please use schema field to specify input types.")
         return inputs
 
 def sub_task(
