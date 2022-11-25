@@ -5,6 +5,7 @@ import warnings
 
 import dask.distributed
 from dask.distributed import get_client, rejoin, secede
+import numpy as np
 import pandas as pd
 
 
@@ -64,8 +65,14 @@ def parse_inputs(
             parse_inputs(getattr(inputs, "inputs"), task_futures, schema),
             len(getattr(inputs, "params"))
         ))
-    elif isinstance(inputs, dask.distributed.Future):
+    elif (
+        isinstance(inputs, dask.distributed.Future) |
+        isinstance(inputs, bool) |
+        isinstance(inputs, int) |
+        isinstance(inputs, np.ndarray)
+    ):
         return inputs
+
     else:
         warnings.warn(f"Unknown input type: {type(inputs)}. "
                       "Please use schema field to specify input types.")
