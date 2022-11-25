@@ -7,6 +7,12 @@ from .modelframe import (
     CNVRCopyNumber,
 )
 
+from .molqtl import (
+    Locus,
+    cneQTL,
+)
+
+
 from .simulate.sim_copynumber import simulate_copynumber
 from .simulate.sim_expression import simulate_expression
 from .simulate.sim_grn import simulate_grn
@@ -23,6 +29,9 @@ __all__ = [
     "Expression",
     "GeneCopyNumber",
     "CNVRCopyNumber",
+
+
+
     "simulate_copynumber",
     "simulate_expression",
     "simulate_grn",

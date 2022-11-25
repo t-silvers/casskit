@@ -1,9 +1,10 @@
 from collections import namedtuple
 import itertools
 from typing import Dict, List
+import warnings
 
 import dask.distributed
-from dask.distributed import get_client, rejoin, secede, as_completed, wait
+from dask.distributed import get_client, rejoin, secede
 import pandas as pd
 
 
@@ -66,19 +67,23 @@ def parse_inputs(
     elif isinstance(inputs, dask.distributed.Future):
         return inputs
     else:
-        # warnings.warn(f"Unknown input type: {type(inputs)}. "
-        #               "Please use schema field to specify input types.")
+        warnings.warn(f"Unknown input type: {type(inputs)}. "
+                      "Please use schema field to specify input types.")
         return inputs
 
-def sub_task(arg_client=None):
+def sub_task(
+    task: Dict,
+    task_futures: Dict[str, dask.distributed.Future],
+    arg_client: dask.distributed.Client = None,
+):
     # Not advised to use this method
     client = arg_client if arg_client is not None else get_client()
     _seceded = False
     if task["gather"] is True:
         secede()
-        task_gathered[task["taskID"]] = client.gather(
+        task_futures[task["taskID"]] = client.gather(
             task_futures
         )
         rejoin()
     else:
-        task_gathered[task["taskID"]] = task_futures
+        task_futures[task["taskID"]] = task_futures
