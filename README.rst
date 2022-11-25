@@ -185,6 +185,10 @@ Summary of related packages
      - Python
      - Yes
      - Janggu is a python package that facilitates deep learning in the context of genomics
+   * - `BioSimulators`_
+     - Python, SBML
+     - Yes
+     - central registry of simulation engines and services for recommending specific tools. see also `Benchmark-Models-PEtab`_
 
 
 .. list-table:: Multi-omic data integration
@@ -290,6 +294,8 @@ information on PyScaffold see https://pyscaffold.org/.
 
 .. Refs
 .. =====
+.. _Benchmark-Models-PEtab: https://github.com/benchmarking-initiative/benchmark-models-petab
+.. _BioSimulators: https://biosimulators.org
 .. _dalmatian: https://github.com/getzlab/dalmatian
 .. _EUGENe: https://github.com/cartercompbio/EUGENe
 .. _eugene.dataload.dataloaders.SeqData: https://github.com/cartercompbio/EUGENe

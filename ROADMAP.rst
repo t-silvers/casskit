@@ -2,6 +2,7 @@
 TO-DO
 =========
 
+- [ ] Flexible passing of keyword arguments to underlying ``dask`` functions
 - [ ] Extend test suite with ``hypothesis`` [`hypothesis docs`_] and ``pytest-benchmark`` [`pytest-benchmark docs`_]
 - [ ] Identifying mislabeled samples with `COSMO`_ (split out from nf implementation). Include known TCGA mislabeling (Are known samples eg `Subchallenge 1 Training Key`_ corrected?)
 - [ ] TCGA CPTAC data
