@@ -5,6 +5,9 @@ from typing import Dict, List
 import pandas as pd
 
 
+def pipe_concat(*args):
+    return pd.concat(args, axis=0)
+
 def column_janitor(df: pd.DataFrame) -> pd.DataFrame:
     """Make all columns lowercase and convert special characters to underscores."""
     return df.rename(columns=str.lower).rename(columns=lambda x: janitor(x))
