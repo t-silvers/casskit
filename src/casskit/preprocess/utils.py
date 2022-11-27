@@ -127,7 +127,7 @@ class PPSignal(Validator):
         
         # Validate individual features
         if (corr_s < self.tol).any():
-            warnings.warn(f"Poor correlation of {corr_s:.2f} between original and transformed data "
+            warnings.warn(f"Poor correlation of between original and transformed data "
                           "for some features. Please check your preprocessing steps.")
 
         if (corr_s < self.etol).any():
