@@ -144,8 +144,10 @@ class PPSignal(Validator):
                 raise KeyError("Correlation between original and transformed data "
                                "is below the error threshold for all features.")
 
-        perc_above_tol = (corr_s > self.tol).value_counts(normalize=True).loc[True]
-        print(f"{perc_above_tol:.2%} of features above threshold {self.tol:.2f}.")
+        if (corr_s < self.tol).any():
+            
+            perc_above_tol = (corr_s > self.tol).value_counts(normalize=True).loc[True]
+            print(f"{perc_above_tol:.2%} of features above threshold {self.tol:.2f}.")
 
         # Validate averages over features
         mean_val = corr_s.mean()
