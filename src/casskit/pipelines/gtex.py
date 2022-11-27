@@ -89,7 +89,7 @@ class GTEx(BaseEstimator, TransformerMixin):
                 raise e
             else:
                 # Ignore validation errors
-                warnings.warn(e)
+                warnings.warn("Validation failed. Ignoring.")
                 pass
 
         return self.transformed

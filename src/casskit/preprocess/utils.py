@@ -127,14 +127,17 @@ class PPSignal(Validator):
         
         # Validate individual features
         if (corr_s < self.tol).any():
-            warnings.warn("Poor correlation between original and transformed data "
+            warnings.warn(f"Poor correlation of {corr_s:.2f} between original and transformed data "
                           "for some features. Please check your preprocessing steps.")
 
         if (corr_s < self.etol).any():
             try:
-                if (corr_s < self.etol).value_counts(normalize=True).loc[True] > self.ef:
+                
+                corr_vc = (corr_s < self.etol).value_counts(normalize=True).loc[True]
+                
+                if corr_vc > self.ef:
                     raise ValueError("Correlation between original and transformed data "
-                                    f"is below the error threshold {self.etol} for more "
+                                    f"is {corr_vc:.2f}, below the error threshold {self.etol:.2f} for more "
                                     f" than {self.ef:.2%} of features."
                                     "Please check your preprocessing steps.")
             except KeyError:
@@ -142,7 +145,7 @@ class PPSignal(Validator):
                                "is below the error threshold for all features.")
 
         perc_above_tol = (corr_s > self.tol).value_counts(normalize=True).loc[True]
-        print(f"{perc_above_tol:.2%} of features above threshold {self.tol}.")
+        print(f"{perc_above_tol:.2%} of features above threshold {self.tol:.2f}.")
 
         # Validate averages over features
         mean_val = corr_s.mean()
