@@ -1,4 +1,7 @@
+from distutils.log import warn
+from logging import warning
 from typing import Dict, List
+import warnings
 
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -30,6 +33,7 @@ class GTEx(BaseEstimator, TransformerMixin):
         min_cpm: float = 1,
         max_freq_zero: float = 0.3,
         cv2_min: float = 0.8,
+        validate: bool = True,
         pp_tol: float = 0.9,
         pp_etol: float = 0.8,
         pp_efrac: float = 0.2,
@@ -41,6 +45,7 @@ class GTEx(BaseEstimator, TransformerMixin):
         self.min_cpm = min_cpm
         self.max_freq_zero = max_freq_zero
         self.cv2_min = cv2_min
+        self.validate = validate
         self.pp_tol = pp_tol
         self.pp_etol = pp_etol
         self.pp_efrac = pp_efrac
@@ -75,7 +80,16 @@ class GTEx(BaseEstimator, TransformerMixin):
     def fit_transform(self, X, y=None):
         """Custom fit_transform method for checks."""
         self.transformed = self.gtex_preprocess.fit_transform(X)
-        self.validator.validate({
-            "original": X, "transformed": self.transformed, "type": "expression"
-        })
+        try:
+            self.validator.validate({
+                "original": X, "transformed": self.transformed, "type": "expression"
+            })
+        except ValueError as e:
+            if self.validate is True:
+                raise e
+            else:
+                # Ignore validation errors
+                warnings.warn(e)
+                pass
+
         return self.transformed
