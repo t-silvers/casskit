@@ -25,6 +25,7 @@ class GTEx(BaseEstimator, TransformerMixin):
         self,
         units: OneOf("log2(count+1)", "counts") = "log2(count+1)",
         lib_size: np.ndarray = None,
+        rint: bool = True,
         genes: List[str] = None,
         min_cpm: float = 1,
         max_freq_zero: float = 0.3,
@@ -35,6 +36,7 @@ class GTEx(BaseEstimator, TransformerMixin):
     ):
         self.units = units
         self.lib_size = lib_size
+        self.rint = rint
         self.genes = genes
         self.min_cpm = min_cpm
         self.max_freq_zero = max_freq_zero
@@ -49,14 +51,18 @@ class GTEx(BaseEstimator, TransformerMixin):
 
     @property
     def gtex_preprocess(self) -> Pipeline:
-        return Pipeline(
-            [("As counts", ToCounts(units=self.units)),
-             ("TMM", EdgeRCPM(lib_size=self.lib_size)),
-             ("Protein coding", ProteinCoding(genes=self.genes)),
-             ("Filter low expression", CountThreshold(self.min_cpm, self.max_freq_zero)),
-             ("Filter low variance", VariationThreshold(self.cv2_min)),
-             ("RINT", RINT())]
-        )
+        gtex_pipe = [
+            ("As counts", ToCounts(units=self.units)),
+            ("TMM", EdgeRCPM(lib_size=self.lib_size)),
+            ("Protein coding", ProteinCoding(genes=self.genes)),
+            ("Filter low expression", CountThreshold(self.min_cpm, self.max_freq_zero)),
+            ("Filter low variance", VariationThreshold(self.cv2_min))
+        ]
+        
+        if self.rint is True:
+            gtex_pipe.append(("RINT", RINT()))
+
+        return Pipeline(gtex_pipe)
 
     def fit(self, X, y=None):
         self.gtex_preprocess.fit(X)
