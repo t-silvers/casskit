@@ -20,37 +20,39 @@ def get_ontology(resource) -> pd.DataFrame:
     """Get ontology / pathway / ... data from local cache."""
     resource = resource.lower()
     
-    if check_package_version("python", "3.10") is True:
+    # Still hits syntax checkers
+    # if check_package_version("python", "3.10") is True:
 
-        match resource:
-            case "biogrid":
-                return get_biogrid()
+    #     match resource:
+    #         case "biogrid":
+    #             return get_biogrid()
 
-            case "corum":
-                return get_corum()
+    #         case "corum":
+    #             return get_corum()
 
-            case "cosmic":
-                return get_cosmic()
+    #         case "cosmic":
+    #             return get_cosmic()
             
-            case "trrust":
-                return get_trrust()
+    #         case "trrust":
+    #             return get_trrust()
                     
-            case _:
-                raise ValueError(f"Resource {resource} not found.")
+    #         case _:
+    #             raise ValueError(f"Resource {resource} not found.")
     
-    # For backwards compatibility with Python <=3.9
+    # # For backwards compatibility with Python <=3.9
+    # else:
+    
+    if resource == "biogrid":
+        return get_biogrid()
+    
+    elif resource == "corum":
+        return get_corum()
+    
+    elif resource == "cosmic":
+        return get_cosmic()
+    
+    elif resource == "trrust":
+        return get_trrust()
+    
     else:
-        if resource == "biogrid":
-            return get_biogrid()
-        
-        elif resource == "corum":
-            return get_corum()
-        
-        elif resource == "cosmic":
-            return get_cosmic()
-        
-        elif resource == "trrust":
-            return get_trrust()
-        
-        else:
-            raise ValueError(f"Resource {resource} not found.")
+        raise ValueError(f"Resource {resource} not found.")
