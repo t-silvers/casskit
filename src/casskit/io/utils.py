@@ -1,6 +1,7 @@
 from functools import wraps
 from pathlib import Path
 import pkg_resources
+import platform
 import subprocess
 from typing import Any, Callable, Dict, List, Union
 import warnings
@@ -42,6 +43,14 @@ def cache_on_disk(f: Callable) -> Callable:
 def check_package_version(package: str, version: str = None) -> bool:
     """Check if package is installed and at least a certain version."""
     try:
+        if package == "python":
+            if version is None:
+                return True
+            else:
+                return pkg_resources.parse_version(
+                    platform.python_version()
+                ) >= pkg_resources.parse_version(version)
+        
         pkg_distrib = pkg_resources.get_distribution(package)
         if version is not None:
             return pkg_resources.parse_version(pkg_distrib.version) >= pkg_resources.parse_version(version)

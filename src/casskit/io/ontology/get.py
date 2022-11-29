@@ -3,6 +3,7 @@
 
 import pandas as pd
 
+from casskit.io.utils import check_package_version
 from casskit.io.ontology.biogrid import get_biogrid
 from casskit.io.ontology.corum import get_corum
 from casskit.io.ontology.cosmic import get_cosmic
@@ -19,18 +20,37 @@ def get_ontology(resource) -> pd.DataFrame:
     """Get ontology / pathway / ... data from local cache."""
     resource = resource.lower()
     
-    match resource:
-        case "biogrid":
+    if check_package_version("python", "3.10") is True:
+
+        match resource:
+            case "biogrid":
+                return get_biogrid()
+
+            case "corum":
+                return get_corum()
+
+            case "cosmic":
+                return get_cosmic()
+            
+            case "trrust":
+                return get_trrust()
+                    
+            case _:
+                raise ValueError(f"Resource {resource} not found.")
+    
+    # For backwards compatibility with Python <=3.9
+    else:
+        if resource == "biogrid":
             return get_biogrid()
-
-        case "corum":
+        
+        elif resource == "corum":
             return get_corum()
-
-        case "cosmic":
+        
+        elif resource == "cosmic":
             return get_cosmic()
         
-        case "trrust":
+        elif resource == "trrust":
             return get_trrust()
-                
-        case _:
+        
+        else:
             raise ValueError(f"Resource {resource} not found.")
