@@ -17,8 +17,9 @@ def build_ontology_cache():
     
 def get_ontology(resource) -> pd.DataFrame:
     """Get ontology / pathway / ... data from local cache."""
-    match resource.lower():
-        
+    resource = resource.lower()
+    
+    match resource:
         case "biogrid":
             return get_biogrid()
 
