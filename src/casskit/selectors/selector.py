@@ -1,4 +1,4 @@
-from dask_ml import compose as dask_compose
+# from dask_ml import compose as dask_compose
 import numpy as np
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
@@ -38,16 +38,17 @@ class ColumnSelector(ColumnTransformer):
             remainder="drop"
         )
 
-class ColumnSelectorDask(dask_compose.ColumnTransformer):
-    # For dask objects, we need to use the dask-ml version of ColumnTransformer
-    def __init__(self, selector_name, **selector_kwargs):
-        self.selector_name = selector_name
-        super().__init__(
-            transformers=[(self.selector_name, "passthrough",
-                           make_column_selector(**selector_kwargs))],
-            remainder="drop",
-            preserve_dataframe=False
-        )
+# TODO:
+# class ColumnSelectorDask(dask_compose.ColumnTransformer):
+#     # For dask objects, we need to use the dask-ml version of ColumnTransformer
+#     def __init__(self, selector_name, **selector_kwargs):
+#         self.selector_name = selector_name
+#         super().__init__(
+#             transformers=[(self.selector_name, "passthrough",
+#                            make_column_selector(**selector_kwargs))],
+#             remainder="drop",
+#             preserve_dataframe=False
+#         )
 
 class make_column_selector:
     """Create a callable to select columns to be used with
