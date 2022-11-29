@@ -24,28 +24,54 @@ def build_tcga_cache(cancer):
 def get_tcga(feature, cancer=None):
     """Get TCGA data from local cache."""
     # TODO: filter samples by cancer type
-    match feature:
+    
+    # match feature:
         
-        case "ancestry":
-            return get_ancestry_pcs()
+    #     case "ancestry":
+    #         return get_ancestry_pcs()
 
-        case "aneuploidy_score":
+    #     case "aneuploidy_score":
+    #         return get_tcga_aneuploidy_scores()
+        
+    #     case "purity":
+    #         return get_tumor_purity()
+        
+    #     case "scna_score":
+    #         return get_scna_scores()
+
+    #     case "subtypes":
+    #         return get_subtypes()
+
+    #     case "survival":
+    #         return get_tcga_cdr_survival()
+        
+    #     case _:
+    #         try:
+    #             return get_gdc_tcga(cancer, feature)
+    #         except Exception as e:
+    #             raise ValueError(f"Feature {feature} not found.") from e
+    
+    # Maintain backwards compatibility with Python <=3.9
+    if feature == "ancestry":
+        return get_ancestry_pcs()
+    
+    elif feature == "aneuploidy_score":
             return get_tcga_aneuploidy_scores()
-        
-        case "purity":
-            return get_tumor_purity()
-        
-        case "scna_score":
-            return get_scna_scores()
-
-        case "subtypes":
-            return get_subtypes()
-
-        case "survival":
-            return get_tcga_cdr_survival()
-        
-        case _:
-            try:
-                return get_gdc_tcga(cancer, feature)
-            except Exception as e:
-                raise ValueError(f"Feature {feature} not found.") from e
+    
+    elif feature == "purity":
+        return get_tumor_purity()
+    
+    elif feature == "scna_score":
+        return get_scna_scores()
+    
+    elif feature == "subtypes":
+        return get_subtypes()
+    
+    elif feature == "survival":
+        return get_tcga_cdr_survival()
+    
+    else:
+        try:
+            return get_gdc_tcga(cancer, feature)
+        except Exception as e:
+            raise ValueError(f"Feature {feature} not found.") from e
