@@ -62,16 +62,19 @@ def parse_inputs(
 ):
     if isinstance(inputs, list):
         return [parse_inputs(x, task_futures, schema) for x in inputs]
+    
     elif isinstance(inputs, str):
         if inputs.startswith("taskID"):
             return task_futures[schema.query("taskID == @inputs").iloc[0].taskID]
         else:
             return inputs
+    
     elif isinstance(inputs, ParamArg):
         return list(itertools.repeat(
             parse_inputs(getattr(inputs, "inputs"), task_futures, schema),
             len(getattr(inputs, "params"))
         ))
+    
     elif (
         isinstance(inputs, dask.distributed.Future) |
         isinstance(inputs, bool) |

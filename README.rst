@@ -189,6 +189,10 @@ Summary of related packages
      - Python, SBML
      - Yes
      - central registry of simulation engines and services for recommending specific tools. see also `Benchmark-Models-PEtab`_
+   * - `NCI Genetic Simulation Resources (GSR)`_
+     - Python, R, C++
+     - Yes
+     - Database of genetic simulation software tools
 
 
 .. list-table:: Multi-omic data integration
@@ -211,10 +215,14 @@ Summary of related packages
      - R
      - Yes
      - OmicsEV: A tool for large scale omics data tables evaluation
-   * - `_SCENIC`_
+   * - `SCENIC`_
      - R, Python
      - Yes
      - SCENIC Suite is a set of tools to study and decipher gene regulation. Its core is based on SCENIC (Single-Cell rEgulatory Network Inference and Clustering) which enables you to infer transcription factors, gene regulatory networks and cell types from single-cell RNA-seq data (using SCENIC) or the combination of single-cell RNA-seq and single-cell ATAC-seq data (using SCENIC+).
+   * - `The Network Zoo`_
+     - R, Python, MATLAB, C
+     - Yes
+     - a network biology package for the inference and analysis of gene regulatory networks
 
 
 .. list-table:: Annotations
@@ -312,6 +320,7 @@ information on PyScaffold see https://pyscaffold.org/.
 .. _LinkedOmics: http://www.linkedomics.org/login.php
 .. _MOFA: https://biofam.github.io/MOFA2/
 .. _MultiAssayExperiment: https://github.com/waldronlab/MultiAssayExperiment
+.. _NCI Genetic Simulation Resources (GSR): https://popmodels.cancercontrol.cancer.gov/gsr/
 .. _NDEx-The Network Data Exchange : https://home.ndexbio.org/index/
 .. _OmicsEV: https://bzhanglab.github.io/OmicsEV/
 .. _OmniPath: https://omnipathdb.org
@@ -329,4 +338,5 @@ information on PyScaffold see https://pyscaffold.org/.
 .. _SKOPS: https://github.com/skops-dev/skops
 .. _TCGAutils: https://github.com/waldronlab/TCGAutils
 .. _TCGAbiolinks: https://github.com/BioinformaticsFMRP/TCGAbiolinks
+.. _The Network Zoo: netzoo.github.io
 .. _TorchData: https://pytorch.org/data/main/tutorial.html
