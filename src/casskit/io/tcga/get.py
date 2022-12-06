@@ -19,8 +19,7 @@ def build_tcga_cache(cancer):
     __ = get_tumor_purity()
     get_subtypes(cache_only=True)
     __ = get_tcga_cdr_survival()
-    
-    
+
 def get_tcga(feature, cancer=None):
     """Get TCGA data from local cache."""
     # TODO: filter samples by cancer type
