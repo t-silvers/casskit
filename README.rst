@@ -27,8 +27,15 @@
     :alt: Project generated with PyScaffold
     :target: https://pyscaffold.org/
 
-|
+.. image:: https://img.shields.io/badge/License-MIT-blue.svg
+    :target: https://opensource.org/licenses/MIT
 
+.. image:: https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg?style=flat
+    :target:
+
+.. image:: https://img.shields.io/badge/Status-Pre--Alpha-red
+    :alt: Status: Pre-Alpha
+    :target:
 
 .. image:: https://github.com/t-silvers/casskit/blob/4110e5b1441c3e51826087fadb4136f2b2fab713/docs/temp-brandmark-logo-med.png
   :width: 800
@@ -41,9 +48,6 @@ casskit
 
 
     Toolkit for Cancer Association studies.
-
-
-lorem ipsum
 
 
 .. _pyscaffold-notes:
@@ -291,13 +295,6 @@ Development roadmap
 =========
 
 see :ref:`roadmap`
-
-
-Note
-====
-
-This project has been set up using PyScaffold 4.3.1. For details and usage
-information on PyScaffold see https://pyscaffold.org/.
 
 
 .. Refs
