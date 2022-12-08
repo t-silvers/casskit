@@ -18,30 +18,6 @@ from casskit.typing import DATAFRAME
 from dataclasses import dataclass, field
 import casskit as ck
 
-@dataclass(frozen=False)
-class ModelFrame:
-    model_frame: ck.typing.DATAFRAME = field(default=None)
-    index: List[str] = None
-    impute: Union[bool, str] = True
-    ...
-    
-    def load(self, **kwargs):
-        # Load and match omics in model_frame
-        self.expression = kwargs.get("expression", None)
-        ...
-        self.model_frame = self._make_model_frame()
-        
-        return self
-    
-    def _make_model_frame(self):
-        # Record accession information
-        ...
-
-    def __getitem__(self, key):
-        # Simplified version of ck.data.ModelFrame.__getitem__
-        return self.model_frame[key]
-
-
 
 @dataclass(frozen=False)
 class ModelFrame:
