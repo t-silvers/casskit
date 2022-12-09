@@ -30,12 +30,9 @@
 .. image:: https://img.shields.io/badge/License-MIT-blue.svg
     :target: https://opensource.org/licenses/MIT
 
-.. image:: https://img.shields.io/badge/Contributions-Welcome-brightgreen.svg?style=flat
-    :target:
-
-.. image:: https://img.shields.io/badge/Status-Pre--Alpha-red
-    :alt: Status: Pre-Alpha
-    :target:
+.. image:: https://img.shields.io/github/v/release/t-silvers/casskit?include_prereleases
+    :alt: GitHub release (latest by date including pre-releases)
+    :target: 
 
 .. .. image:: https://github.com/t-silvers/casskit/blob/4110e5b1441c3e51826087fadb4136f2b2fab713/docs/temp-brandmark-logo-med.png
 ..   :width: 800
@@ -49,6 +46,8 @@ casskit
 
     Toolkit for Cancer Association studies.
 
+
+This is a pre-alpha release of casskit **(v0.0.1)**.
 
 .. _pyscaffold-notes:
 
