@@ -55,12 +55,8 @@ This is a pre-alpha release of casskit **(v0.0.1)**.
 
 Installation
 ------------
-
-
 github
 ~~~~~~
-
-
 .. code-block:: bash
   
     git clone https://github.com/t-silvers/casskit.git
@@ -69,7 +65,7 @@ github
 pip
 ~~~
 (Not implemented yet)
-.. code:: bash
+.. code-block:: bash
 
     pip install casskit
 
