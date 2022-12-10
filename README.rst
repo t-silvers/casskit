@@ -65,6 +65,7 @@ github
 pip
 ~~~
 (Not implemented yet)
+
 .. code-block:: bash
 
     pip install casskit
