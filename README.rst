@@ -55,6 +55,8 @@ This is a pre-alpha release of casskit **(v0.0.1)**.
 Summary of related packages
 =========
 
+Fetching and parsing TCGA
+-------------------------
 
 .. list-table:: Fetching and parsing TCGA
    :widths: 30 10 10 65
@@ -77,6 +79,9 @@ Summary of related packages
      - 
      - 
 
+
+(Biological) Data structures
+----------------------------
 
 .. list-table:: (Biological) Data structures
    :widths: 30 10 10 65
@@ -156,6 +161,9 @@ Summary of related packages
      - genomics datasets maintains coverage or sequence type of information along with the associated genomic intervals. Externally, the datasets behave similar to a numpy array
 
 
+Modeling
+--------
+
 .. list-table:: Modeling
    :widths: 30 10 10 65
    :header-rows: 1
@@ -198,6 +206,9 @@ Summary of related packages
      - Database of genetic simulation software tools
 
 
+Multi-omic data integration
+---------------------------
+
 .. list-table:: Multi-omic data integration
    :widths: 30 10 10 65
    :header-rows: 1
@@ -228,6 +239,10 @@ Summary of related packages
      - a network biology package for the inference and analysis of gene regulatory networks
 
 
+
+Annotations
+-----------
+
 .. list-table:: Annotations
    :widths: 30 10 10 65
    :header-rows: 1
@@ -254,6 +269,9 @@ Summary of related packages
      - The NDEx Project provides an open-source framework where scientists and organizations can store, share, manipulate, and publish biological network knowledge.
 
 
+
+Other
+-----
 
 .. list-table:: Other
    :widths: 30 10 10 65
