@@ -58,7 +58,7 @@ Summary of related packages
 Fetching and parsing TCGA
 -------------------------
 
-.. list-table:: Fetching and parsing TCGA
+.. list-table::
    :widths: 30 10 10 65
    :header-rows: 1
 
