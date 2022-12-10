@@ -83,7 +83,7 @@ Fetching and parsing TCGA
 (Biological) Data structures
 ----------------------------
 
-.. list-table:: (Biological) Data structures
+.. list-table::
    :widths: 30 10 10 65
    :header-rows: 1
 
@@ -164,7 +164,7 @@ Fetching and parsing TCGA
 Modeling
 --------
 
-.. list-table:: Modeling
+.. list-table::
    :widths: 30 10 10 65
    :header-rows: 1
 
@@ -209,7 +209,7 @@ Modeling
 Multi-omic data integration
 ---------------------------
 
-.. list-table:: Multi-omic data integration
+.. list-table::
    :widths: 30 10 10 65
    :header-rows: 1
 
@@ -239,11 +239,10 @@ Multi-omic data integration
      - a network biology package for the inference and analysis of gene regulatory networks
 
 
-
 Annotations
 -----------
 
-.. list-table:: Annotations
+.. list-table::
    :widths: 30 10 10 65
    :header-rows: 1
 
@@ -269,11 +268,10 @@ Annotations
      - The NDEx Project provides an open-source framework where scientists and organizations can store, share, manipulate, and publish biological network knowledge.
 
 
-
 Other
 -----
 
-.. list-table:: Other
+.. list-table::
    :widths: 30 10 10 65
    :header-rows: 1
 
