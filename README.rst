@@ -51,6 +51,28 @@ This is a pre-alpha release of casskit **(v0.0.1)**.
 
 .. _pyscaffold-notes:
 
+Installation
+------------
+
+github
+~~~~~~
+.. code-block:: bash
+  
+    git clone https://github.com/t-silvers/casskit.git
+    python setup.py install
+
+pip
+~~~
+(Not implemented yet)
+.. code:: bash
+
+    pip install casskit
+
+conda
+~~~~~
+(Not implemented yet)
+
+
 =========
 Summary of related packages
 =========
