@@ -12,6 +12,7 @@ class QuickSim(base.SimulationMixin):
     shape: Tuple
     dims: List
     stems: List = None
+    out_fmt: str = "mat"
 
     @property
     def coord_labels(self):
@@ -40,11 +41,22 @@ class QuickSim(base.SimulationMixin):
             self.stems = self.dims
 
     def simulate(self) -> pd.DataFrame:
-        data = self.function_aliases[self.sampling_dist](self.shape)
-
-        return pd.DataFrame(data,
-                            index=self.coord_labels[0],
-                            columns=self.coord_labels[1])
+        data_vals = self.function_aliases[self.sampling_dist](self.shape)
+        df_mat = pd.DataFrame(data_vals,
+                              index=self.coord_labels[0],
+                              columns=self.coord_labels[1])
+        
+        if self.out_fmt == "mat":
+            return df_mat
+        
+        elif self.out_fmt == "tidy":
+            return (df_mat
+                    .melt(ignore_index=False, var_name=self.dims[1])
+                    .rename_axis(self.dims[0])
+                    .set_index(self.dims[1], append=True))
+        
+        else:
+            return df_mat
 
     @classmethod
     def from_dict(cls, d) -> pd.DataFrame:
