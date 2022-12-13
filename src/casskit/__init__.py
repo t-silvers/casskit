@@ -8,6 +8,7 @@ from . import models as mod
 from . import pipelines as pipe
 from . import preprocess as pp
 from . import selectors as sel
+from .data import simulate as sim
 
 dask_cluster = DaskCluster.dask_cluster
 
@@ -42,4 +43,5 @@ __all__ = [
     "pipe",
     "pp",
     "sel",
+    "sim",
 ]

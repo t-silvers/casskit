@@ -12,7 +12,7 @@ from .molqtl import (
     cneQTL,
 )
 
-
+from .simulate.quick import quick_sim
 from .simulate.sim_copynumber import simulate_copynumber
 from .simulate.sim_expression import simulate_expression
 from .simulate.sim_grn import simulate_grn
@@ -29,9 +29,7 @@ __all__ = [
     "Expression",
     "GeneCopyNumber",
     "CNVRCopyNumber",
-
-
-
+    "quick_sim",
     "simulate_copynumber",
     "simulate_expression",
     "simulate_grn",

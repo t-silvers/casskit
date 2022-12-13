@@ -112,4 +112,9 @@ class DaskCluster:
 
     @staticmethod
     def timelimit():
-        return subprocess.check_output("TIME=$(squeue -j $SLURM_JOB_ID -h --Format TimeLimit); echo -n $TIME", shell=True, text=True)
+        SLURM_JOB_TIME_LIMIT = (
+            "TIME=$(squeue -j $SLURM_JOB_ID -h --Format TimeLimit); echo -n $TIME"
+        )
+        return subprocess.check_output(SLURM_JOB_TIME_LIMIT,
+                                       shell=True,
+                                       text=True)

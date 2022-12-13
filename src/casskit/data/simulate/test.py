@@ -1,4 +1,8 @@
+#DEV
+import pandas as pd
+
 from casskit.data.simulate.sim_variants import simulate_variants
+
 
 class SimTCGA:
     

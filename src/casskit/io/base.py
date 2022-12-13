@@ -3,7 +3,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from contextlib import suppress
 from functools import wraps
-import logging
 from pathlib import Path
 from typing import Callable, Optional
 import urllib
