@@ -67,6 +67,5 @@ class QuickSim(base.SimulationMixin):
         self.check_inputs()
         self.data = self.simulate()
 
-
 quick_sim = QuickSim.from_dict
 """"Convenience function for creating a quick simulation."""
