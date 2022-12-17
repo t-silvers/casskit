@@ -4,6 +4,7 @@ from .annotate import (
     get_ensembl,
     annotate_genes
 )
+from .annot.centromere import Centromere, annotate_chrom_arm
 from .ontology.get import build_ontology_cache, get_ontology
 from .tcga.get import build_tcga_cache, get_tcga
 
@@ -14,6 +15,8 @@ __all__ = [
     "build_ensembl_cache",
     "get_ensembl",
     "annotate_genes",
+    "Centromere",
+    "annotate_chrom_arm",
     "build_ontology_cache",
     "get_ontology",
     "build_tcga_cache",
