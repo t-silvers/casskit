@@ -9,6 +9,7 @@ TO-DO
 - [ ] Add native support for `SMOTE` and other oversampling methods
 - [ ] Support custom Data structure `serializations in dask`
 - [ ] Add tutorial using `PyDESeq2`
+- [ ] *cis*-mapping tutorial
 
 .. Refs
 .. =====
