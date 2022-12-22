@@ -4,7 +4,6 @@ import io
 import os
 from pathlib import Path
 import subprocess
-import sys
 import tempfile
 from typing import Callable, Dict, List, Optional
 
@@ -64,6 +63,7 @@ class Mash:
 
     def __init__(
         self,
+        tissues,
         cache_dir: Optional[Path] = None,
         rand_sample_size: int = 2E5,
         strong_sample_size: int = 2E4,
@@ -74,6 +74,7 @@ class Mash:
         self.cache_dir = cache_dir if cache_dir else Path(config.CACHE_DIR)
         
         # Mash parameters
+        self.tissues = tissues
         self.rand_sample_size = rand_sample_size
         self.strong_sample_size = strong_sample_size
         self.strong_sample_method = strong_sample_method
@@ -98,9 +99,13 @@ class Mash:
             mash_rds = f"{d}/data.rds"
             
             # Prepare data
-            data_idx = prepare_mash_object(X, strat_idx, _MASH_MASHDATA_R, d,
-                                           getattr(self.nullcorr, "cache"),
-                                           mash_rds,
+            data_idx = prepare_mash_object(df=X,
+                                           strat_idx=strat_idx,
+                                           rscript=_MASH_MASHDATA_R,
+                                           temp_dir=d,
+                                           v_rds=getattr(self.nullcorr, "cache"),
+                                           out_rds=mash_rds,
+                                           condition_cols=self.tissues,
                                            )
             
             # Run mash

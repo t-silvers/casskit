@@ -14,6 +14,7 @@ def prepare_mash_object(
     v_rds: str,
     out_rds: str,
     condition_col: str = "tissue",
+    condition_cols: list[str] = [],
     param_cols: Dict[str, str] = dict(b="coef", sd="std_err"),
     fillna: Dict[str, float] = dict(b=0, sd=1E3),
 ) -> pd.Index:
@@ -25,6 +26,13 @@ def prepare_mash_object(
                                 values=param,
                                 fill_value=fillna.get(k, None),
                                 )
+
+        # Need to enforce that the number of conditions
+        # is the same as the number of conditions in the
+        # the null model.
+        for col in condition_cols:
+            if col not in df_mat.columns:
+                df_mat[col] = fillna.get(k, None)
         
         df_mat.to_csv(f"{temp_dir}/{k}.csv", index=False)
     
