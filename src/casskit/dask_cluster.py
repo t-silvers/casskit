@@ -68,7 +68,7 @@ class DaskCluster:
         memory: str = "8GB",
         numworkers: int = 5,
         threads: int = 4,
-        time_limit: str = None
+        time_limit: str = "1:00:00"
     ):
         return cls(cores, memory, numworkers, threads, time_limit).acquire_cluster()
 

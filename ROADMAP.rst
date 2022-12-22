@@ -10,12 +10,15 @@ TO-DO
 - [ ] Support custom Data structure `serializations in dask`
 - [ ] Add tutorial using `PyDESeq2`
 - [ ] *cis*-mapping tutorial
+- [ ] Add stratified sampling function using `imblearn.FunctionSampler`
+
 
 .. Refs
 .. =====
 .. _Subchallenge 1 Training Key: https://precision.fda.gov/challenges/4
 .. _COSMO : https://github.com/bzhanglab/COSMO
 .. _hypothesis docs: https://hypothesis.readthedocs.io/en/latest/index.html
+.. _imblearn.FunctionSampler: https://imbalanced-learn.org/stable/references/generated/imblearn.FunctionSampler.html
 .. _PyDESeq2: https://github.com/FedeGerva/pydeseq2
 .. _pytest-benchmark docs: https://pytest-benchmark.readthedocs.io/en/latest/
 .. _serializations in dask: https://distributed.dask.org/en/stable/serialization.html#dask-serialization-family
