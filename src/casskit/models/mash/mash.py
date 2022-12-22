@@ -24,12 +24,7 @@ _mashnullcorr1 = "https://stephenslab.github.io/mashr/articles/intro_correlation
 _mashnullcorr2 = "https://stephenslab.github.io/mashr/reference/estimate_null_correlation_simple.html"
 
 # R scripts
-if sys.stdin.isatty():
-    parent_dir = Path("").resolve() / "src" / "cneqtl" / "mash"
-
-else:
-    parent_dir = Path(__file__).parent
-
+parent_dir = Path(__file__).parent
 _MASH_NULLCORR_R = parent_dir / "nullcorr.R"
 _MASH_MASHDATA_R = parent_dir / "mashdata.R"
 _MASH_COVARIANCE_R = parent_dir / "covariance.R"
