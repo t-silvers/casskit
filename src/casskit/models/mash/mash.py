@@ -11,7 +11,7 @@ from typing import Callable, Dict, List, Optional
 import pandas as pd
 
 # from .config import *
-from cneqtl.mash.utils import make_mash_rdata, prepare_mash_object, stratified_sample
+from .utils import make_mash_rdata, prepare_mash_object, stratified_sample
 from casskit import config
 from casskit.io import utils as io_utils
 
