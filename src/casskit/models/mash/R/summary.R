@@ -29,7 +29,7 @@ prepare.mash.output <- function(mash.model){
     dplyr::rename_with(~paste0(., "_pm"))
 
   psd.res <-
-    tibble::as_tibble(mash.model$result$PosteriorMean) %>%
+    tibble::as_tibble(mash.model$result$PosteriorSD) %>%
     dplyr::rename_with(~paste0(., "_psd"))
 
   lfsr.res <-

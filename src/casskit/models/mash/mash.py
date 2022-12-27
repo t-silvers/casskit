@@ -11,7 +11,7 @@ import pandas as pd
 
 # from .config import *
 from .utils import make_mash_rdata, prepare_mash_object, stratified_sample
-from casskit import config
+from casskit import config, utils
 from casskit.io import utils as io_utils
 
 
@@ -24,12 +24,12 @@ _mashnullcorr2 = "https://stephenslab.github.io/mashr/reference/estimate_null_co
 
 # R scripts
 parent_dir = Path(__file__).parent
-_MASH_NULLCORR_R = parent_dir / "nullcorr.R"
-_MASH_MASHDATA_R = parent_dir / "mashdata.R"
-_MASH_COVARIANCE_R = parent_dir / "covariance.R"
-_MASH_MIXTURE_R = parent_dir / "mixture.R"
-_MASH_STRONG_R = parent_dir / "strong.R"
-_MASH_SUMMARY_R = parent_dir / "summary.R"
+_MASH_NULLCORR_R = parent_dir / "R" / "nullcorr.R"
+_MASH_MASHDATA_R = parent_dir / "R" / "mashdata.R"
+_MASH_COVARIANCE_R = parent_dir / "R" / "covariance.R"
+_MASH_MIXTURE_R = parent_dir / "R" / "mixture.R"
+_MASH_STRONG_R = parent_dir / "R" / "strong.R"
+_MASH_SUMMARY_R = parent_dir / "R" / "summary.R"
 
 
 class Mash:
@@ -332,15 +332,14 @@ class MashNullCorr:
             A MashSubsetFiles instance.
 
         """
-        cmd = (f"Rscript {_MASH_NULLCORR_R} "
-               f"--method {self.method} "
-               f"--out {self.cache} "
-               "--b_rand {bhat_random} "
-               "--s_rand {shat_random} "
-               .format(**subset_files.__dict__))
-
-        subprocess.run(cmd, shell=True, check=True)
-
+        args = dict()
+        args["method"] = self.method
+        args["out"] = self.cache
+        args["b_rand"] = subset_files.__dict__.get("bhat_random")
+        args["s_rand"] = subset_files.__dict__.get("shat_random")
+        
+        utils.subprocess_cli_rscript(_MASH_NULLCORR_R, args)
+        
     def __repr__(self):
         return f"MashNullCorr(method={self.method!r}, fitted={self.fitted})"
 
@@ -368,13 +367,12 @@ class MashDataDrivenCovariance:
         return self
 
     def calculate_covariances(self, subset_files) -> None:
-        """Perform extreme deconvolution to estimate data-driven covariance matrices."""        
-        cmd = (f"Rscript {_MASH_COVARIANCE_R} "
-               f"--out {self.cache} "
-                "--strong {hat_strong} "
-                .format(**subset_files.__dict__))
-        
-        subprocess.run(cmd, shell=True, check=True)
+        """Perform extreme deconvolution to estimate data-driven covariance matrices."""
+        args = dict()
+        args["out"] = self.cache
+        args["strong"] = subset_files.__dict__.get("hat_strong")
+
+        utils.subprocess_cli_rscript(_MASH_COVARIANCE_R, args)
 
 class MashMixtureMod:
     def __init__(
@@ -398,10 +396,9 @@ class MashMixtureMod:
         return self
 
     def fit_mixture_model(self, subset_files):
-        cmd = (f"Rscript {_MASH_MIXTURE_R} "
-               f"--covariance {self.covariance_rds} "
-               f"--out {self.cache} "
-                "--random {hat_random} "
-                .format(**subset_files.__dict__))
+        args = dict()
+        args["covariance"] = self.covariance_rds
+        args["out"] = self.cache
+        args["random"] = subset_files.__dict__.get("hat_random")
 
-        subprocess.run(cmd, shell=True, check=True)
+        utils.subprocess_cli_rscript(_MASH_MIXTURE_R, args)
