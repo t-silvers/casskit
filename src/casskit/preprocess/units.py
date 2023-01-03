@@ -13,7 +13,7 @@ UNITS = {
     "log2": "log2",
     "log10": "log10",
     "log2(count+1)": "log1p",
-     "log2(copy-number/2)": "",
+    "log2(copy-number/2)": "",
     "absolute": "counts",
     "abs": "counts",
     "counts": "counts"

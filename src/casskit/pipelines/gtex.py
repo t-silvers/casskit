@@ -34,8 +34,8 @@ class GTEx(BaseEstimator, TransformerMixin):
         max_freq_zero: float = 0.3,
         cv2_min: float = 0.8,
         validate: bool = True,
-        pp_tol: float = 0.9,
-        pp_etol: float = 0.8,
+        pp_tol: float = 0.8,
+        pp_etol: float = 0.6,
         pp_efrac: float = 0.2,
     ):
         self.units = units
