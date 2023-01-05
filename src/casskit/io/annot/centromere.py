@@ -86,7 +86,8 @@ def annotate_chrom_arm(data, assembly):
                 # Downcast to save memory
                 .assign(Chromosome=lambda x: x.Chromosome.astype("category"),
                         cen_start=lambda x: x.pop("Start").astype("float"),
-                        cen_end=lambda x: x.pop("End").astype("float"),)
+                        cen_end=lambda x: x.pop("End").astype("float"),
+                        )
                 )
     
     # Add arm annotation

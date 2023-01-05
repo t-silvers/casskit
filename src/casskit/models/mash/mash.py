@@ -50,13 +50,14 @@ class Mash:
       fetched. Each row is represented as a tuple of strings.
 
     Raises:
-        IOError: An error occurred accessing the smalltable.
+        IOError: An error occurred accessing
     """
     __instance = None
     
     def __new__(cls, *args, **kwargs):
         # Safety check to prevent accidental instantiation
         # Singleton assumes meta-analysis will use all available data
+        # (and should therefore be instantiated only once).
         if not Mash.__instance:
             Mash.__instance = object.__new__(cls)
         return Mash.__instance
@@ -122,6 +123,7 @@ class Mash:
         with tempfile.TemporaryDirectory() as d:
             
             # (1) Temporary files for mash
+            # ----------------------------
             print("Creating temporary files for mash")
             self.subset_files = MashSubsetFiles(d)
             self.subset_raw_data = \
@@ -137,6 +139,7 @@ class Mash:
                     getattr(self.subset_raw_data, k).to_csv(v, index=False)
 
             # (2) Calculate cross-tissue correlation from null tests
+            # ------------------------------------------------------
             print("Calculating cross-tissue correlation from null tests")
             self.nullcorr = MashNullCorr(self.null_corr_method,
                                          self.cache_dir,
@@ -144,15 +147,18 @@ class Mash:
             self.nullcorr.fit(self.subset_files)
 
             # (3) Set subset data objects with correlation structure
+            # ------------------------------------------------------
             print("Setting subset data objects with correlation structure")
             self._make_fit_data()
 
             # (4) Calculate data-driven covariance matrices
+            # ---------------------------------------------
             print("Calculating data-driven covariance matrices")
             self.covariance = MashDataDrivenCovariance(self.cache_dir)
             self.covariance.fit(self.subset_files)
 
             # (5) Fit mixture model
+            # ---------------------
             print("Fitting mixture model")
             self.mixture = MashMixtureMod(getattr(self.covariance, "cache"),
                                           self.cache_dir,
@@ -169,8 +175,7 @@ class Mash:
                             )
 
     def _transform(self, mash_data, mix_prop):
-        
-        _STDOUT_MSG_LINES = 5 # Number of lines to skip in stdout
+        STDOUT_MSG_LINES = 5 # Number of lines to skip in stdout
         
         # Run mash
         mash_l = []
@@ -178,14 +183,15 @@ class Mash:
                                "--data", mash_data,
                                "--mix", mix_prop
                                ],
-                              stdout=subprocess.PIPE) as p:
+                              stdout=subprocess.PIPE
+                              ) as p:
             with io.TextIOWrapper(p.stdout, newline=os.linesep) as f:
                 reader = csv.reader(f, delimiter=",")
                 for r in reader:
                     mash_l.append(pd.Series(r))
         
         # Convert to dataframe
-        return pd.concat(mash_l[_STDOUT_MSG_LINES:], axis=1).set_index(0).T.dropna(how="all")
+        return pd.concat(mash_l[STDOUT_MSG_LINES:], axis=1).set_index(0).T.dropna(how="all")
 
     def __repr__(self):
         return f"Mash(fitted={self.fitted})"
@@ -300,18 +306,11 @@ class MashSubsetData:
 ####################################################################################################
 
 class MashNullCorr:
-    def __init__(
-        self,
-        method: str = "simple",
-        cache_dir: Optional[Path] = None,
-    ) -> None:
+    def __init__(self, method: str = "simple", cache_dir: Optional[Path] = None):
         self.method = method
         self.cache_dir = cache_dir
+        self.cache = self.cache_dir / f"mash.method~{self.method}.nullvar.rds"
         self.fitted = False
-
-    @property
-    def cache(self):
-        return self.cache_dir / f"mash.method~{self.method}.nullvar.rds"
 
     def fit(self, subset_files: Dict) -> None:
         if self.fitted is False:
@@ -348,16 +347,10 @@ class MashNullCorr:
                 f"{self.method!r}")
 
 class MashDataDrivenCovariance:
-    def __init__(
-        self,
-        cache_dir: Optional[Path] = None,
-    ) -> None:
+    def __init__(self,cache_dir: Optional[Path] = None):
         self.cache_dir = cache_dir
         self.fitted = False
-
-    @property
-    def cache(self):
-        return self.cache_dir / f"mash.ddcovariance.rds"
+        self.cache = self.cache_dir / f"mash.ddcovariance.rds"
 
     def fit(self, subset_files: Dict) -> None:
         if self.fitted is False:
@@ -375,12 +368,8 @@ class MashDataDrivenCovariance:
         utils.subprocess_cli_rscript(_MASH_COVARIANCE_R, args)
 
 class MashMixtureMod:
-    def __init__(
-        self,
-        covariance_rds: Path,
-        cache_dir: Optional[Path] = None,
-    ) -> None:
-        self.covariance_rds = covariance_rds
+    def __init__(self, cov_rds: Path, cache_dir: Optional[Path] = None):
+        self.cov_rds = cov_rds
         self.cache_dir = cache_dir
         self.fitted = False
 
@@ -397,7 +386,7 @@ class MashMixtureMod:
 
     def fit_mixture_model(self, subset_files):
         args = dict()
-        args["covariance"] = self.covariance_rds
+        args["covariance"] = self.cov_rds
         args["out"] = self.cache
         args["random"] = subset_files.__dict__.get("hat_random")
 
