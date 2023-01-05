@@ -35,19 +35,16 @@ _MASH_SUMMARY_R = parent_dir / "R" / "summary.R"
 class Mash:
     f"""Fits a MASH model to harmonized eQTL data.
 
-    Retrieves rows pertaining to the given keys from the Table instance
-    represented by table_handle.  String keys will be UTF-8 encoded. For
-    missing shat values, replace with a large value (e.g. 1e6). In
+    For missing shat values, replace with a large value (e.g. 1e6). In
     {_fastqtltomash}, 1e3 is used. Hard-coding _HANDLE_NAN_S = 1e3. See
     also {_mashr17} and {_ashr76}.
 
     Args:
-      table_handle:
-        An open smalltable.Table instance.
+      tissues:
+        tissues or conditions.
 
     Returns:
-      A dict mapping keys to the corresponding table row data
-      fetched. Each row is represented as a tuple of strings.
+      mashed data.
 
     Raises:
         IOError: An error occurred accessing
@@ -349,8 +346,8 @@ class MashNullCorr:
 class MashDataDrivenCovariance:
     def __init__(self,cache_dir: Optional[Path] = None):
         self.cache_dir = cache_dir
-        self.fitted = False
         self.cache = self.cache_dir / f"mash.ddcovariance.rds"
+        self.fitted = False
 
     def fit(self, subset_files: Dict) -> None:
         if self.fitted is False:
@@ -371,11 +368,8 @@ class MashMixtureMod:
     def __init__(self, cov_rds: Path, cache_dir: Optional[Path] = None):
         self.cov_rds = cov_rds
         self.cache_dir = cache_dir
+        self.cache = self.cache_dir / f"mash.mixturemod.rds"
         self.fitted = False
-
-    @property
-    def cache(self):
-        return self.cache_dir / f"mash.mixture.rds"
 
     def fit(self, subset_files: Dict) -> None:
         if self.fitted is False:
