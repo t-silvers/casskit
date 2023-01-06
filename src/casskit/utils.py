@@ -1,6 +1,7 @@
 import csv
 from difflib import SequenceMatcher
 import io
+import itertools
 import os
 from pathlib import Path
 import re
@@ -8,6 +9,7 @@ import subprocess
 from typing import Dict, List, Union
 
 import pandas as pd
+import tqdm
 
 
 def pipe_concat(*args):
@@ -39,7 +41,8 @@ def fuzzy_match(k: List, v: List, deduped: bool = False) -> Dict:
     k : List
         Samples in Dict keys (<- "to replace...")
     v : List
-        Samples in Dict values (<- "... with these")
+        Samples in Dict values (<- "... with these").
+        Should be the shorter list.
     deduped : boolean, default=False
         Is input unique?
 
@@ -69,20 +72,22 @@ def fuzzy_match(k: List, v: List, deduped: bool = False) -> Dict:
 
     """
     k_, v_ = k, v
-
     if deduped is False:
-        k_ = list(set(k))
-        v_ = list(set(v))
+        k_, v_ = list(set(k)), list(set(v))
 
+    # Remove nan
+    rm_nan = lambda x: [i for i in x if pd.notnull(i)]
+    k_, v_ = rm_nan(k_), rm_nan(v_)
+        
     match_dict = {}
-    for k in k_:
-        for v in v_:
-            match_size = (SequenceMatcher(None, k, v)
-                          .find_longest_match()
-                          .size)
+    for v in tqdm.tqdm(v_):
+        for k in k_:
+            seq_match = SequenceMatcher(None, k, v)
+            match_size = seq_match.find_longest_match().size
             
             if (match_size == len(k) or match_size == len(v)):
                 match_dict[k] = v
+                break
 
     return match_dict
 
