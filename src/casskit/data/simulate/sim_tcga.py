@@ -159,10 +159,12 @@ def simulate_tcga(
     I = 10,
     seed: int = 212,
     augmented: bool = False,
+    min_h2: int = .1,
 ):
     return SimTCGA(template=template,
                    N=N,
                    I=I,
                    seed=seed,
-                   augmented=augmented
+                   augmented=augmented,
+                   min_h2=min_h2,
                    )
