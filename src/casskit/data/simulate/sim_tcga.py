@@ -90,7 +90,7 @@ class SimTCGA:
             .reset_index()
         )
 
-    def make_grn(self, per_chrom=True):
+    def make_grn(self, per_chrom=True, cis=True):
         if per_chrom is True:
             cneqtls1 = (self.template
                        .groupby("Chromosome")
@@ -111,6 +111,11 @@ class SimTCGA:
         
         else:
             raise NotImplementedError("Not implemented yet.")
+
+        if cis is True:
+            # make cis, cis = abs(10 * trans)
+            cis_cneqtl = cneqtls.sample(1).abs().mul(10)
+            cneqtls = pd.concat([cis_cneqtl, cneqtls.drop(cis_cneqtl.index)], axis=0)
 
         return (cneqtls
                 .rename("Start")
