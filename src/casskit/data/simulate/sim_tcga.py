@@ -92,12 +92,22 @@ class SimTCGA:
 
     def make_grn(self, per_chrom=True):
         if per_chrom is True:
-            cneqtls = (self.template
+            cneqtls1 = (self.template
                        .groupby("Chromosome")
                        .agg({"Start": "min", "End": "max"})
                        .apply(lambda x: self.rng.binomial(1, p=.5, size=self.I) * \
                            self.rng.integers(x[0], x[1], size=self.I), axis=1)
                        )
+
+            cneqtls2 = (self.template
+                       .groupby("Chromosome")
+                       .agg({"Start": "min", "End": "max"})
+                       .apply(lambda x: self.rng.binomial(1, p=.5, size=self.I) * \
+                           self.rng.integers(x[0], x[1], size=self.I), axis=1)
+                       )
+
+            # combine
+            cneqtls = pd.concat([cneqtls1, cneqtls2], axis=0)
         
         else:
             raise NotImplementedError("Not implemented yet.")
