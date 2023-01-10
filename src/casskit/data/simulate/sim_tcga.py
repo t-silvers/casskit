@@ -166,6 +166,11 @@ class SimTCGA:
                       .apply(pd.Series)
                       )
 
+        # Add noise
+        rng = np.random.default_rng()
+        esig = rng.normal(0, 1, expression.shape)
+        expression += esig
+        
         expression.columns = design.columns
 
         return expression.T
