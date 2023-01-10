@@ -124,7 +124,7 @@ class SimTCGA:
                     
                 # Simulate cn-eQTL effects from normal distribution
                 .assign(gene_id=lambda x: x.pop("variable").map('egene-{}'.format),
-                        beta=lambda x: self.rng.normal(0, 1, size=len(x)),)
+                        beta=lambda x: self.rng.normal(0, 0.5, size=len(x)),)
                 .reset_index()
                 .query("Start != 0")
                 )
