@@ -90,18 +90,23 @@ class SimTCGA:
             .reset_index()
         )
 
-    def make_grn(self):
-        return (self.template
-                .groupby("Chromosome")
-                .agg({"Start": "min", "End": "max"})
-                
-                # Randomly select true cn-eQTLs
-                .apply(lambda x: self.rng.binomial(1, p=.5, size=self.I) * \
-                       self.rng.integers(x[0], x[1], size=self.I), axis=1)
+    def make_grn(self, per_chrom=True):
+        if per_chrom is True:
+            cneqtls = (self.template
+                       .groupby("Chromosome")
+                       .agg({"Start": "min", "End": "max"})
+                       .apply(lambda x: self.rng.binomial(1, p=.5, size=self.I) * \
+                           self.rng.integers(x[0], x[1], size=self.I), axis=1)
+                       )
+        
+        else:
+            raise NotImplementedError("Not implemented yet.")
+
+        return (cneqtls
                 .rename("Start")
                 .apply(pd.Series)
                 .melt(ignore_index=False, value_name="Start")
-                
+                    
                 # Simulate cn-eQTL effects from normal distribution
                 .assign(gene_id=lambda x: x.pop("variable").map('egene-{}'.format),
                         beta=lambda x: self.rng.normal(0, 1, size=len(x)),)
@@ -114,7 +119,7 @@ class SimTCGA:
         return (self.make_design(grn, self.copynumber)
                 .assign(hfilt=\
                     lambda x: x.var(axis=1) \
-                        * x.index.get_level_values("beta")**2 > self.min_h2)
+                        * x.index.get_level_values("beta")**2 >= self.min_h2)
                 .query("hfilt")
                 .drop("hfilt", axis=1)
                 .index.to_frame(index=False)
