@@ -3,62 +3,31 @@
 
 from __future__ import annotations
 
-from collections import namedtuple
-import logging
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Dict, Optional
-import urllib
-import warnings
 
 import pandas as pd
 
-import casskit.io.base as base
-import casskit.io.utils as io_utils
-import casskit.descriptors as descriptors
+from .config import *
 import casskit.config as config
+from casskit.descriptors import OneOf
+from casskit.io.base import DataURLMixin
+import casskit.io.utils as io_utils
 
 
-TCGA_CANCERS = [
-    "TCGA-ACC", "TCGA-BLCA", "TCGA-BRCA", "TCGA-CESC", "TCGA-CHOL",
-    "TCGA-COAD", "TCGA-DLBC", "TCGA-ESCA", "TCGA-GBM", "TCGA-HNSC",
-    "TCGA-KICH", "TCGA-KIRC", "TCGA-KIRP", "TCGA-LAML", "TCGA-LIHC",
-    "TCGA-LUAD", "TCGA-LUSC", "TCGA-MESO", "TCGA-OV", "TCGA-PAAD",
-    "TCGA-PCPG", "TCGA-PRAD", "TCGA-READ", "TCGA-SARC", "TCGA-SKCM",
-    "TCGA-STAD", "TCGA-TGCT", "TCGA-THCA", "TCGA-THYM", "TCGA-UCEC",
-    "TCGA-UCS", "TCGA-UVM", "GDC-PANCAN"
-]
-
-XenaData = namedtuple("xena", ["omic", "sep", "compression", "units"])
-
-TCGA_XENA_DATASETS = {
-    "cnv": XenaData("cnv", "\t", "gzip", "from_metadata"),
-    "GDC_phenotype": XenaData("GDC_phenotype", "\t", "gzip", None),
-    "gistic": XenaData("gistic", "\t", "gzip", "from_metadata"),
-    "htseq_counts": XenaData("htseq_counts", "\t", "gzip", "from_metadata"),
-    "htseq_fpkm": XenaData("htseq_fpkm", "\t", "gzip", "from_metadata"),
-    "htseq_fpkm-uq": XenaData("htseq_fpkm-uq", "\t", "gzip", "from_metadata"),
-    "masked_cnv": XenaData("masked_cnv", "\t", "gzip", "from_metadata"),
-    "methylation27": XenaData("methylation27", "\t", "gzip", "from_metadata"),
-    "methylation450": XenaData("methylation450", "\t", "gzip", "from_metadata"),
-    "mirna": XenaData("mirna", "\t", "gzip", "from_metadata"),
-    "muse_snv": XenaData("muse_snv", "\t", "gzip", None),
-    "mutect2_snv": XenaData("mutect2_snv", "\t", "gzip", None),
-    "somaticsniper_snv": XenaData("somaticsniper_snv", "\t", "gzip", None),
-    "survival": XenaData("survival", "\t", None, None),
-    "varscan2_snv": XenaData("varscan2_snv", "\t", "gzip", None),   
-}
-
-
-class TCGAXenaLoader(base.DataURLMixin):
+class TCGAXenaLoader(DataURLMixin):
     
-    cancer = descriptors.OneOf(*TCGA_CANCERS)
-    xena_data = descriptors.OneOf(*TCGA_XENA_DATASETS)
+    cancer = OneOf(*TCGA_CANCERS)
+    xena_data = OneOf(*tcga_xena_datasets)
 
     def __init__(
         self,
         cancer: str,
         xena_data: XenaData,
         cache_dir: Optional[Path] = None,
+        minimal: bool = False,
+        num_samples: int = 50,
     ):
         io_utils.check_package_version("pyarrow")
         
@@ -67,12 +36,16 @@ class TCGAXenaLoader(base.DataURLMixin):
         self.omic = xena_data.omic
         self.sep = xena_data.sep
         self.compression = xena_data.compression
-
         self.stem = f"{self.cancer}.{self.omic}"
+                
         if cache_dir is None:
             cache_dir = config.get_cache()
 
         self.set_cache(cache_dir)
+        
+        # For testing and memory-limited settings
+        self.minimal = minimal
+        self.num_samples = num_samples
         self.raw_data = self.fetch()
 
     @property
@@ -80,17 +53,10 @@ class TCGAXenaLoader(base.DataURLMixin):
         return f"https://gdc-hub.s3.us-east-1.amazonaws.com/download/{self.stem}"
 
     @property
-    @base.DataURLMixin.safe_fetch
-    def metadata(self) -> Dict[str, object]:
-        return pd.read_json(f"{self.basename}.tsv.json", orient="index")
-
-    @property
-    def units(self):
-        if self._units == "from_metadata":
-            if (self.metadata is not None & "unit" in self.metadata.index):
-                return self.metadata.loc["unit"][0]
-
-        return None
+    @DataURLMixin.safe_fetch
+    def metadata(self) -> TCGAXenaMetadata:
+        metadata_df = pd.read_json(f"{self.basename}.tsv.json", orient="index")
+        return TCGAXenaMetadata(metadata_df)
 
     @io_utils.cache_on_disk
     def fetch(self) -> pd.DataFrame:
@@ -100,9 +66,31 @@ class TCGAXenaLoader(base.DataURLMixin):
         
         return self._fetch(url)
 
-    @base.DataURLMixin.safe_fetch
+    @DataURLMixin.safe_fetch
     def _fetch(self, url) -> pd.DataFrame:
-        return pd.read_csv(url, sep=self.sep, compression=self.compression)
+        data = pd.read_csv(url, sep=self.sep, compression=self.compression)
+        if self.minimal is True:
+            
+            # Get minimal samples
+            if self.metadata.type == "genomicMatrix":
+                data = (data
+                        .set_index(data.columns[0])
+                        .sort_index(axis=1)
+                        .iloc[:, :self.num_samples]
+                        .reset_index())
+                
+            elif self.metadata.type == "genomicSegment":
+                samples = data["sample"].unique().tolist()
+                samples = sorted(samples)[:self.num_samples]
+                data = data.query("sample in @samples")
+
+            elif ((self.metadata.type == "clinicalMatrix") or
+                  (self.metadata.type == "mutationVector")):
+                samples = data.iloc[:, 0].unique().tolist()
+                samples = sorted(samples)[:self.num_samples]
+                data = data[data[data.columns[0]].isin(samples)]
+
+        return data
     
     def set_cache(self, cache_dir: Path) -> Path:
         self.path_cache = Path(cache_dir, f"{self.stem}.raw.parquet")
@@ -111,7 +99,7 @@ class TCGAXenaLoader(base.DataURLMixin):
 
     @classmethod
     def get(cls, cancer: str, data: str) -> pd.DataFrame:
-        return cls(cancer, TCGA_XENA_DATASETS[data]).raw_data
+        return cls(cancer, tcga_xena_datasets[data]).raw_data
 
     @classmethod
     def build_cache(
@@ -120,7 +108,7 @@ class TCGAXenaLoader(base.DataURLMixin):
         cache_dir: Path = None,
         overwrite: bool = False
     ) -> None:
-        for xena_data in TCGA_XENA_DATASETS.values():
+        for xena_data in tcga_xena_datasets.values():
             print(f"Building {xena_data}")
             if cache_dir is None:
                 cache_dir = config.get_cache()
@@ -132,6 +120,13 @@ class TCGAXenaLoader(base.DataURLMixin):
             # Make new tuple with compression
             xd_ = XenaData(xena_data.omic, xena_data.sep, compression, xena_data.units)
             cls(cancer, xd_, cache_dir).raw_data
+
+class TCGAXenaMetadata:
+    def __init__(self, data):
+        self.data = data
+        if self.data is not None:
+            for metadata_attr in self.data.index:
+                setattr(self, metadata_attr, self.data.loc[metadata_attr][0])
 
 get_gdc_tcga = TCGAXenaLoader.get
 """Shortcut for TCGAXenaLoader.build_cache"""

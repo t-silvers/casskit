@@ -91,54 +91,10 @@ Summary of related packages
      - R
      - Yes
      - A repository of curated biological data
-   * - pyGeno
-     - Python
-     - Yes
-     - precision medicine and proteogenomics
-   * - `MultiAssayExperiment`_
-     - R
-     - Yes
-     - A Bioconductor package for the representation of multi-assay experiments
-   * - `scverse`_
-     - R, Python
-     - Yes
-     - ``AnnData``, ``muon`` with ``PyTorch`` for single-cell RNA-seq
-   * - `sgkit`_
-     - Python
-     - Yes
-     - ``xarray`` for VCFs with some statgen functionality (eg GWAS)
-   * - `scikit-allel`_
-     - Python
-     - No
-     - Succeeded by ``sgkit``
-   * - `scikit-genome`_
-     - Python
-     - Yes
-     - add-on to CNVkit
-   * - `scikit-bio`_
-     - Python
-     - Yes
-     - mainly microbial genomics
    * - `dalmatian`_
      - Python
      - Yes
      - a collection of high-level functions for interacting with Firecloud via Pandas dataframes
-   * - `HTSeq 2.0`_
-     - Python
-     - Yes
-     - HTSeq is a Python package for analysis of high-throughput sequencing data
-   * - `Hail`_
-     - Python
-     - Yes
-     - Cloud-native genomic dataframes and batch computing
-   * - `hail.matrixtable.MatrixTable`_
-     - Python
-     - Yes
-     - A MatrixTable is a distributed two-dimensional extension of a Table
-   * - `kartothek`_
-     - Python
-     - Yes
-     - A consistent table management library in python / manage tabular data in object stores
    * - `EUGENe`_
      - Python
      - Yes
@@ -147,6 +103,18 @@ Summary of related packages
      - Python
      - Yes
      - SeqData object used to containerize and store data for EUGENe workflows
+   * - `Hail`_
+     - Python
+     - Yes
+     - Cloud-native genomic dataframes and batch computing
+   * - `hail.matrixtable.MatrixTable`_
+     - Python
+     - Yes
+     - A MatrixTable is a distributed two-dimensional extension of a Table
+   * - `HTSeq 2.0`_
+     - Python
+     - Yes
+     - HTSeq is a Python package for analysis of high-throughput sequencing data
    * - `Janggu`_
      - Python
      - Yes
@@ -155,6 +123,42 @@ Summary of related packages
      - Python
      - Yes
      - genomics datasets maintains coverage or sequence type of information along with the associated genomic intervals. Externally, the datasets behave similar to a numpy array
+   * - `kartothek`_
+     - Python
+     - Yes
+     - A consistent table management library in python / manage tabular data in object stores
+   * - `MultiAssayExperiment`_
+     - R
+     - Yes
+     - A Bioconductor package for the representation of multi-assay experiments
+   * - `OpenOmics`_
+     - python
+     - Yes
+     - A bioinformatics API and web-app to integrate multi-omics datasets & interface with public databases
+   * - pyGeno
+     - Python
+     - Yes
+     - precision medicine and proteogenomics
+   * - `scikit-allel`_
+     - Python
+     - No
+     - Succeeded by ``sgkit``
+   * - `scikit-bio`_
+     - Python
+     - Yes
+     - mainly microbial genomics
+   * - `scikit-genome`_
+     - Python
+     - Yes
+     - add-on to CNVkit
+   * - `scverse`_
+     - R, Python
+     - Yes
+     - ``AnnData``, ``muon`` with ``PyTorch`` for single-cell RNA-seq
+   * - `sgkit`_
+     - Python
+     - Yes
+     - ``xarray`` for VCFs with some statgen functionality (eg GWAS)
 
 
 .. list-table:: Modeling
@@ -321,6 +325,7 @@ see :ref:`roadmap`
 .. _NDEx-The Network Data Exchange : https://home.ndexbio.org/index/
 .. _OmicsEV: https://bzhanglab.github.io/OmicsEV/
 .. _OmniPath: https://omnipathdb.org
+.. _OpenOmics: https://github.com/JonnyTran/OpenOmics
 .. _PyBDA: https://bmcbioinformatics.biomedcentral.com/articles/10.1186/s12859-019-3087-8
 .. _pycellbase: https://pypi.org/project/pycellbase/
 .. _pyensembl: https://raw.githubusercontent.com/openvax/pyensembl/0e750e50105c22666fcd43181183719876e15e6a/README.md
