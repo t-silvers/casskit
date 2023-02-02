@@ -5,7 +5,6 @@ from typing import List
 
 import numpy as np
 import pandas as pd
-import ruptures as rpt
 
 import casskit.data.simulate.base as base
 

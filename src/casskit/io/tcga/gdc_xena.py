@@ -78,7 +78,7 @@ class TCGAXenaLoader(DataURLMixin):
                         .sort_index(axis=1)
                         .iloc[:, :self.num_samples]
                         .reset_index())
-                
+
             elif self.metadata.type == "genomicSegment":
                 samples = data["sample"].unique().tolist()
                 samples = sorted(samples)[:self.num_samples]
@@ -93,7 +93,7 @@ class TCGAXenaLoader(DataURLMixin):
         return data
     
     def set_cache(self, cache_dir: Path) -> Path:
-        self.path_cache = Path(cache_dir, f"{self.stem}.raw.parquet")
+        self.path_cache = Path(cache_dir, f"GDC.{self.cancer}/data/{self.omic}.raw.parquet")
         self.read_cache = lambda cache: pd.read_parquet(cache)
         self.write_cache = lambda data, cache: data.to_parquet(cache, engine="pyarrow")
 
@@ -106,7 +106,8 @@ class TCGAXenaLoader(DataURLMixin):
         cls,
         cancer: str,
         cache_dir: Path = None,
-        overwrite: bool = False
+        overwrite: bool = False,
+        minimal: bool = False,
     ) -> None:
         for xena_data in tcga_xena_datasets.values():
             print(f"Building {xena_data}")
@@ -119,7 +120,7 @@ class TCGAXenaLoader(DataURLMixin):
 
             # Make new tuple with compression
             xd_ = XenaData(xena_data.omic, xena_data.sep, compression, xena_data.units)
-            cls(cancer, xd_, cache_dir).raw_data
+            cls(cancer, xd_, cache_dir=cache_dir, minimal=minimal).raw_data
 
 class TCGAXenaMetadata:
     def __init__(self, data):

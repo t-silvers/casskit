@@ -10,13 +10,13 @@ from casskit.io.tcga.survival_cdr import get_tcga_cdr_survival
 from casskit.io.tcga.tumorpurity import get_tumor_purity
 
 
-def build_tcga_cache(cancer, subtype_data=None):
+def build_tcga_cache(cancer, subtype_data=None, minimal=False):
     """Build local cache of TCGA data."""
 
-    build_tcga(cancer)
+    build_tcga(cancer, minimal=minimal)
     get_ancestry_pcs(cache_only=True)
     __ = get_tcga_aneuploidy_scores()
-    __ = get_tumor_purity()
+    # __ = get_tumor_purity()
     get_subtypes(cache_only=True, data=subtype_data)
     __ = get_tcga_cdr_survival()
 

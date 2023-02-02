@@ -5,7 +5,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 HOME = os.environ["HOME"]
-SCRATCH = os.environ["SCRATCH"]
+
+try:
+    SCRATCH = os.environ["SCRATCH"]
+except KeyError:
+    pass
 
 _LOG_DIR_ENV_KEY = "CASSKIT_LOG_DIR"
 
