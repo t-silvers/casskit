@@ -16,20 +16,20 @@ class DaskCluster:
         memory: str = "8GB",
         n_workers: int = 5,
         processes: int = 4,
-        time_limit: str = None,
+        time: str = None,
         log_dir: str = None,
     ):
         self.cores = cores
         self.memory = memory
         self.n_workers = n_workers
         self.processes = processes
-        self.time_limit = time_limit
+        self.time = time
         
-        if time_limit is None:
-            self.time_limit = self.timelimit()
+        if time is None:
+            self.time = self.timelimit()
         
-        elif time_limit == "default":
-            self.time_limit = "0:30:00"
+        elif time == "default":
+            self.time = "0:30:00"
         
         self.log_dir = log_dir
         if log_dir is None:
@@ -44,7 +44,7 @@ class DaskCluster:
         memory: str = "8GB",
         n_workers: int = 5,
         processes: int = 4,
-        time_limit: str = None
+        time: str = None
     ):
         """Context manager to launch a Dask cluster on SLURM.
 
@@ -53,7 +53,7 @@ class DaskCluster:
         with DaskCluster(4, '4GB', 2, "0:30:00") as (cluster, client):
             # do stuff
         """
-        cluster, client = cls.start(cores, memory, n_workers, processes, time_limit)
+        cluster, client = cls.start(cores, memory, n_workers, processes, time)
         try:
             yield cluster, client
 
@@ -68,9 +68,9 @@ class DaskCluster:
         memory: str = "8GB",
         n_workers: int = 5,
         processes: int = 4,
-        time_limit: str = "1:00:00"
+        time: str = "1:00:00"
     ):
-        return cls(cores, memory, n_workers, processes, time_limit).acquire_cluster()
+        return cls(cores, memory, n_workers, processes, time).acquire_cluster()
 
     def acquire_cluster(self):
         """
@@ -88,7 +88,7 @@ class DaskCluster:
             processes=self.processes,
             queue='hbfraser,hns',
             memory=self.memory,
-            walltime=self.time_limit,
+            walltime=self.time,
             job_extra_directives=[
                 '--job-name="smk-dask-worker"',
                 '--propagate=NONE',
@@ -116,5 +116,4 @@ class DaskCluster:
             "TIME=$(squeue -j $SLURM_JOB_ID -h --Format TimeLimit); echo -n $TIME"
         )
         return subprocess.check_output(SLURM_JOB_TIME_LIMIT,
-                                       shell=True,
-                                       text=True)
+                                       shell=True, text=True)
