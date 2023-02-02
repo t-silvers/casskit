@@ -131,15 +131,21 @@ class SimTCGA:
 
     def _filter_identifiability(self, grn) -> pd.DataFrame:
         """Filter GRN for identifiability based on ~h2."""
-        return (self.make_design(grn, self.copynumber)
-                .assign(hfilt=\
-                    lambda x: x.var(axis=1) \
-                        * x.index.get_level_values("beta")**2 >= self.min_h2)
-                .query("hfilt")
-                .drop("hfilt", axis=1)
-                .index.to_frame(index=False)
-                .merge(grn)
-                )
+        filtered_grn = (self.make_design(grn, self.copynumber)
+                        .assign(hfilt=\
+                            lambda x: x.var(axis=1) \
+                                * x.index.get_level_values("beta")**2 >= self.min_h2)
+                        .query("hfilt")
+                        .drop("hfilt", axis=1)
+                        .index.to_frame(index=False)
+                        .merge(grn))
+        
+        # Record h2
+        filtered_design = self.make_design(filtered_grn, self.copynumber)
+        filtered_grn["herit"] = filtered_design.var(axis=1) * \
+            filtered_design.index.get_level_values("beta")**2
+        
+        return filtered_grn
 
     @staticmethod
     def make_design(grn, copynumber):
