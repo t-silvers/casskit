@@ -14,15 +14,15 @@ class DaskCluster:
         self,
         cores: int = 4,
         memory: str = "8GB",
-        numworkers: int = 5,
-        threads: int = 4,
+        n_workers: int = 5,
+        processes: int = 4,
         time_limit: str = None,
         log_dir: str = None,
     ):
         self.cores = cores
         self.memory = memory
-        self.numworkers = numworkers
-        self.threads = threads
+        self.n_workers = n_workers
+        self.processes = processes
         self.time_limit = time_limit
         
         if time_limit is None:
@@ -42,8 +42,8 @@ class DaskCluster:
         cls,
         cores: int = 4,
         memory: str = "8GB",
-        numworkers: int = 5,
-        threads: int = 4,
+        n_workers: int = 5,
+        processes: int = 4,
         time_limit: str = None
     ):
         """Context manager to launch a Dask cluster on SLURM.
@@ -53,7 +53,7 @@ class DaskCluster:
         with DaskCluster(4, '4GB', 2, "0:30:00") as (cluster, client):
             # do stuff
         """
-        cluster, client = cls.start(cores, memory, numworkers, threads, time_limit)
+        cluster, client = cls.start(cores, memory, n_workers, processes, time_limit)
         try:
             yield cluster, client
 
@@ -66,11 +66,11 @@ class DaskCluster:
         cls,
         cores: int = 4,
         memory: str = "8GB",
-        numworkers: int = 5,
-        threads: int = 4,
+        n_workers: int = 5,
+        processes: int = 4,
         time_limit: str = "1:00:00"
     ):
-        return cls(cores, memory, numworkers, threads, time_limit).acquire_cluster()
+        return cls(cores, memory, n_workers, processes, time_limit).acquire_cluster()
 
     def acquire_cluster(self):
         """
@@ -85,7 +85,7 @@ class DaskCluster:
         
         cluster = SLURMCluster(
             cores=self.cores,
-            processes=self.threads,
+            processes=self.processes,
             queue='hbfraser,hns',
             memory=self.memory,
             walltime=self.time_limit,
@@ -104,9 +104,9 @@ class DaskCluster:
             ]
         )
 
-        cluster.scale(self.numworkers)
+        cluster.scale(self.n_workers)
         client = Client(cluster, timeout="30s")
-        client.wait_for_workers(n_workers=self.numworkers)
+        client.wait_for_workers(n_workers=self.n_workers)
         
         return cluster, client
 
