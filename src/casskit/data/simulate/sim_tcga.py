@@ -41,7 +41,7 @@ class SimTCGA:
     def make_copynumber(self):
         if self.augmented is True:
             chroms = self.template.Chromosome.unique()
-            cn_skeleton = self.chrom_swap_augmented(
+            cn_skeleton = chrom_swap_augmented(
                 self.N,
                 self.template["sample"].unique(),
                 chroms,
@@ -68,27 +68,10 @@ class SimTCGA:
             
             return self.template.query("sample in @samples")
 
-    @staticmethod
-    def chrom_swap_augmented(
-        n_samples: int = 500,
-        samples: list = None,
-        groups: list = None,
-        rng = np.random.default_rng(),
-    ):
-        return (
-            pd.DataFrame(rng.choice(samples,
-                                    replace=True,
-                                    size=[len(groups), n_samples]),
-                        index=groups)
-            .rename_axis("Chromosome")
-            .melt(value_name="sample",
-                  var_name="sample_sim",
-                  ignore_index=False)
-            .reset_index()
-        )
-
     def make_grn(self, per_chrom=True, cis=True):
         if per_chrom is True:
+            # Sampling twice is a hacky way to have multiple cn-eQTLs on the
+            # same chromosome with Pr=p**2=0.25
             cneqtls1 = (self.template
                        .groupby("Chromosome")
                        .agg({"Start": "min", "End": "max"})
@@ -125,7 +108,7 @@ class SimTCGA:
 
     def _filter_identifiability(self, grn) -> pd.DataFrame:
         """Filter GRN for identifiability based on ~h2."""
-        proposal_design = self.make_design(grn, self.copynumber)
+        proposal_design = make_design(grn, self.copynumber)
         proposal_betasq = proposal_design.index.get_level_values("beta")**2
         filtered_grn = (proposal_design
                         .assign(hfilt=\
@@ -137,7 +120,7 @@ class SimTCGA:
                         .merge(grn))
         
         # Record h2
-        filtered_design = self.make_design(filtered_grn, self.copynumber)
+        filtered_design = make_design(filtered_grn, self.copynumber)
         filtered_betasq = filtered_design.index.get_level_values("beta")**2
         filtered_grn["herit"] = (filtered_design.var(axis=1)
                                  * filtered_betasq).values
@@ -145,7 +128,7 @@ class SimTCGA:
         return filtered_grn
 
     def make_expression(self):
-        design = self.make_design(self.grn, self.copynumber)
+        design = make_design(self.grn, self.copynumber)
         expression = (design
                       .droplevel("Chromosome")
                       .reset_index()
@@ -163,7 +146,8 @@ class SimTCGA:
         return expression.T
 
     def __repr__(self):
-        return f"SimTCGA(N={self.N}, I={self.I}, augmented={self.augmented}, seed={self.seed})"
+        return (f"SimTCGA(N={self.N}, I={self.I}, "
+                "augmented={self.augmented}, seed={self.seed})")
 
 def make_design(grn, copynumber):
     # idx_cols = ["gene_id", "Chromosome", "herit", "beta"]
@@ -178,6 +162,24 @@ def make_design(grn, copynumber):
                          columns="sample",
                          values="value",
                          fill_value=0))
+
+def chrom_swap_augmented(
+    n_samples: int = 500,
+    samples: list = None,
+    groups: list = None,
+    rng = np.random.default_rng(),
+):
+    return (
+        pd.DataFrame(rng.choice(samples,
+                                replace=True,
+                                size=[len(groups), n_samples]),
+                    index=groups)
+        .rename_axis("Chromosome")
+        .melt(value_name="sample",
+                var_name="sample_sim",
+                ignore_index=False)
+        .reset_index()
+    )
 
 def simulate_tcga(
     template: pd.DataFrame,
