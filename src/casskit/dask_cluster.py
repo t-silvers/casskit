@@ -6,7 +6,7 @@ import subprocess
 from dask_jobqueue import SLURMCluster
 from dask.distributed import Client
 
-import casskit.config as config
+from casskit import config
 
 
 class DaskCluster:

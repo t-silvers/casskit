@@ -158,7 +158,7 @@ class SimTCGA:
                        suffixes=("", "_seg")
                        )
                 .query("Start >= Start_seg and Start <= End")
-                .pivot_table(index=["gene_id", "Chromosome", "beta"],
+                .pivot_table(index=["gene_id", "Chromosome", "herit", "beta"],
                              columns="sample",
                              values="value",
                              fill_value=0
@@ -166,7 +166,7 @@ class SimTCGA:
                 )
 
     def make_expression(self):
-        design = self.make_design(self.grn, self.copynumber)        
+        design = self.make_design(self.grn, self.copynumber)
         expression = (design
                       .droplevel("Chromosome")
                       .reset_index()

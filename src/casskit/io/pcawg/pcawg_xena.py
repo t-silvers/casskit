@@ -3,30 +3,19 @@
 
 from __future__ import annotations
 
-from collections import namedtuple
 from pathlib import Path
 from typing import Dict, Optional
 
 import pandas as pd
 
-import casskit.io.base as base
+from casskit.io.pcawg.config import *
+from casskit.io import base
 import casskit.io.utils as io_utils
-import casskit.descriptors as descriptors
-import casskit.config as config
-
-
-
-PCAWGData = namedtuple("pcawg", ["stem", "omic"])
-
-PCAWG_XENA_DATASETS = {
-    "rnaseq": PCAWGData("tophat_star_fpkm_uq.v2_aliquot_gl.sp.log", "rnaseq"),
-    "copynumber": PCAWGData("20170119_final_consensus_copynumber_sp", "copynumber"),
-    "phenotype": PCAWGData("project_code_sp", "phenotype"),
-}
+from casskit import descriptors
+from casskit import config
 
 
 class PCAWGXenaLoader(base.DataURLMixin):
-    
     pcawg_data = descriptors.OneOf(*PCAWG_XENA_DATASETS)
 
     def __init__(
