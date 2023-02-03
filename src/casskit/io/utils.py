@@ -9,6 +9,7 @@ import warnings
 import pandas as pd
 
 
+
 def cache_on_disk(f: Callable) -> Callable:
     """Cache function output on disk.
     
@@ -21,7 +22,7 @@ def cache_on_disk(f: Callable) -> Callable:
         if hasattr(self, "path_cache"):
             cache = self.path_cache
 
-            if Path(cache).exists():
+            if (Path(cache).exists() and Path(cache).stat().st_size > 0):
                 print(f"Loading from cache: {cache}")
                 data = self.read_cache(cache)
                 
