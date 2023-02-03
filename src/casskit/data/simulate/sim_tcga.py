@@ -129,18 +129,19 @@ class SimTCGA:
 
     def make_expression(self):
         design = make_design(self.grn, self.copynumber)
+        print(design.head())
         expression = (design
                       .droplevel(["Chromosome", "herit"])
                       .reset_index()
                       .groupby("gene_id")
-                      .apply(lambda df: np.dot(df.beta.values, df.drop("beta", axis=1).values))
+                      .apply(lambda df: \
+                          np.dot(df.beta.values, df.drop("beta", axis=1).values))
                       .apply(pd.Series))
 
-        # Add noise
-        rng = np.random.default_rng()
-        esig = rng.normal(0, 1, expression.shape)
-        expression += esig
-        
+        print(expression.head())
+        rng = np.random.default_rng() # Add noise
+        esigma = rng.normal(0, 1, expression.shape)
+        expression += esigma
         expression.columns = design.columns
 
         return expression.T
