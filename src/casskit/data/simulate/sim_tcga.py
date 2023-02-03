@@ -109,21 +109,30 @@ class SimTCGA:
     def _filter_identifiability(self, grn) -> pd.DataFrame:
         """Filter GRN for identifiability based on ~h2."""
         proposal_design = make_design(grn, self.copynumber)
-        proposal_betasq = proposal_design.index.get_level_values("beta")**2
-        filtered_grn = (proposal_design
-                        .assign(hfilt=\
-                            lambda x: x.var(axis=1) \
-                                * proposal_betasq >= self.min_h2)
-                        .query("hfilt")
-                        .drop("hfilt", axis=1)
-                        .index.to_frame(index=False)
+        proposal_betas = proposal_design.index.get_level_values("beta")
+        
+        # Calculate h2
+        calc_pseudo_herit = lambda X, b: X.var(axis=1) * b**2
+        proposal_pseudo_herit = calc_pseudo_herit(proposal_design, proposal_betas)
+        
+        # Filter
+        proposal_design["herit"] = proposal_pseudo_herit
+        if all(proposal_pseudo_herit < self.min_h2):
+            # Keep largest to avoid empty GRN
+            filtered_proposal = proposal_design.nlargest(1, "herit", keep="all")
+        else:
+            filtered_proposal = proposal_design.query("herit >= @self.min_h2")
+
+        filtered_grn = (filtered_proposal
+                        .drop("herit", axis=1)
+                        .index
+                        .to_frame(index=False)
                         .merge(grn))
         
         # Record h2
         filtered_design = make_design(filtered_grn, self.copynumber)
-        filtered_betasq = filtered_design.index.get_level_values("beta")**2
-        filtered_grn["herit"] = (filtered_design.var(axis=1)
-                                 * filtered_betasq).values
+        filtered_betas = filtered_design.index.get_level_values("beta")
+        filtered_grn["herit"] = calc_pseudo_herit(filtered_design, filtered_betas)
         
         return filtered_grn
 
