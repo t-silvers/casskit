@@ -132,11 +132,6 @@ class SimTCGA:
         # Record h2
         filtered_design = make_design(filtered_grn, self.copynumber)
         filtered_betas = filtered_design.index.get_level_values("beta")
-        
-        print(filtered_design)
-        print(filtered_betas)
-        print(calc_pseudo_herit(filtered_design, filtered_betas))
-        print(filtered_grn)
         filtered_grn["herit"] = calc_pseudo_herit(filtered_design,
                                                   filtered_betas
                                                   ).values
