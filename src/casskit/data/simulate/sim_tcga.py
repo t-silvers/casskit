@@ -136,7 +136,10 @@ class SimTCGA:
         print(filtered_design)
         print(filtered_betas)
         print(calc_pseudo_herit(filtered_design, filtered_betas))
-        filtered_grn["herit"] = calc_pseudo_herit(filtered_design, filtered_betas)
+        print(filtered_grn)
+        filtered_grn["herit"] = calc_pseudo_herit(filtered_design,
+                                                  filtered_betas
+                                                  ).values
 
         return filtered_grn
 
