@@ -6,8 +6,8 @@ import subprocess
 from typing import Any, Callable, Dict, List, Union
 import warnings
 
+import numpy as np
 import pandas as pd
-
 
 
 def cache_on_disk(f: Callable) -> Callable:
@@ -75,7 +75,11 @@ def wrap_rcall(script: str,
     subprocess.run(cmd, shell=True, check=check)
 
 def translate_pcawg_cancer(s):
-    """Harmonize project cancer types"""
+    """Harmonize project cancer types to TCGA standard.
+    
+    Replace with another resource, if available. Can also provide option
+    to classify samples based on molecular, etc features.
+    """
     PCAWG_CODES = {
         'BLCA-US': 'TCGA-BLCA', 'BRCA-US': "TCGA-BRCA", 'OV-AU': "TCGA-OV",
         'PAEN-AU': "TCGA-PDAC", 'PRAD-CA': "TCGA-PRAD", 'PRAD-US': "TCGA-PRAD",

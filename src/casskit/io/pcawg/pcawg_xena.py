@@ -6,6 +6,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Dict, Optional
 
+import numpy as np
 import pandas as pd
 
 from casskit.io.pcawg.config import *
@@ -73,3 +74,64 @@ get_pcawg = PCAWGXenaLoader.get
 
 build_pcawg = PCAWGXenaLoader.build_cache
 """Shortcut for TCGAXenaLoader.build_cache"""
+
+class PCAWGRawData:
+    def __init__(self):
+        for data_set in [
+            "copynumber",
+            "rnaseq",
+            "phenotype"
+        ]:
+            setattr(self, data_set, get_pcawg(data_set))
+    
+    def __repr__(self):
+        return "PCAWGRawData"
+
+class PCAWGDataSet:
+    def __init__(self, ret_union: bool = False):
+        self.raw_data = PCAWGRawData()
+        
+        # Prepare data
+        copynumber = self.configure_copynumber(self.raw_data.copynumber)
+        expression = self.configure_expression(self.raw_data.rnaseq)
+        phenotype = self.configure_phenotype(self.raw_data.phenotype)        
+        
+        if ret_union is True:
+            copynumber_sample_ids = copynumber["sample"].unique()
+            expression_sample_ids = expression.columns
+            shared_samples = np.intersect1d(copynumber_sample_ids,
+                                            expression_sample_ids,
+                                            assume_unique=True)
+
+            copynumber = copynumber.query("sample in @shared_samples")
+            expression = expression.loc[:, shared_samples]
+            phenotype = phenotype.query("sample in @shared_samples")
+            
+        self.copynumber = copynumber
+        self.expression = expression
+        self.phenotype = phenotype
+
+    @staticmethod
+    def configure_copynumber(data):
+        return data.rename(columns={"sampleID": "sample"})
+
+    @staticmethod
+    def configure_expression(data):
+        return (data
+                # Parse gene IDs to remove periods
+                .assign(gene_id=lambda x: \
+                    x.feature.str.split(".", expand=True).get(0))
+                .set_index("gene_id")
+                .drop("feature", axis=1))
+
+    @staticmethod
+    def configure_phenotype(data):
+        return (data
+                .assign(cancer=lambda df: \
+                    io_utils.translate_pcawg_cancer(df.dcc_project_code))
+                .explode("cancer")
+                .dropna()
+                .rename(columns={"icgc_specimen_id": "sample"}))
+
+    def __repr__(self):
+        return "PCAWGDataSet"
