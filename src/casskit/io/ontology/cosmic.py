@@ -24,7 +24,7 @@ class CancerGeneCensusCOSMIC:
     your own account credentials to access.
     """
     
-    data: Optional[pd.DataFrame] = field(init=False, default=None)
+    data: Optional[pd.DataFrame] = field(default=None)
     cache_dir: Optional[Path] = field(init=True, default=None)
     acct_email: str = "tsilvers@stanford.edu"
     acct_pwd: str = "Public212Password&"
