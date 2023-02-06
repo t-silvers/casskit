@@ -61,7 +61,7 @@ class CancerGeneCensusCOSMIC:
 
     @classmethod
     def get(cls, data=None) -> pd.DataFrame:
-        return cls(data=data).fetch()
+        return cls(data).fetch()
 
     def __post_init__(self):
         if self.cache_dir is None:
