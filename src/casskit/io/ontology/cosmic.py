@@ -25,12 +25,16 @@ class CancerGeneCensusCOSMIC:
     your own account credentials to access.
     """
     
+    data: Optional[pd.DataFrame] = field(init=False, default=None)
     cache_dir: Optional[Path] = field(init=True, default=None)
     acct_email: str = "tsilvers@stanford.edu"
     acct_pwd: str = "Public212Password&"
     
     @io_utils.cache_on_disk
     def fetch(self) -> pd.DataFrame:
+        if self.data:
+            return self.data
+ 
         cmd = (
             '''
             AUTHENTICATION=$(echo "email:pwd" | base64)
@@ -56,8 +60,8 @@ class CancerGeneCensusCOSMIC:
         self.write_cache = lambda data, cache: data.to_csv(cache, index=False)
 
     @classmethod
-    def get(cls) -> pd.DataFrame:
-        return cls().fetch()
+    def get(cls, data=None) -> pd.DataFrame:
+        return cls(data=data).fetch()
 
     def __post_init__(self):
         if self.cache_dir is None:

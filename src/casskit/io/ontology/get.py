@@ -10,10 +10,10 @@ from casskit.io.ontology.cosmic import get_cosmic
 from casskit.io.ontology.trrust import get_trrust
 
 
-def build_ontology_cache():
+def build_ontology_cache(cosmic_data):
     get_biogrid()
     get_corum()
-    get_cosmic()
+    get_cosmic(data=cosmic_data)
     get_trrust()
     
 def get_ontology(resource) -> pd.DataFrame:
