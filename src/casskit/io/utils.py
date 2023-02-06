@@ -73,3 +73,26 @@ def wrap_rcall(script: str,
     
     cmd = f"Rscript {script} {' '.join(_args())}"
     subprocess.run(cmd, shell=True, check=check)
+
+def translate_pcawg_cancer(s):
+    """Harmonize project cancer types"""
+    PCAWG_CODES = {
+        'BLCA-US': 'TCGA-BLCA', 'BRCA-US': "TCGA-BRCA", 'OV-AU': "TCGA-OV",
+        'PAEN-AU': "TCGA-PDAC", 'PRAD-CA': "TCGA-PRAD", 'PRAD-US': "TCGA-PRAD",
+        'RECA-EU': "TCGA-KIRC|TCGA-KIRP", 'SKCM-US': "TCGA-SKCM",
+        'STAD-US': "TCGA-STAD", 'THCA-US': "TCGA-THCA", 'KIRP-US': "TCGA-KIRP",
+        'LIHC-US': "TCGA-LIHC", 'PRAD-UK': "TCGA-PRAD", 'LIRI-JP': "TCGA-LIHC",
+        'PBCA-DE': np.nan, 'CESC-US': "TCGA-CESC", 'PACA-AU': "TCGA-PDAC",
+        'PACA-CA': "TCGA-PDAC", 'LAML-KR': "TCGA-LAML", 'COAD-US': "TCGA-COAD",
+        'ESAD-UK': "TCGA-ESCA", 'LINC-JP': "TCGA-LIHC", 'LICA-FR': "TCGA-LIHC",
+        'CLLE-ES': np.nan, 'HNSC-US': "TCGA-HNSC", 'EOPC-DE': "TCGA-PRAD",
+        'BRCA-UK': "TCGA-BRCA", 'BOCA-UK': np.nan, 'MALY-DE': "TCGA-DLBC",
+        'CMDI-UK': np.nan, 'BRCA-EU': "TCGA-BRCA", 'ORCA-IN': np.nan,
+        'BTCA-SG': "TCGA-CHOL", 'SARC-US': "TCGA-SARC", 'KICH-US': "TCGA-KICH",
+        'MELA-AU': "TCGA-SKCM", 'DLBC-US': "TCGA-DLBC", 'GACA-CN': "TCGA-STAD",
+        'PAEN-IT': "TCGA-PDAC", 'GBM-US': "TCGA-GBM", 'KIRC-US': "TCGA-KIRC",
+        'LAML-US': "TCGA-LAML", 'LGG-US': "TCGA-LGG", 'LUAD-US': "TCGA-LUAD",
+        'LUSC-US': "TCGA-LUSC", 'OV-US': "TCGA-OV", 'READ-US': "TCGA-READ",
+        'UCEC-US': "TCGA-UCEC",
+    }
+    return s.rename("pcawg_id").replace(PCAWG_CODES).str.split("|")
