@@ -1,20 +1,14 @@
 import logging
+from pkgutil import extend_path
 import sys
 
-from .config import set_cache, set_logging
-from .dask_cluster import DaskCluster
-from . import data, io, factory
-from . import models as mod
-from . import pipelines as pipe
-from . import preprocess as pp
-from . import selectors as sel
-from .data import simulate as sim
-
-dask_cluster = DaskCluster.dask_cluster
+from . import pp, data
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
+__all__ = ["pp", "data"]
+__path__ = extend_path(__path__, __name__)
 
 if sys.version_info[:2] >= (3, 8):
     # TODO: Import directly (no need for conditional) when `python_requires = >= 3.8`
@@ -30,18 +24,3 @@ except PackageNotFoundError:  # pragma: no cover
 finally:
     del version, PackageNotFoundError
 
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
-
-__all__ = [
-    "set_cache",
-    "set_logging",
-    "dask_cluster",
-    "data",
-    "io",
-    "factory",
-    "mod",
-    "pipe",
-    "pp",
-    "sel",
-    "sim",
-]
