@@ -8,4 +8,3 @@ PCAWG_XENA_DATASETS = {
     "copynumber": PCAWGData("20170119_final_consensus_copynumber_sp", "copynumber"),
     "phenotype": PCAWGData("project_code_sp", "phenotype"),
 }
-
