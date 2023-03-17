@@ -1,12 +1,14 @@
+import sys
+sys.path.append("/Users/thomassilvers/GitHub/")
+
+from casskit_io.descriptors import OneOf
+
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import FunctionTransformer
 
-from casskit.descriptors import OneOf
-
 
 __all__ = ["UNITS", "ToCounts"]
-
 
 UNITS = {
     "log1p": "log1p",
@@ -42,15 +44,12 @@ log2rtoabs = FunctionTransformer(
     _log2rtoabs, inverse_func=_abstolog2r, check_inverse=False
 )
 
-
 class ToCounts(BaseEstimator, TransformerMixin):
-    
     TFORM_FUNCS = {
         "log2(count+1)": log21ptoabs.fit_transform,
         "counts": lambda X: X,
         "log2(copy-number/2)": log2rtoabs.fit_transform,
     }
-    
     units = OneOf(*TFORM_FUNCS.keys())
     
     def __init__(self, units: str):

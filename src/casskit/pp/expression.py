@@ -1,37 +1,70 @@
 from typing import List
+import warnings
+
+import sys
+sys.path.append("/Users/thomassilvers/GitHub/")
+from casskit_io.annot import get_ensembl
+from casskit_io.descriptors import OneOf
 
 import numpy as np
 import pandas as pd
 from qtl import norm as qtl_norm
 from scipy import stats
 from sklearn.base import BaseEstimator, TransformerMixin
+from sklearn.pipeline import Pipeline
 
-from casskit.io import get_ensembl
-
-
-__all__ = [
-    "VariationThreshold",
-    "EdgeRCPM",
-    "RINT",
-    "CountThreshold",
-    "ProteinCoding",
-]
+from .generics import VariationThreshold
+from .units import ToCounts
 
 
-class VariationThreshold(BaseEstimator, TransformerMixin):
-    def __init__(self, cv2_min: float = 0.1):
+class GTEx(BaseEstimator, TransformerMixin):
+    """
+    https://github.com/broadinstitute/gtex-pipeline/blob/master/qtl/leafcutter/src/cluster_prepare_fastqtl.py    
+    """
+    
+    def __init__(
+        self,
+        units: OneOf("log2(count+1)", "counts") = "log2(count+1)",
+        lib_size: np.ndarray = None,
+        rint: bool = True,
+        min_cpm: float = 1,
+        max_freq_zero: float = 0.3,
+        cv2_min: float = 0.8,
+    ):
+        self.units = units
+        self.lib_size = lib_size
+        self.rint = rint
+        self.min_cpm = min_cpm
+        self.max_freq_zero = max_freq_zero
         self.cv2_min = cv2_min
 
+    @property
+    def gtex_preprocess(self) -> Pipeline:
+        gtex_pipe = [
+            ("As counts", ToCounts(units=self.units)),
+            ("TMM", EdgeRCPM(lib_size=self.lib_size)),
+            ("Protein coding", ProteinCoding()),
+            ("Filter low expression", CountThreshold(self.min_cpm, self.max_freq_zero)),
+            ("Filter low variance", VariationThreshold(self.cv2_min))
+        ]
+        
+        if self.rint is True:
+            gtex_pipe.append(("RINT", RINT()))
+
+        return Pipeline(gtex_pipe)
+
     def fit(self, X, y=None):
+        self.gtex_preprocess.fit(X)
         return self
 
     def transform(self, X):
-        return self.variation_threshold(X, self.cv2_min)
-
-    @staticmethod
-    def variation_threshold(A, cv2_min):
-        ix = (stats.variation(A, axis=0, nan_policy="omit") >= cv2_min).nonzero()[0]
-        return np.take(A, ix, axis=1)
+        self.fit(X)
+        return self.gtex_preprocess.transform(X)
+    
+    def fit_transform(self, X, y=None):
+        """Custom fit_transform method for checks."""
+        self.transformed = self.gtex_preprocess.fit_transform(X)
+        return self.transformed
 
 class EdgeRCPM(BaseEstimator, TransformerMixin):
     def __init__(self, lib_size: np.ndarray = None):
@@ -122,29 +155,26 @@ class ProteinCoding(BaseEstimator, TransformerMixin):
     
     Parameters
     ----------
-    genes: List[str]
-        List of gene names (as Ensembl gene ID) to filter
+    assembly: str
     """
-    def __init__(self, genes, assembly: str = "GRCh37"):
-        self.genes = genes
+    def __init__(self, assembly: str = "GRCh37"):
         self.assembly = assembly
-        self.protein_coding_genes = self.get_protein_coding(assembly)
+        self.protein_coding_genes = (
+            get_ensembl(assembly)
+            .query("gene_biotype == 'protein_coding'")
+            ["gene_id"]
+            .tolist()
+        )
 
     def fit(self, X, y=None):
         return self
 
     def transform(self, X):
-        ix = self.filter_protein_coding(self.genes, self.protein_coding_genes)
-        return np.take(X, ix, axis=1)
+        X_genes = X.columns
+        protein_coding = list(set(X_genes).intersection(self.protein_coding_genes))
+        X_protein_coding = X.reindex(columns=protein_coding)
+        return X_protein_coding
 
-    @staticmethod
-    def get_protein_coding(assembly) -> List:
-        return (get_ensembl(assembly)
-                .query("gene_biotype == 'protein_coding'")
-                ["gene_id"]
-                .tolist())
-    
-    @staticmethod
-    def filter_protein_coding(X_genes, protein_coding_genes):
-        protein_coding = set(X_genes).intersection(protein_coding_genes)
-        return np.sort([X_genes.index(x) for x in protein_coding])
+    def fit_transform(self, X, y=None):
+        """Custom fit_transform method for checks."""
+        return self.transform(X)
