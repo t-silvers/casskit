@@ -1,19 +1,23 @@
-from .modelframe import (
-    ModelFrame,
-    Phenotype,
-    Variants,
-    Expression,
-    GeneCopyNumber,
-    CNVRCopyNumber,
+from pkgutil import extend_path
+
+from . import datasets
+from .base import BaseOmic, BaseMultiOmic
+from .multiomic import MultiOmic
+from .omic import (
+    CopyNumberVariation,
+    MessengerRNA,
+    Protein,
+    SomaticMutation,
 )
 
-__path__ = __import__('pkgutil').extend_path(__path__, __name__)
-
 __all__ = [
-    "ModelFrame",
-    "Phenotype",
-    "Variants",
-    "Expression",
-    "GeneCopyNumber",
-    "CNVRCopyNumber",
+    "datasets",
+    "BaseOmic",
+    "BaseMultiOmic",
+    "MultiOmic",
+    "CopyNumberVariation",
+    "MessengerRNA",
+    "Protein",
+    "SomaticMutation",
 ]
+__path__ = extend_path(__path__, __name__)
