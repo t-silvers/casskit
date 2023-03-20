@@ -1,11 +1,6 @@
 from typing import List
 import warnings
 
-import sys
-sys.path.append("/Users/thomassilvers/GitHub/")
-from casskit_io.annot import get_ensembl
-from casskit_io.descriptors import OneOf
-
 import numpy as np
 import pandas as pd
 from qtl import norm as qtl_norm
@@ -15,6 +10,8 @@ from sklearn.pipeline import Pipeline
 
 from .generics import VariationThreshold
 from .units import ToCounts
+from ..data.io.annot import get_ensembl
+from ..data.io.descriptors import OneOf
 
 
 class GTEx(BaseEstimator, TransformerMixin):

@@ -1,11 +1,8 @@
-import sys
-sys.path.append("/Users/thomassilvers/GitHub/")
-
-from casskit_io.descriptors import OneOf
-
 import numpy as np
 from sklearn.base import BaseEstimator, TransformerMixin
 from sklearn.preprocessing import FunctionTransformer
+
+from ..data.io.descriptors import OneOf
 
 
 __all__ = ["UNITS", "ToCounts"]
