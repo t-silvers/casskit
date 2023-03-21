@@ -110,7 +110,12 @@ class RINT(BaseEstimator, TransformerMixin):
         Note:
             - https://cran.r-project.org/web/packages/RNOmni/vignettes/RNOmni.html
         """
-        return stats.norm.ppf((stats.rankdata(A, method="average", axis=0) - k) / (A.shape[0] - 2*k + 1))
+        n_obs = A.shape[0]
+        a_ranked = stats.rankdata(A, method="average", axis=0)
+        a_ranked_ = (a_ranked - k) / (n_obs - 2*k + 1)
+        a_rint = stats.norm.ppf(a_ranked_)
+        
+        return a_rint
 
 class CountThreshold(BaseEstimator, TransformerMixin):
     def __init__(self, min_cpm: int = 1, max_freq_zero: float = 0.3):
@@ -141,9 +146,11 @@ class CountThreshold(BaseEstimator, TransformerMixin):
         In addition, each kept gene is required to have at least min.total.count
         reads across all the samples.
         """
-
-        ix = ((np.count_nonzero(A >= k, axis=0) / A.shape[0]) >= n).nonzero()[0]
-        return np.take(A, ix, axis=1)
+        freq_ge_k = (np.count_nonzero(A >= k, axis=0) / A.shape[0])
+        filt_ix = (freq_ge_k >= n).nonzero()[0]
+        filt_a = np.take(A, filt_ix, axis=1)
+        
+        return filt_a
 
 class ProteinCoding(BaseEstimator, TransformerMixin):
     """Filter out non-protein coding genes
