@@ -66,3 +66,11 @@ class SomaticMutationBuilder(OmicsBuilder):
     def simulate_data(self, method, *args, **kwargs):
         sim_data = self.simulate(method, *args, **kwargs)
         self.sim_data = sim_data
+
+class MethylationBuilder(OmicsBuilder):
+    def __init__(self, *args, **kwargs):
+        super().__init__("Methylation", *args, **kwargs)
+
+    def simulate_data(self, method, *args, **kwargs):
+        sim_data = self.simulate(method, *args, **kwargs)
+        self.sim_data = sim_data
