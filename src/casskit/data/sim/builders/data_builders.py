@@ -36,7 +36,13 @@ class OmicsBuilder(OmicsBuilderMixin):
             simulation_method = self.simulation_methods.get(method, None)
             if simulation_method is None:
                 raise ValueError(f"Method {method} not recognized")
-        return simulation_method(self.n_samples, self.n_vars, *args, **kwargs)
+        
+        return simulation_method(
+            self.n_samples,
+            self.n_vars,
+            *args,
+            **kwargs
+        )
     
 class CopyNumberVariationBuilder(OmicsBuilder):
     def __init__(self, *args, **kwargs):
