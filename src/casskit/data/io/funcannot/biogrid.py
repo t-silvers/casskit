@@ -13,17 +13,25 @@ from ..config import CACHE_DIR
 from ..utils import cache_on_disk, column_janitor
 
 
-BIOGRID_ASSET = pd.read_csv(Path(__file__).parent / "assets/BIOGRID-MV-Physical-4.4.218.tab3.txt",
-                            sep="\t", low_memory=False)
+# TODO: Refactor biogrid to use REST API?
+try:
+    BIOGRID_ASSET = pd.read_csv(
+        Path(__file__).parent / "assets/BIOGRID-MV-Physical-4.4.218.tab3.txt",
+        sep="\t", low_memory=False
+    )
+except:
+    BIOGRID_ASSET = pd.DataFrame()
+
+# BIOGRID_URL = "https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-4.4.212/BIOGRID-ALL-4.4.212.tab3.zip"
+# BIOGRID_URL = "https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release/BIOGRID-ALL-LATEST.tab3.zip"
+BIOGRID_URL = "https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release/BIOGRID-MV-Physical-LATEST.tab3.zip"
+
 
 @dataclass
 class BioGRID(DataURLMixin):
     """Fetch BioGRID interaction data."""
-
     cache_dir: Optional[Path] = field(init=True, default=CACHE_DIR)
-    # url: str = "https://downloads.thebiogrid.org/Download/BioGRID/Release-Archive/BIOGRID-4.4.212/BIOGRID-ALL-4.4.212.tab3.zip"
-    # url: str = "https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release/BIOGRID-ALL-LATEST.tab3.zip"
-    url: str = "https://downloads.thebiogrid.org/Download/BioGRID/Latest-Release/BIOGRID-MV-Physical-LATEST.tab3.zip"
+    url: str = BIOGRID_URL
     organism: str = "Homo sapiens"
     
     @cache_on_disk
@@ -60,6 +68,10 @@ class BioGRID(DataURLMixin):
 
 get_biogrid = BioGRID.get
 """Convencience functions for loading BioGRID data."""
+
+#######
+# DEV #
+#######
 
 def _biogrid_rest_evidence():
     params = {"accesskey": "6f5b1db04594466337d179d76c147877", "format": "json"}
@@ -117,7 +129,6 @@ def biogrid_rest_api(gene_list=None, exclude_genes="false", max=10000):
 
 def build_biogrid_from_rest():
     """
-    
     Silly double-counting here because interactions are asymmetric (ie lists A-B separate from B-A)
     """
     genes_queried = []
