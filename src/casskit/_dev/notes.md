@@ -1,0 +1,1 @@
+- `pyranges` doesn't install correctly from pip during setup. Instead, tried `mamba install -c bioconda pyranges` (worked?). Pin python version to fix?
