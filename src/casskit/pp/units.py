@@ -20,16 +20,12 @@ UNITS = {
 
 # TODO: FunctionTransformer arg check_inverse doesn't work when input has no dtype (eg pd.DataFrame)
 
-
+# -- Helpers for unit Transfomers --
 def _abstolog21p(X):
     return np.log2(1 + X)
 
 def _log21ptoabs(X):
     return (np.exp2(X) - 1).astype(int)
-
-log21ptoabs = FunctionTransformer(
-    _log21ptoabs, inverse_func=_abstolog21p, check_inverse=False
-)
 
 def _abstolog2r(X):
     return np.log2(X/2)
@@ -37,10 +33,14 @@ def _abstolog2r(X):
 def _log2rtoabs(X):
     return np.exp2(X) * 2
 
+# -- unit Transfomers --
+log21ptoabs = FunctionTransformer(
+    _log21ptoabs, inverse_func=_abstolog21p, check_inverse=False
+)
+
 log2rtoabs = FunctionTransformer(
     _log2rtoabs, inverse_func=_abstolog2r, check_inverse=False
 )
-
 class ToCounts(BaseEstimator, TransformerMixin):
     TFORM_FUNCS = {
         "log2(count+1)": log21ptoabs.fit_transform,
