@@ -1,7 +1,4 @@
 from typing import Callable
-
-import sys
-sys.path.append("/Users/thomassilvers/GitHub/")
 from casskit_data import omic
 
 import pandas as pd
@@ -43,11 +40,12 @@ class OmicsBuilder(OmicsBuilderMixin):
             *args,
             **kwargs
         )
-    
+
 class CopyNumberVariationBuilder(OmicsBuilder):
     def __init__(self, *args, **kwargs):
         super().__init__("CopyNumberVariation", *args, **kwargs)
 
+    # TODO: Refactor into base class
     def simulate_data(self, method, parse_output=True, *args, **kwargs):
         sim_data = self.simulate(method, *args, **kwargs)
         if parse_output is True:

@@ -1,8 +1,4 @@
-import sys
-sys.path.append("/Users/thomassilvers/GitHub/")
-
-from casskit_io import get_tcga
-
+from ..io import get_tcga
 from ..omic import (
     CopyNumberVariation,
     MessengerRNA,
