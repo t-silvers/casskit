@@ -14,7 +14,7 @@ class CassKitCacheManager:
         if cache_dir is not None:
             self.cache_dir = Path(cache_dir)
         else:
-            self.cache_dir = Path(os.getenv('PKG_CACHE', Path.home() / '.demo_pkg_cache'))
+            self.cache_dir = Path(os.getenv('PKG_CACHE', Path.home() / '.demo_pkg_casche'))
 
         self.cache_dir.mkdir(parents=True, exist_ok=True)
 
